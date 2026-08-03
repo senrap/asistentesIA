@@ -1,0 +1,304 @@
+{
+  "meta": {
+    "titulo": "Biblioteca de Asistentes de IA",
+    "subtitulo": "Prompts listos para contratar mejor",
+    "descripcion": "Un asistente por cada etapa del proceso de selección. Probalo en tu IA favorita o descargá el prompt y adaptalo.",
+    "version": "1.0.0",
+    "autor": "HACHE Consultora"
+  },
+  "etapas": [
+    {
+      "id": "definicion",
+      "nombre": "Definición",
+      "orden": 1,
+      "descripcion": "Antes de publicar nada: qué puesto es, a quién buscamos y cómo se mide el éxito."
+    },
+    {
+      "id": "atraccion",
+      "nombre": "Atracción",
+      "orden": 2,
+      "descripcion": "Salir al mercado con un mensaje que atraiga al perfil correcto y espante al que no."
+    },
+    {
+      "id": "filtrado",
+      "nombre": "Filtrado",
+      "orden": 3,
+      "descripcion": "Reducir el pool sin perder tiempo ni buenos candidatos."
+    },
+    {
+      "id": "evaluacion",
+      "nombre": "Evaluación",
+      "orden": 4,
+      "descripcion": "Entrevistar con criterio y decidir con evidencia, no con intuición."
+    },
+    {
+      "id": "cierre",
+      "nombre": "Cierre",
+      "orden": 5,
+      "descripcion": "Cerrar la oferta, arrancar bien y dejar la puerta abierta con los que no quedaron."
+    }
+  ],
+  "asistentes": [
+    {
+      "slug": "contexto-maestro",
+      "nombre": "Contexto Maestro",
+      "etapa": "definicion",
+      "orden": 1,
+      "resumen": "El prompt raíz. Configura la IA como tu Head of Talent y deja el contexto cargado para todos los pasos siguientes.",
+      "para_que_sirve": "Arrancá siempre por acá. Establece quién es la empresa, cómo contratamos y cómo querés que te respondan. Todo lo que venga después hereda este contexto.",
+      "necesitas": [
+        "Qué hace tu empresa y qué la diferencia",
+        "Etapa del negocio y tamaño del equipo",
+        "Modalidad de trabajo"
+      ],
+      "entrega": "Un resumen de cómo entendió tu negocio, las preguntas que le faltan y la sesión lista para el paso 1.",
+      "tiempo": "5 min",
+      "tags": ["setup", "contexto", "base"],
+      "destacado": true
+    },
+    {
+      "slug": "definicion-de-puesto",
+      "nombre": "Definidor de Puesto",
+      "etapa": "definicion",
+      "orden": 2,
+      "resumen": "Aterriza qué hace y qué no hace el puesto, con entregables a 30/60/90 días y un diagnóstico honesto.",
+      "para_que_sirve": "La mayoría de las malas contrataciones arrancan con un puesto mal definido. Este asistente te obliga a cerrar el alcance antes de publicar nada.",
+      "necesitas": [
+        "Qué problema querés resolver contratando",
+        "Qué resultado esperás de la persona",
+        "Presupuesto mensual disponible"
+      ],
+      "entrega": "Misión del rol, qué sí y qué no hará, entregables por período, anti-perfiles y una advertencia sobre si el puesto es contratable.",
+      "tiempo": "15 min",
+      "tags": ["alcance", "30-60-90", "scoping"],
+      "destacado": true
+    },
+    {
+      "slug": "perfil-ideal-y-antiperfil",
+      "nombre": "Perfil Ideal y Anti-Perfil",
+      "etapa": "definicion",
+      "orden": 3,
+      "resumen": "Separa lo innegociable de lo deseable, detecta falsos requisitos y te dice si el perfil existe al precio que pagás.",
+      "para_que_sirve": "Para dejar de pedir cosas que filtran buenos candidatos sin sumar nada, y para saber dónde buscar a la persona que sí encaja.",
+      "necesitas": [
+        "El puesto ya definido",
+        "Rango salarial",
+        "A quién reporta y si tiene gente a cargo"
+      ],
+      "entrega": "Requisitos innegociables, deseables y falsos requisitos, competencias con conducta observable, arquetipos a evitar y un chequeo de realidad de mercado.",
+      "tiempo": "15 min",
+      "tags": ["perfil", "competencias", "mercado"]
+    },
+    {
+      "slug": "sop-del-rol",
+      "nombre": "SOP del Rol",
+      "etapa": "definicion",
+      "orden": 4,
+      "resumen": "El manual operativo del puesto: responsabilidades, ritmo diario, KPIs y hasta dónde decide solo.",
+      "para_que_sirve": "Es lo que le entregás a la persona el día 1. También sirve como vara para evaluar desempeño después.",
+      "necesitas": [
+        "Misión y responsabilidades del rol",
+        "Herramientas que usa el equipo",
+        "A quién reporta"
+      ],
+      "entrega": "Un SOP en Markdown con objetivo, responsabilidades, ritmo diario/semanal/mensual, KPIs, semáforo de desempeño y matriz de autonomía.",
+      "tiempo": "10 min",
+      "tags": ["sop", "kpis", "operaciones"]
+    },
+    {
+      "slug": "job-description-builder",
+      "nombre": "Job Description Builder",
+      "etapa": "definicion",
+      "orden": 5,
+      "resumen": "Arma la descripción de puesto completa y después audita su propio trabajo: sesgos, requisitos inflados y qué falta.",
+      "para_que_sirve": "Una descripción que sirve para tres cosas a la vez: atraer, alinear al equipo interno y evaluar desempeño más adelante.",
+      "necesitas": [
+        "Puesto, área y línea de reporte",
+        "Rango salarial y modalidad",
+        "Seniority buscado"
+      ],
+      "entrega": "Descripción completa con misión, responsabilidades medibles, fuera de alcance, KPIs, primeros 90 días y condiciones. Más una auditoría de sesgos y requisitos inflados.",
+      "tiempo": "20 min",
+      "tags": ["job description", "auditoría", "sesgos"],
+      "destacado": true
+    },
+    {
+      "slug": "anuncio-de-vacante",
+      "nombre": "Anuncio de Vacante",
+      "etapa": "atraccion",
+      "orden": 1,
+      "resumen": "Copy de vacante que se lee como escrito por el fundador, no por el departamento de personal.",
+      "para_que_sirve": "Publicar en LinkedIn, Indeed o donde busques. Incluye el bloque de autofiltro que ahorra decenas de aplicaciones que no van.",
+      "necesitas": [
+        "Misión y responsabilidades del rol",
+        "Perfil y anti-perfil",
+        "Esquema de pago y modalidad"
+      ],
+      "entrega": "El copy final listo para pegar, 3 variantes de titular, una versión corta de 600 caracteres y 10 palabras clave para el canal.",
+      "tiempo": "10 min",
+      "tags": ["copy", "linkedin", "publicación"],
+      "destacado": true
+    },
+    {
+      "slug": "pieza-grafica-de-vacante",
+      "nombre": "Pieza Gráfica de Vacante",
+      "etapa": "atraccion",
+      "orden": 2,
+      "resumen": "Genera el prompt de imagen listo para pegar en Gemini, DALL·E, Midjourney o Ideogram.",
+      "para_que_sirve": "Un prompt de imagen no se improvisa. Este asistente te lo escribe con el copy real de la vacante ya redactado adentro.",
+      "necesitas": [
+        "Identidad visual o logo de la empresa",
+        "Misión del rol y 3 tareas concretas",
+        "Qué generador vas a usar"
+      ],
+      "entrega": "El prompt de imagen listo para usar, la variante vertical, 3 titulares alternativos y un checklist de revisión.",
+      "tiempo": "5 min",
+      "tags": ["imagen", "diseño", "redes"]
+    },
+    {
+      "slug": "ficha-para-video-de-vacante",
+      "nombre": "Ficha para Video de Vacante",
+      "etapa": "atraccion",
+      "orden": 3,
+      "resumen": "El documento que leés en cámara para explicar el puesto. Solo viñetas, cada una explicable en dos frases.",
+      "para_que_sirve": "Un video explicativo antes del formulario filtra sola a la gente que no encaja. Esta ficha es el guión de apoyo.",
+      "necesitas": [
+        "Contexto de empresa, etapa y visión",
+        "Misión y responsabilidades del rol",
+        "Modalidad, horario y esquema salarial"
+      ],
+      "entrega": "La ficha completa en viñetas, la duración estimada del video, los primeros 30 segundos escritos y 3 cosas que conviene no decir.",
+      "tiempo": "10 min",
+      "tags": ["video", "loom", "guión"]
+    },
+    {
+      "slug": "formulario-de-aplicacion",
+      "nombre": "Formulario de Aplicación",
+      "etapa": "filtrado",
+      "orden": 1,
+      "resumen": "Máximo 25 preguntas, cada una diseñada para decidir. Con criterios de descarte automático y grilla de puntaje.",
+      "para_que_sirve": "Filtrar antes de la entrevista. Cada pregunta viene con qué revela y qué respuesta descarta.",
+      "necesitas": [
+        "Perfil y anti-perfil definidos",
+        "En qué plataforma vas a armarlo",
+        "Condiciones del puesto"
+      ],
+      "entrega": "El formulario por secciones con tipo de campo sugerido, criterios de descarte automático, grilla de puntaje y tiempo estimado de completado.",
+      "tiempo": "15 min",
+      "tags": ["screening", "formulario", "filtro"]
+    },
+    {
+      "slug": "cv-scanner",
+      "nombre": "CV Scanner",
+      "etapa": "filtrado",
+      "orden": 2,
+      "resumen": "Rankea candidatos contra el puesto con cinco ejes ponderados, y te dice si el pool alcanza o hay que seguir buscando.",
+      "para_que_sirve": "Pasar de 80 CVs a 5 conversaciones. No evalúa quién es mejor profesional: evalúa quién puede hacer este puesto.",
+      "necesitas": [
+        "El puesto definido y los requisitos innegociables",
+        "Los CVs o el export del formulario en Excel/CSV"
+      ],
+      "entrega": "Tabla de ranking con puntaje por eje, análisis individual de los que pasan, top 5 compacto y un diagnóstico de la calidad del pool.",
+      "tiempo": "20 min",
+      "tags": ["cv", "ranking", "excel"],
+      "destacado": true
+    },
+    {
+      "slug": "guion-de-entrevista",
+      "nombre": "Guión de Entrevista",
+      "etapa": "evaluacion",
+      "orden": 1,
+      "resumen": "Máximo 15 preguntas situacionales. Cada una con qué valida, la señal positiva, la red flag y la repregunta si evade.",
+      "para_que_sirve": "Entrevistar con estructura y sin preguntas de manual. Diseñado para que la transcripción después se pueda analizar.",
+      "necesitas": [
+        "Perfil, anti-perfil y cultura del equipo",
+        "Riesgos de contratación que querés evitar",
+        "Cuánto dura la entrevista"
+      ],
+      "entrega": "Apertura, tabla de 15 preguntas con señales positivas y red flags, cierre y una grilla de puntuación con umbral de avance.",
+      "tiempo": "10 min",
+      "tags": ["entrevista", "situacionales", "scorecard"],
+      "destacado": true
+    },
+    {
+      "slug": "analisis-de-entrevista",
+      "nombre": "Análisis de Entrevista",
+      "etapa": "evaluacion",
+      "orden": 2,
+      "resumen": "Le pasás el transcript y te dice si contratás o no. Separa lo que la persona dijo de lo que demostró.",
+      "para_que_sirve": "Sacarle el sesgo de simpatía a la decisión. Cada señal positiva tiene que estar respaldada por una cita textual.",
+      "necesitas": [
+        "El transcript o resumen de la entrevista",
+        "El puesto y el perfil definidos"
+      ],
+      "entrega": "Resumen ejecutivo, señales positivas con evidencia, red flags, nivel de riesgo, qué falta verificar y una recomendación final sin ambigüedad.",
+      "tiempo": "10 min",
+      "tags": ["transcript", "evidencia", "decisión"]
+    },
+    {
+      "slug": "comite-de-decision",
+      "nombre": "Comité de Decisión",
+      "etapa": "evaluacion",
+      "orden": 3,
+      "resumen": "Compara finalistas entre sí y elige. No empata, y si ninguno califica, te lo dice.",
+      "para_que_sirve": "Cuando tenés dos o tres buenos y no te decidís. Arma el caso a favor y en contra de cada uno, y te muestra cuál es la variable que realmente decide.",
+      "necesitas": [
+        "Todo el material de los finalistas",
+        "Presupuesto máximo y urgencia real",
+        "Costo de dejar el puesto vacante"
+      ],
+      "entrega": "Tabla comparativa ponderada, defensa y objeción de cada finalista, la pregunta que decide, escenario de fracaso y recomendación con condiciones.",
+      "tiempo": "15 min",
+      "tags": ["finalistas", "comparativa", "decisión"]
+    },
+    {
+      "slug": "propuesta-de-oferta",
+      "nombre": "Propuesta de Oferta",
+      "etapa": "cierre",
+      "orden": 1,
+      "resumen": "Estrategia de oferta, guión de la conversación, carta lista para enviar y manejo de contraofertas.",
+      "para_que_sirve": "Cerrar sin sobrepagar. Busca primero las palancas que no cuestan plata y te marca el punto de walk-away.",
+      "necesitas": [
+        "Qué motiva al candidato según la entrevista",
+        "Su pretensión y tu techo real",
+        "Si tiene otras ofertas"
+      ],
+      "entrega": "Número recomendado con argumento, guión de la conversación, carta de oferta lista, las 5 objeciones probables y plan de seguimiento hasta el día 1.",
+      "tiempo": "15 min",
+      "tags": ["oferta", "negociación", "cierre"]
+    },
+    {
+      "slug": "plan-de-onboarding-30-60-90",
+      "nombre": "Plan de Onboarding 30/60/90",
+      "etapa": "cierre",
+      "orden": 2,
+      "resumen": "Los primeros 90 días semana por semana, con puntos de control y señales tempranas de mala contratación.",
+      "para_que_sirve": "Que la persona sea autónoma rápido, y que vos te enteres a los 15 días si te equivocaste, no a los seis meses.",
+      "necesitas": [
+        "SOP y KPIs del puesto",
+        "Herramientas y accesos necesarios",
+        "Puntos débiles que detectaste en la entrevista"
+      ],
+      "entrega": "Checklist previo al día 1, agenda del primer día, plan semanal por bloque de 30 días, puntos de control con semáforo y señales tempranas de alerta.",
+      "tiempo": "15 min",
+      "tags": ["onboarding", "90 días", "seguimiento"],
+      "destacado": true
+    },
+    {
+      "slug": "respuesta-a-no-seleccionados",
+      "nombre": "Respuesta a No Seleccionados",
+      "etapa": "cierre",
+      "orden": 3,
+      "resumen": "Tres versiones según hasta dónde llegó cada persona, sin frases de manual y sin prometer lo que no vas a cumplir.",
+      "para_que_sirve": "La gente que rechazás hoy te recomienda, te vuelve a aplicar o te contrata mañana. Vale la pena escribirlo bien.",
+      "necesitas": [
+        "Canal de envío y tono de la marca",
+        "Quién firma",
+        "Si vas a abrir más búsquedas pronto"
+      ],
+      "entrega": "Tres mensajes según etapa, versiones cortas para WhatsApp, pedido de conexión en LinkedIn y qué hacer con la base de descartados.",
+      "tiempo": "5 min",
+      "tags": ["rechazo", "marca empleadora", "comunicación"]
+    }
+  ]
+}

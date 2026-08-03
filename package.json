@@ -1,0 +1,14 @@
+{
+  "name": "biblioteca-asistentes-ia",
+  "version": "1.0.0",
+  "description": "Biblioteca de asistentes de IA para procesos de selección. Probá el asistente o descargá el prompt.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "dev": "node scripts/build.mjs && python3 -m http.server 4173"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
