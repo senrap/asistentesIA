@@ -2,7 +2,7 @@
    Editá prompts/*.md o catalogo.json y volvé a correr: npm run build */
 window.BIBLIOTECA = {
   "meta": {
-    "titulo": "Biblioteca de Asistentes de IA",
+    "titulo": "Biblioteca de Asistentes de HACHE",
     "subtitulo": "Prompts listos para contratar mejor",
     "descripcion": "Un asistente por cada etapa del proceso de selección. Probalo en tu IA favorita o descargá el prompt y adaptalo.",
     "version": "1.0.0",

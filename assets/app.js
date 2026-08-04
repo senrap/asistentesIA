@@ -1,4 +1,4 @@
-/* Biblioteca de Asistentes de IA — HACHE
+/* Biblioteca de Asistentes de HACHE
    Los datos vienen de assets/data.js (window.BIBLIOTECA), generado por scripts/build.mjs. */
 (() => {
   'use strict';
@@ -67,7 +67,7 @@
     const encabezado =
       `# ${asistente.nombre}\n` +
       `> ${asistente.resumen}\n` +
-      `> Etapa: ${etapaPorId[asistente.etapa].nombre} · Biblioteca de Asistentes de IA — HACHE\n\n` +
+      `> Etapa: ${etapaPorId[asistente.etapa].nombre} · Biblioteca de Asistentes de HACHE\n\n` +
       `---\n\n`;
     const blob = new Blob([encabezado + asistente.prompt + '\n'], {
       type: 'text/markdown;charset=utf-8',
