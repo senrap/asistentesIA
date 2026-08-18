@@ -291,17 +291,20 @@
       // llegó cerrado, es que todavía no se rebuildeó.
       var yaEsFecha = s.libera <= HOY;
       var abierta = s.abierta || false;
+      var videos = s.grabaciones || [];
+      var tieneContenido = abierta && (videos.length || s.notas || (s.material || []).length);
 
-      if (soloDisponibles && !(abierta && s.grabacion)) return;
+      if (soloDisponibles && !tieneContenido) return;
 
       var li = el("li", "ruta-item");
-      if (abierta && s.grabacion) li.classList.add("is-open");
-      else if (!abierta) li.classList.add("is-locked");
+      if (tieneContenido) li.classList.add("is-open");
+      if (!abierta) li.classList.add("is-locked");
       if (s.numero === actual) li.classList.add("is-current");
 
-      li.appendChild(
-        el("div", "ruta-num", String(s.numero).padStart(2, "0"))
-      );
+      // La cabecera es idéntica esté abierta o cerrada; lo que cambia es si
+      // se puede desplegar.
+      var cabeza = el("div", "ruta-head-row");
+      cabeza.appendChild(el("div", "ruta-num", String(s.numero).padStart(2, "0")));
 
       var main = el("div", "ruta-main");
       var top = el("div", "ruta-top");
@@ -313,39 +316,22 @@
       if (s.resumen) main.appendChild(el("p", "ruta-resumen", s.resumen));
 
       var meta;
-      if (abierta && s.grabacion) {
+      if (tieneContenido) {
         meta = "Disponible desde el " + fechaCorta(s.libera);
-        if (s.duracion) meta += " · " + s.duracion;
+        if (videos.length > 1) meta += " · " + videos.length + " grabaciones";
       } else if (abierta || yaEsFecha) {
-        meta = "Se libera el " + fechaCorta(s.libera) + " · subiendo la grabación";
+        meta = "Se libera el " + fechaCorta(s.libera) + " · subiendo el contenido";
       } else {
-        meta = "Se libera el " + fechaCorta(s.libera) + " · " + enDias(diasHasta(s.libera));
+        meta =
+          "Se libera el " + fechaCorta(s.libera) +
+          (s.hora ? " a las " + s.hora + " hs" : "") +
+          " · " + enDias(diasHasta(s.libera));
       }
       main.appendChild(el("p", "ruta-meta", meta));
-
-      if (s.material && s.material.length) {
-        var mat = el("div", "ruta-material");
-        mat.appendChild(el("span", "ruta-material-label", "Material"));
-        s.material.forEach(function (m) {
-          var a = el("a", null, m.nombre);
-          a.href = m.url;
-          a.target = "_blank";
-          a.rel = "noopener";
-          mat.appendChild(a);
-        });
-        main.appendChild(mat);
-      }
-
-      li.appendChild(main);
+      cabeza.appendChild(main);
 
       var acciones = el("div", "ruta-actions");
-      if (abierta && s.grabacion) {
-        var ver = el("a", "btn btn-cta btn-sm", "Ver grabación");
-        ver.href = s.grabacion;
-        ver.target = "_blank";
-        ver.rel = "noopener";
-        acciones.appendChild(ver);
-      } else {
+      if (!tieneContenido) {
         var lock = el("span", "lock");
         lock.innerHTML =
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
@@ -360,16 +346,90 @@
         );
         acciones.appendChild(lock);
       }
+      cabeza.appendChild(acciones);
 
-      if (s.encuentro && s.encuentro.abierta && s.encuentro.grabacion) {
-        var verEnc = el("a", "btn btn-outline btn-sm", "Grabación del encuentro");
-        verEnc.href = s.encuentro.grabacion;
-        verEnc.target = "_blank";
-        verEnc.rel = "noopener";
-        acciones.appendChild(verEnc);
+      if (!tieneContenido) {
+        li.appendChild(cabeza);
+        lista.appendChild(li);
+        return;
       }
 
-      li.appendChild(acciones);
+      // Semana con contenido: acordeón. Abierto de entrada si es la actual.
+      var det = el("details", "ruta-det");
+      if (s.numero === actual) det.open = true;
+
+      var sum = el("summary", "ruta-sum");
+      sum.appendChild(cabeza);
+      sum.appendChild(el("span", "ruta-chevron"));
+      det.appendChild(sum);
+
+      var cuerpo = el("div", "ruta-cuerpo");
+
+      if (videos.length) {
+        var vids = el("div", "ruta-videos");
+        videos.forEach(function (g) {
+          var a = el("a", "video-link");
+          a.href = g.url;
+          a.target = "_blank";
+          a.rel = "noopener";
+          a.innerHTML =
+            '<span class="video-play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor">' +
+            '<path d="M8 5.5v13l11-6.5z"/></svg></span>';
+          var txt = el("span", "video-txt");
+          txt.appendChild(el("span", "video-nombre", g.titulo || "Ver grabación"));
+          if (g.nota) txt.appendChild(el("span", "video-nota", g.nota));
+          a.appendChild(txt);
+          vids.appendChild(a);
+        });
+
+        if (s.encuentro && s.encuentro.abierta && s.encuentro.grabacion) {
+          var ae = el("a", "video-link video-link-enc");
+          ae.href = s.encuentro.grabacion;
+          ae.target = "_blank";
+          ae.rel = "noopener";
+          ae.innerHTML =
+            '<span class="video-play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor">' +
+            '<path d="M8 5.5v13l11-6.5z"/></svg></span>';
+          var te = el("span", "video-txt");
+          te.appendChild(el("span", "video-nombre", "Grabación del encuentro de consultas"));
+          te.appendChild(el("span", "video-nota", "Sesión en vivo del " + fechaCorta(s.encuentro.fecha)));
+          ae.appendChild(te);
+          vids.appendChild(ae);
+        }
+        cuerpo.appendChild(vids);
+      }
+
+      if (s.material && s.material.length) {
+        var mat = el("div", "ruta-material");
+        mat.appendChild(el("span", "ruta-material-label", "Material de práctica"));
+        s.material.forEach(function (m) {
+          var a = el("a", "material-link");
+          a.href = m.url;
+          // Los archivos del repo se bajan; los links externos se abren.
+          if (/^https?:\/\//.test(m.url)) {
+            a.target = "_blank";
+            a.rel = "noopener";
+          } else {
+            a.setAttribute("download", "");
+          }
+          a.innerHTML =
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+            'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+            '<path d="M12 4v11m0 0 4-4m-4 4-4-4"/><path d="M4 18h16"/></svg>';
+          a.appendChild(el("span", null, m.nombre + (m.tipo ? " · " + m.tipo : "")));
+          mat.appendChild(a);
+        });
+        cuerpo.appendChild(mat);
+      }
+
+      if (s.notas) {
+        var notas = el("div", "ruta-notas");
+        notas.innerHTML = s.notas;
+        cuerpo.appendChild(notas);
+      }
+
+      det.appendChild(cuerpo);
+      li.appendChild(det);
       lista.appendChild(li);
     });
 
