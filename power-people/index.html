@@ -92,10 +92,11 @@
           >
             <span class="progress-fill" data-progress-fill></span>
           </div>
-          <div class="progress-ends">
+          <div class="progress-ends" data-progress-ends>
             <span>Miércoles 19 de agosto</span>
             <span>Miércoles 2 de diciembre</span>
           </div>
+          <p class="fuente-aviso" data-fuente hidden></p>
         </div>
       </section>
 
@@ -200,7 +201,7 @@
                 Tenemos un grupo de WhatsApp para canalizar todas las dudas: es el camino más
                 rápido para que te respondamos.
               </p>
-              <p class="card-note" data-whatsapp-note>Te compartimos el link de acceso por mail.</p>
+              <p class="card-note" data-whatsapp>Te compartimos el link de acceso por mail.</p>
             </article>
 
             <article class="card card-highlight">
@@ -266,6 +267,7 @@
               <p class="section-label green">Próximo encuentro</p>
               <p class="next-date" data-next-date>Miércoles 26 de agosto</p>
               <p class="next-time">19:00 a 20:00 hs · <span class="tz">Argentina (GMT-3)</span></p>
+              <p class="next-host" data-next-host hidden></p>
 
               <div class="local-time" data-local-box hidden>
                 <p class="local-label">En tu zona horaria <span data-local-tz></span></p>
@@ -319,47 +321,9 @@
       <section class="section" id="facilitador">
         <div class="wrap">
           <p class="section-label">Quién te acompaña</p>
-          <h2>El facilitador del primer módulo</h2>
+          <h2 data-facilitador-titulo>Quién te acompaña en este módulo</h2>
           <span class="accent-line" aria-hidden="true"></span>
-
-          <div class="profe">
-            <div class="profe-side">
-              <div class="profe-avatar" aria-hidden="true">PS</div>
-              <p class="profe-nombre">Pablo Senra</p>
-              <p class="profe-rol">
-                Director académico de la Academia Power People. Facilita el primer módulo y las
-                clases de consulta.
-              </p>
-              <ul class="profe-tags">
-                <li>Consultor</li>
-                <li>Profesor en ITBA</li>
-                <li>Speaker</li>
-              </ul>
-            </div>
-            <div class="profe-bio">
-              <p>
-                Pablo es un apasionado por traducir datos en acciones que potencien a las
-                organizaciones. Esta historia comenzó muchos años atrás, cuando trabajaba en el área
-                y notó con preocupación que muchas veces en HR nos cuesta sustentar nuestras
-                decisiones como sí lo hacen otras áreas de la organización.
-              </p>
-              <p>
-                Comenzó a investigar con datos y se enamoró de la capacidad que tienen para impulsar
-                conversaciones significativas con el resto de la organización. ¡Ya no pudo dejarlo
-                atrás! Así es que decidió fundar HACHE, y hoy es consultor, profesor en ITBA, speaker
-                e influencer reconocido en el mundo de People Analytics y HR.
-              </p>
-              <blockquote class="profe-quote">
-                🎙️ “Buscamos insights en los datos que nos permitan potenciar el logro de los
-                objetivos e incrementar el bienestar de los colaboradores.”
-              </blockquote>
-              <p>
-                Cuando no está sumergido en conversaciones sobre datos y talento, disfruta de ser
-                papá de Baltu, hincha de Racing y un viajero incansable. Sueña con salir en roadtrip
-                conectándose con la comunidad de People Analytics en cada ciudad que visite 🚙
-              </p>
-            </div>
-          </div>
+          <div class="profe" data-facilitador hidden></div>
         </div>
       </section>
 
@@ -376,6 +340,9 @@
               <p>
                 Escribí en el <strong>grupo de WhatsApp</strong>. Es el canal principal del
                 programa y donde te respondemos más rápido.
+              </p>
+              <p class="card-note" data-whatsapp="btn btn-cta btn-sm">
+                Te compartimos el link de acceso por mail.
               </p>
             </article>
             <article class="card">
@@ -486,6 +453,8 @@
 
     <div class="toast" data-toast role="status" aria-live="polite"></div>
 
+    <script src="assets/config.js"></script>
+    <script src="assets/sheet.js"></script>
     <script src="assets/contenido.js"></script>
     <script src="assets/programa.js"></script>
   </body>

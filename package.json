@@ -11,8 +11,5 @@
   },
   "engines": {
     "node": ">=20"
-  },
-  "devDependencies": {
-    "marked": "^18.0.10"
   }
 }

@@ -1,0 +1,78 @@
+"Fecha","Hora","Módulo","Grabación","Título","Nota","Facilitador","Link","Link 2","Sesión Online","Link Sesión","Texto","Archivo 1","Archivo 2","Archivo 3"
+"2026-08-19","19:30","Power BI","1 y 2","Primeros pasos: obtener y transformar datos","La grabación 1 comienza en el minuto 1:50.","Pablo","https://www.youtube.com/watch?v=Q16aqEuN8FU","https://www.youtube.com/watch?v=qeqz232bYCE","1","","Power BI tiene 4 vistas 😎, depende en cuál estés vas a poder realizar diferentes cosas.
+
+- 🛠 **Transformar datos:** el editor donde preparás los datos para el posterior análisis.
+- 🎨 **Vista Informe:** es el lugar donde vamos a graficar nuestro informe.
+- 🗃 **Vista de Datos:** nos permite visualizar la tabla, revisar formatos, crear columnas calculadas.
+- 🧩 **Vista de Modelo:** aquí podremos relacionar nuestras diferentes tablas.
+
+## Obtener datos
+
+Power BI va a trabajar con datos que están en orígenes externos. Recordá que lo primero que tenés que hacer es conectar tus datos.
+
+Podés hacerlo desde el menú de Inicio con el botón de **Obtener Datos**, o directamente desde Excel si vas a trabajar con ese origen. Cuando trabajes conectando datos que están cargados manualmente en Excel, recomendamos que le des **formato de tabla** a tus datos.
+
+## Transformar datos
+
+Al importar una base de datos es importante pasar por **Transformar datos** y preparar los datos antes de comenzar el análisis. Algunas transformaciones que hicimos fueron:
+
+- Chequear el tipo de datos (mucho muy importante 😂)
+- Filtrar filas en blanco y elegir columnas
+- Modificar formatos (mayúsculas, minúsculas, etc.)
+- Combinar columnas
+- Reemplazar y extraer valores
+- Operaciones de fecha
+- Operaciones matemáticas y de redondeo
+- Crear columnas condicionales (para las generaciones, rangos de edad, etc.)
+
+### Tres cosas para tener a mano
+
+- Si te aparece un paso que se llama **""Filas Filtradas""** y no lo aplicaste intencionalmente, la recomendación es eliminarlo con la ""x"".
+- Si te aparece el cartel de **""Insertar un paso""**, salvo que lo estés haciendo intencionalmente, cancelá y posicionate en el último paso del menú de pasos aplicados antes de volver a crearlo.
+- Cuando termines de trabajar en la vista de Transformar datos, podrás aplicar los cambios desde el menú de Inicio clickeando en **Cerrar y aplicar**.","Nómina Panda | https://drive.google.com/PEGA-ACA-EL-LINK","",""
+"2026-08-26","19:00","Power BI","3","Visualizaciones: elegir y armar tus gráficos","","","https://www.youtube.com/watch?v=B4OEvZgHlaM","","","","## 1️⃣ Elegir la visualización
+
+- 🔲 Si solo vas a mostrar un dato, la **tarjeta** es una excelente opción.
+- 📊 Si necesitás comparar valores o establecer un ranking, utilizá gráficos de **barras o columnas**. Aunque no es mandatorio, podés usar este consejo para elegir cuál utilizar: - Barras para variables categóricas (texto) - Columnas para variables numéricas o de tiempo
+- 📈 Los gráficos de **líneas** suelen utilizarse para mostrar tendencia en el tiempo.
+- 🎂 Los gráficos de **torta o anillos** usalos con cuidado y para mostrar 2 o 3 segmentos máximo.
+- 🎛 Los **segmentadores** te permiten filtrar a los demás gráficos.
+- 📄 Las **tablas y matrices** son buenas para mostrar datos que se necesiten recorrer uno a uno; lo ideal es que se utilicen con conjuntos de datos de hasta 20 datos.
+
+## 2️⃣ Seleccionar los campos a mostrar en el gráfico
+
+Este paso es muy simple, ya que Power BI nos permite hacer drag and drop, arrastrar y tirar.
+
+En general los gráficos van a mostrar un valor (es la columna que llevarás a **valores**) y lo segmentarán de alguna forma (esa columna es la que irá al **eje, detalles, leyenda…**).
+
+## 3️⃣ Elegir la operación a realizar
+
+Aquí es donde vas a poder definir la operación a realizar (suma, promedio, mediana…) desde el menú ▼. En este mismo menú encontrarás para mostrar el valor como **porcentaje del total** y, si estás en una variable de segmentación, podés agruparla con la función **NUEVO GRUPO**.
+
+## 4️⃣ Aplicar filtros
+
+Los filtros son muy parecidos a Excel, pero acá vas a poder aplicarlos en diferentes niveles:
+
+- 📊 Podés aplicarlo a **un único gráfico** (en este gráfico hablo de los líderes solamente).
+- 📄 Podés aplicarlo a **todos los gráficos de una página** (en esta página hablo de activos).
+- 📕 Podés aplicarlo a **todo el informe** (quiero que todo el informe sea solo de un área).
+
+## 5️⃣ Trabajar sobre el formato
+
+👩‍🎨 El **rodillo** te permitirá cambiar casi todo lo que tiene que ver con el formato.","","",""
+"2026-09-02","19:00","Power BI","4","Drill down e interacciones entre gráficos","","Pablo","https://www.youtube.com/watch?v=8DInJyV43rk","","2","","🤿 Si tenés más de un campo en el eje del objeto visual, aparecerán las opciones de **Explorar en profundidad** o *drill down*. Estas te permitirán cambiar el nivel de detalle (granularidad) en que segmentás esos valores. Recordá que vas a poder recorrer los diferentes niveles con las flechas que aparecerán sobre el gráfico ↑↓⇊
+
+🐱‍💻 Por otro lado, recordá que los gráficos se pueden **filtrar entre sí**. Si querés modificar ese funcionamiento, deberás ingresar a **Formato → Editar interacciones**.","","",""
+"2026-09-09","19:00","Talent","Talent 1","","","Pablo","https://www.youtube.com/watch?v=mtThkteWOuM","","","","","","",""
+"2026-09-16","19:00","Talent","Talent 2","","","Lito","https://www.youtube.com/watch?v=i-43NwzrhQ8","","3","","","","",""
+"2026-09-23","19:00","Talent","Talent 3","","","","https://www.youtube.com/watch?v=RFEjJmJ6RQY","","","","","","",""
+"2026-09-30","19:00","Talent","Descanso","","","Lito","","","4","","","","",""
+"2026-10-07","19:00","Compensaciones","Compe 1","","","","https://www.youtube.com/watch?v=YXELALbl9Q8","","","","","","",""
+"2026-10-14","19:00","Compensaciones","Compe 2","","","Nico","https://www.youtube.com/watch?v=s_6JU-un_Wk","","5","","","","",""
+"2026-10-21","19:00","Compensaciones","Compe 3","","","","https://www.youtube.com/watch?v=S1fzwiB2y9s","","","","","","",""
+"2026-10-28","19:00","Compensaciones","Descanso","","","Nico","","","6","","","","",""
+"2026-11-04","19:00","DataViz","DataViz 1","","","","https://www.youtube.com/watch?v=9DwdCyLvkbI","","","","","","",""
+"2026-11-11","19:00","DataViz","DataViz 2","","","Charlie","https://www.youtube.com/watch?v=K7wdwB1SeSo","","7","","","","",""
+"2026-11-18","19:00","DataViz","DataViz 3","","","","https://www.youtube.com/watch?v=kaNQiVWUGXI","","","","","","",""
+"2026-11-25","19:00","DataViz","Descanso","","","Charlie","","","8","","","","",""
+"2026-12-02","19:00","Cierre","CIERRE","","","Pablo","","","9","","","","",""

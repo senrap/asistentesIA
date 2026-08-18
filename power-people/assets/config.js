@@ -1,0 +1,17 @@
+/* Generado por power-people/scripts/build.mjs desde config.json — no editar a mano. */
+window.PPCONFIG = {
+  "sheet": {
+    "id": "1emeX5Xb_PloWFBWDZgvfpEo4zxevkapvU_ew1ewK738",
+    "hojaContenido": "Contenido",
+    "hojaFacilitadores": "Facilitadores"
+  },
+  "programa": {
+    "nombre": "Power People 2026",
+    "inicio": "2026-08-19",
+    "fin": "2026-12-02",
+    "zoom": "https://us02web.zoom.us/j/84283169271",
+    "whatsapp": "https://chat.whatsapp.com/FyrL31VZ06CFOQICWZKz6x",
+    "horaArgentina": 19,
+    "duracionHoras": 1
+  }
+};

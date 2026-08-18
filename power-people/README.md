@@ -1,127 +1,116 @@
 # Power People 2026 — sitio del programa
 
-Sitio estático para los alumnos de Power People 2026. Sin framework ni backend. Se despliega en
-`/power-people/` del mismo sitio que la Biblioteca de Asistentes.
+Sitio estático para los alumnos de Power People 2026. Se despliega en `/power-people/`.
+El contenido del programa **no vive en el repo**: vive en un Google Sheet que el sitio lee en vivo.
 
 ## Cómo está armado
 
 | Archivo | Qué es |
 |---|---|
-| `contenido.json` | **Fuente de verdad.** Semanas, títulos, links de grabaciones y momentos de liberación. |
-| `semanas/*.md` | Las notas de cada semana, en markdown. |
-| `material/` | Archivos de práctica (Excel, etc.) que el alumno descarga. |
-| `scripts/build.mjs` | Genera `assets/contenido.js` aplicando el bloqueo por fecha y hora. |
-| `index.html` + `assets/` | El sitio. Lee `window.PROGRAMA` de `assets/contenido.js`. |
+| **El Google Sheet** | **Fuente de verdad.** Semanas, links, textos, material y facilitadores. |
+| `config.json` | ID del Sheet y datos fijos del programa (Zoom, WhatsApp, fechas). |
+| `lib/sheet.mjs` | Lectura y parseo del Sheet. Única copia: corre en el navegador y en Node. |
+| `scripts/build.mjs` | Empaqueta `lib/` para el navegador y guarda una copia de respaldo. |
+| `fixtures/*.csv` | Espejo local del Sheet, para desarrollar y testear sin red. |
+| `index.html` + `assets/` | El sitio. |
 
 ```bash
-npm run build:programa        # regenera assets/contenido.js
-npm run build                 # buildea la Biblioteca y el programa
+npm run build:programa              # regenera los assets leyendo el Sheet
+npm run build:programa -- --local   # los regenera desde fixtures/, sin red
 ```
 
-## El bloqueo de grabaciones
+`assets/sheet.js`, `assets/config.js` y `assets/contenido.js` son **generados**. No los edites.
 
-**El bloqueo es real, no cosmético.** Una semana cuya `libera` todavía no llegó sale del build
-**sin la URL**: el link no está en el HTML publicado. No hay "ver código fuente" que lo revele.
-
-El alumno igual ve el título y la fecha en que se libera — eso es a propósito: sabe qué viene.
+## Cómo llega el contenido a la página
 
 ```
-contenido.json  ──build──▶  assets/contenido.js  ──▶  navegador
-  (todos los                 (solo lo ya                (solo ve lo
-   links)                     liberado)                  que llegó)
+Google Sheet ──(fetch en vivo)──▶ navegador del alumno
+     │
+     └──(build)──▶ assets/contenido.js ──▶ respaldo si el fetch falla
 ```
 
-**Excepción: los archivos de `material/` no están bloqueados.** El link a un `.xlsx` desaparece de
-la página igual que los demás, pero el archivo sigue existiendo en su URL para quien la conozca.
-Si alguna vez hace falta un material realmente cerrado hasta su fecha, hay que subirlo a otro lado
-y poner una URL externa.
+El sitio intenta leer el Sheet en cada visita. Si no puede —Google caído, la planilla dejó de ser
+pública, una red corporativa que bloquea `docs.google.com`— usa la copia de respaldo y avisa al
+alumno con una línea chica bajo la barra de progreso.
 
-### Consecuencia: hace falta un build programado
+**Editás el Sheet y se ve al recargar la página.** No hace falta buildear ni deployar.
 
-El build congela el estado del momento en que corre. Netlify buildea en cada push, así que si solo
-pusheás, una grabación con fecha del 14 de octubre no aparece sola ese día — aparece en el
-siguiente deploy.
+## El bloqueo por fecha
 
-Para que se libere sola hay que disparar un build periódico. Dos caminos:
+Una semana cuya fecha y hora todavía no llegaron se muestra con candado: sin links, sin material y
+sin texto.
 
-- **Netlify scheduled function** que llame al build hook del sitio.
-- **GitHub Action** con `schedule: cron` que haga POST al build hook de Netlify.
+**Este bloqueo es de presentación, no de seguridad.** Como el navegador lee la planilla entera para
+poder mostrarla, el CSV con todas las filas —incluidas las futuras— llega hasta el navegador. Quien
+abra las herramientas de desarrollo puede ver los links de las semanas que faltan. Es la
+contrapartida de que el Sheet se edite y se publique al instante.
 
-**La precisión del desbloqueo es la frecuencia del build.** Con un build diario a medianoche, algo
-programado para las 19:30 se libera recién al día siguiente; con un build por hora, se libera
-dentro de la hora. Para horarios como "19:30" conviene el build horario.
+Si en algún momento querés bloqueo duro, el camino es que el sitio lea el Sheet en el build en vez
+de en vivo: ahí los links futuros nunca salen del servidor. Se paga con un build por cada cambio.
 
-Mientras tanto sirve el camino manual: pushear (o apretar "Trigger deploy" en Netlify) cuando toca
-liberar.
+La copia de respaldo **sí** tiene bloqueo duro: se genera con las URLs futuras ya recortadas.
 
-### Probar el bloqueo sin esperar
+## El Google Sheet
+
+Tiene tres hojas. La de **Instrucciones** explica cada columna dentro de la propia planilla.
+
+**Contenido** — una fila por semana:
+
+| Columna | Qué poner |
+|---|---|
+| `Fecha` | Desde cuándo se ve. `AAAA-MM-DD`. Lo único obligatorio. |
+| `Hora` | Hora de Argentina. Vacío = 19:00. |
+| `Módulo` | Tiene que coincidir con la hoja Facilitadores. |
+| `Grabación` | Etiqueta corta: `1 y 2`, `Talent 1`, `Descanso`, `CIERRE`. |
+| `Título` | Lo que ve el alumno. Vacío = se usa `Grabación`. |
+| `Nota` | Aclaración chica bajo la primera grabación. |
+| `Facilitador` | Quién da esa semana. |
+| `Link`, `Link 2` | Grabaciones de práctica. |
+| `Sesión Online` | Número del encuentro. Vacío = esa semana no hay. |
+| `Link Sesión` | Grabación del encuentro, cuando la subas. |
+| `Texto` | Markdown: `**negrita**`, `- listas`, `## títulos`, links. |
+| `Archivo 1/2/3` | Material. `Nombre \| https://drive.google.com/...` |
+
+**Facilitadores** — una fila por módulo: `Módulo`, `Nombre`, `Rol`, `Iniciales`, `Bio`, `LinkedIn`,
+`Cita`. El sitio muestra el del módulo que se está cursando, calculado a partir de la última semana
+liberada.
+
+**Requisito:** la planilla tiene que estar compartida como *Cualquier persona con el enlace ·
+Lector*. Sin eso el sitio no la puede leer y siempre cae al respaldo.
+
+## Las bases de datos
+
+Van a Drive, compartidas como "cualquiera con el enlace", y el link se pega en `Archivo 1/2/3`.
+No las subas al repo: el sitio es público y un archivo del repo queda accesible por URL aunque su
+semana esté cerrada.
+
+## Probar sin esperar
 
 ```bash
-node power-people/scripts/build.mjs --ahora 2026-08-19T19:45
-node power-people/scripts/build.mjs --ahora 2026-10-20        # fin de ese día
+node power-people/scripts/build.mjs --local --ahora 2026-09-20T12:00
 ```
 
-Recordá volver a correr `npm run build:programa` sin `--ahora` antes de commitear.
+Arma el respaldo como si fuera ese momento, leyendo `fixtures/` en vez del Sheet. Sirve para ver
+cómo se comporta el bloqueo. Volvé a correr `npm run build:programa` antes de commitear.
 
-## Cargar el contenido de una semana
+Los `fixtures/*.csv` son un espejo del Sheet al momento de crearlo. Sirven para desarrollo; no se
+sincronizan solos.
 
-En `contenido.json`, dentro de la semana que corresponda:
-
-```json
-{
-  "numero": 1,
-  "libera": "2026-08-19",
-  "hora": "19:30",
-  "titulo": "Primeros pasos: obtener y transformar datos",
-  "resumen": "Una línea de qué se ve.",
-  "notas": "semana-01.md",
-  "grabaciones": [
-    { "titulo": "Clase 1", "url": "https://...", "nota": "Arrancá desde 1 h 50 min." },
-    { "titulo": "Clase 2", "url": "https://..." }
-  ],
-  "material": [
-    { "nombre": "Nómina Panda", "url": "material/nomina-panda.xlsx", "tipo": "Excel · 71 KB" }
-  ],
-  "encuentro": { "libera": "2026-08-20", "hora": "19:00", "grabacion": "https://..." }
-}
-```
-
-- `libera` + `hora` — el momento exacto, en hora de Argentina, desde el que se ve el contenido.
-- `notas` — nombre de un archivo en `semanas/`. Markdown común: títulos, listas, **negrita**,
-  emoji. Se renderiza en el build.
-- `grabaciones` — una o varias por semana. `nota` es opcional y sale como línea chica debajo.
-- `material` — `material/archivo.xlsx` para un archivo del repo (se descarga), o una URL externa
-  (se abre en otra pestaña).
-- `encuentro` — solo en las semanas con sesión en vivo. El encuentro es el mismo miércoles de
-  `libera`; `encuentro.libera` es cuándo se publica **la grabación** de esa sesión.
-- Podés cargar los links con anticipación: mientras el momento no llegue, no salen del build.
-
-El build valida fechas, horas, URLs, archivos de material faltantes, `.md` huérfanos y números de
-semana duplicados. Falla antes de publicar algo roto.
-
-## Datos generales del programa
-
-En `contenido.json` → `programa`: nombre, fechas de inicio y fin, link de Zoom, horario y el
-grupo de WhatsApp. En cuanto `whatsapp` deje de ser `null`, el botón aparece solo en la tarjeta.
-
-## Qué resuelve el JS (y por qué)
+## Qué resuelve el JS
 
 | Función | Para qué |
 |---|---|
-| Barra de progreso | El alumno ve en qué semana del programa está, sin contar a mano. |
-| Ruta del programa | Las 16 semanas, qué está disponible y cuándo se libera lo que falta. Las semanas con contenido se despliegan con las grabaciones, el material y las notas. |
-| Hora local | Los encuentros son 19 hs de Argentina. Si el alumno está en otra zona, ve su hora —y su fecha, que puede correrse al día siguiente. |
+| Lectura del Sheet | El contenido se edita en una planilla, no en el código. |
+| Respaldo | Si la planilla no se puede leer, el alumno igual ve el programa. |
+| Barra de progreso | En qué semana del programa está, sin contar a mano. |
+| Ruta del programa | Las semanas, qué está disponible y cuándo se libera lo que falta. |
+| Hora local | Los encuentros son 19 hs de Argentina. Fuera del país muestra la hora —y la fecha, que puede correrse al día siguiente. |
 | Cuenta regresiva | Cuánto falta para el próximo encuentro. |
-| Copiar link | El link de Zoom al portapapeles, sin seleccionar texto. |
-| Descargar `.ics` | Los 8 encuentros a la agenda del alumno, con recordatorio 30 min antes. |
+| Markdown | La columna `Texto` se escribe en markdown y se renderiza en el navegador. |
+| Copiar link / `.ics` | El Zoom al portapapeles; los encuentros a la agenda, con aviso 30 min antes. |
 
 Argentina no aplica horario de verano, así que 19:00 ART es siempre 22:00 UTC. Los encuentros se
-construyen en UTC y se formatean con `Intl` en la zona del navegador: no hay conversiones a mano.
-
-## Calendario
-
-16 semanas, todos los miércoles del 19 de agosto al 2 de diciembre de 2026.
-8 encuentros en vivo, cada dos semanas: 19/8, 2/9, 16/9, 30/9, 14/10, 28/10, 11/11 y 25/11.
+construyen en UTC y se formatean con `Intl` en la zona del navegador.
 
 ## Probarlo
 
