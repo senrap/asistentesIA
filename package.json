@@ -5,8 +5,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "node scripts/build.mjs",
-    "dev": "node scripts/build.mjs && python3 -m http.server 4173"
+    "build": "node scripts/build.mjs && node power-people/scripts/build.mjs",
+    "dev": "npm run build && python3 -m http.server 4173",
+    "build:programa": "node power-people/scripts/build.mjs"
   },
   "engines": {
     "node": ">=20"

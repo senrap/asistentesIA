@@ -1,40 +1,29 @@
 /* ==========================================================================
    Power People 2026 — HACHE Consultora
    Sin dependencias. Todo corre en el navegador del alumno.
+
+   Los datos vienen de assets/contenido.js, que genera scripts/build.mjs a
+   partir de contenido.json. Las grabaciones todavía no liberadas NO llegan
+   hasta acá: el build las deja afuera.
    ========================================================================== */
 
 (function () {
   "use strict";
 
-  /* ------------------------------------------------------------------
-     CONFIG — lo único que hay que tocar para actualizar el programa
-     ------------------------------------------------------------------ */
-  var CONFIG = {
-    nombre: "Power People 2026",
-    // Link fijo de Zoom para todos los encuentros sincrónicos.
-    zoom: "https://us02web.zoom.us/j/84283169271",
-    // Grupo de WhatsApp. Poné la URL de invitación y el botón aparece solo.
-    whatsapp: null,
-    // Inicio y fin del programa (YYYY-MM-DD).
-    inicio: "2026-08-19",
-    fin: "2026-12-02",
-    // Los encuentros son a esta hora de Argentina (GMT-3, sin horario de verano).
-    horaArgentina: 19,
-    duracionHoras: 1
-  };
+  var DATOS = window.PROGRAMA || { programa: {}, semanas: [], generado: "" };
+  var CONFIG = DATOS.programa || {};
+  var SEMANAS = DATOS.semanas || [];
 
   // Argentina no aplica horario de verano: 19:00 ART === 22:00 UTC, siempre.
-  var UTC_HOUR = CONFIG.horaArgentina + 3;
+  var UTC_HOUR = (CONFIG.horaArgentina || 19) + 3;
   var MS_DIA = 86400000;
+  var HOY = new Date().toISOString().slice(0, 10);
 
   var $ = function (sel, ctx) {
     return (ctx || document).querySelector(sel);
   };
-  var $$ = function (sel, ctx) {
-    return Array.prototype.slice.call((ctx || document).querySelectorAll(sel));
-  };
 
-  /** "2026-08-26" -> Date del inicio del encuentro, en UTC. */
+  /** "2026-08-26" -> Date del inicio del encuentro (19 hs ART), en UTC. */
   function fechaEncuentro(iso) {
     var p = iso.split("-");
     return new Date(Date.UTC(+p[0], +p[1] - 1, +p[2], UTC_HOUR, 0, 0));
@@ -44,6 +33,47 @@
   function fechaSimple(iso) {
     var p = iso.split("-");
     return new Date(Date.UTC(+p[0], +p[1] - 1, +p[2]));
+  }
+
+  function fmt(date, opts) {
+    try {
+      return new Intl.DateTimeFormat("es-AR", opts).format(date);
+    } catch (e) {
+      return date.toLocaleString();
+    }
+  }
+
+  function capitalizar(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
+  /** "mié 26 de agosto" */
+  function fechaCorta(iso) {
+    return fmt(fechaSimple(iso), {
+      weekday: "short",
+      day: "numeric",
+      month: "long",
+      timeZone: "UTC"
+    });
+  }
+
+  function diasHasta(iso) {
+    return Math.ceil((fechaSimple(iso) - fechaSimple(HOY)) / MS_DIA);
+  }
+
+  function enDias(dias) {
+    if (dias <= 0) return "hoy";
+    if (dias === 1) return "mañana";
+    if (dias < 7) return "en " + dias + " días";
+    var semanas = Math.round(dias / 7);
+    return "en " + semanas + (semanas === 1 ? " semana" : " semanas");
+  }
+
+  function el(tag, cls, texto) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (texto != null) n.textContent = texto;
+    return n;
   }
 
   /* ------------------------------------------------------------------
@@ -69,13 +99,13 @@
     var barra = $("[data-progress-bar]");
     var relleno = $("[data-progress-fill]");
     var texto = $("[data-progress-week]");
-    if (!barra || !relleno || !texto) return;
+    if (!barra || !relleno || !texto || !CONFIG.inicio) return;
 
     var inicio = fechaSimple(CONFIG.inicio);
     var fin = fechaSimple(CONFIG.fin);
     var ahora = new Date();
 
-    var totalSemanas = Math.round((fin - inicio) / (MS_DIA * 7)) + 1;
+    var totalSemanas = SEMANAS.length || Math.round((fin - inicio) / (MS_DIA * 7)) + 1;
     var transcurrido = ahora - inicio;
     var pct = Math.max(0, Math.min(100, (transcurrido / (fin - inicio)) * 100));
 
@@ -84,37 +114,36 @@
 
     if (ahora < inicio) {
       var faltan = Math.ceil((inicio - ahora) / MS_DIA);
-      texto.textContent =
-        faltan <= 1 ? "Arranca mañana" : "Arranca en " + faltan + " días";
-      barra.setAttribute("aria-valuetext", texto.textContent);
-      return;
-    }
-
-    if (ahora > fin) {
+      texto.textContent = faltan <= 1 ? "Arranca mañana" : "Arranca en " + faltan + " días";
+    } else if (ahora > fin) {
       texto.textContent = "Programa finalizado · ¡Gracias por cursar!";
-      barra.setAttribute("aria-valuetext", texto.textContent);
-      return;
+    } else {
+      var semana = Math.min(totalSemanas, Math.floor(transcurrido / (MS_DIA * 7)) + 1);
+      texto.textContent = "Semana " + semana + " de " + totalSemanas;
     }
-
-    var semana = Math.min(
-      totalSemanas,
-      Math.floor(transcurrido / (MS_DIA * 7)) + 1
-    );
-    texto.textContent = "Semana " + semana + " de " + totalSemanas;
     barra.setAttribute("aria-valuetext", texto.textContent);
+  }
+
+  /** Número de la semana en curso, o null si el programa no arrancó / terminó. */
+  function semanaActual() {
+    for (var i = SEMANAS.length - 1; i >= 0; i--) {
+      if (SEMANAS[i].libera <= HOY) return SEMANAS[i].numero;
+    }
+    return null;
   }
 
   /* ------------------------------------------------------------------
      Encuentros sincrónicos
      ------------------------------------------------------------------ */
-  var items = $$("[data-agenda] li[data-date]");
-  var encuentros = items.map(function (li) {
-    var inicio = fechaEncuentro(li.getAttribute("data-date"));
+  var encuentros = SEMANAS.filter(function (s) {
+    return s.encuentro;
+  }).map(function (s) {
+    var inicio = fechaEncuentro(s.encuentro.fecha);
     return {
-      li: li,
-      iso: li.getAttribute("data-date"),
+      semana: s.numero,
+      iso: s.encuentro.fecha,
       inicio: inicio,
-      fin: new Date(inicio.getTime() + CONFIG.duracionHoras * 3600000)
+      fin: new Date(inicio.getTime() + (CONFIG.duracionHoras || 1) * 3600000)
     };
   });
 
@@ -128,46 +157,38 @@
 
   var enArgentina = new Date().getTimezoneOffset() === 180;
 
-  function fmt(date, opts) {
-    try {
-      return new Intl.DateTimeFormat("es-AR", opts).format(date);
-    } catch (e) {
-      return date.toLocaleString();
-    }
-  }
-
-  function capitalizar(str) {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  }
-
   function pintarAgenda(proximo) {
+    var lista = $("[data-agenda]");
+    if (!lista) return;
+    lista.innerHTML = "";
     var ahora = Date.now();
+
     encuentros.forEach(function (e) {
+      var li = el("li");
+      li.appendChild(el("span", "agenda-date", capitalizar(fechaCorta(e.iso))));
+
       if (e.fin.getTime() <= ahora) {
-        e.li.classList.add("is-past");
-        return;
+        li.classList.add("is-past");
+      } else if (proximo && e === proximo) {
+        li.classList.add("is-next");
+        li.appendChild(el("span", "agenda-tag", "Próximo"));
+      } else if (!enArgentina) {
+        // Fuera de Argentina mostramos la hora local: puede caer otro día.
+        li.appendChild(
+          el(
+            "span",
+            "agenda-local",
+            fmt(e.inicio, {
+              weekday: "short",
+              day: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: false
+            })
+          )
+        );
       }
-      if (proximo && e === proximo) {
-        e.li.classList.add("is-next");
-        var tag = document.createElement("span");
-        tag.className = "agenda-tag";
-        tag.textContent = "Próximo";
-        e.li.appendChild(tag);
-        return;
-      }
-      // Para el resto, si el alumno está fuera de Argentina mostramos su hora local.
-      if (!enArgentina) {
-        var local = document.createElement("span");
-        local.className = "agenda-local";
-        local.textContent = fmt(e.inicio, {
-          weekday: "short",
-          day: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: false
-        });
-        e.li.appendChild(local);
-      }
+      lista.appendChild(li);
     });
   }
 
@@ -191,7 +212,6 @@
       })
     );
 
-    // Hora local del alumno, solo si no está en horario de Argentina.
     if (!enArgentina) {
       var box = $("[data-local-box]");
       var tzEl = $("[data-local-tz]");
@@ -213,11 +233,7 @@
           minute: "2-digit",
           hour12: false
         });
-        var finLocal = fmt(proximo.fin, {
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: false
-        });
+        var finLocal = fmt(proximo.fin, { hour: "2-digit", minute: "2-digit", hour12: false });
         valEl.textContent = capitalizar(inicioLocal) + " a " + finLocal + " hs";
         box.hidden = false;
       }
@@ -230,15 +246,14 @@
   }
 
   function pintarCuenta(proximo) {
-    var el = $("[data-countdown]");
-    if (!el || !proximo) return;
+    var elc = $("[data-countdown]");
+    if (!elc || !proximo) return;
 
-    var ahora = Date.now();
-    var faltan = proximo.inicio.getTime() - ahora;
+    var faltan = proximo.inicio.getTime() - Date.now();
 
     if (faltan <= 0) {
-      el.textContent = "🟢 El encuentro está en curso — entrá cuando quieras.";
-      el.hidden = false;
+      elc.textContent = "🟢 El encuentro está en curso — entrá cuando quieras.";
+      elc.hidden = false;
       return;
     }
 
@@ -247,27 +262,140 @@
     var minutos = Math.floor((faltan % 3600000) / 60000);
 
     if (dias > 0) {
-      el.textContent =
+      elc.textContent =
         "Faltan " + dias + (dias === 1 ? " día" : " días") +
         (horas > 0 ? " y " + horas + (horas === 1 ? " hora" : " horas") : "");
     } else if (horas > 0) {
-      el.textContent = "Faltan " + horas + (horas === 1 ? " hora" : " horas") +
-        " y " + minutos + " min";
+      elc.textContent =
+        "Faltan " + horas + (horas === 1 ? " hora" : " horas") + " y " + minutos + " min";
     } else {
-      el.textContent = "Faltan " + minutos + " min — te esperamos.";
+      elc.textContent = "Faltan " + minutos + " min — te esperamos.";
     }
-    el.hidden = false;
+    elc.hidden = false;
+  }
+
+  /* ------------------------------------------------------------------
+     Ruta del programa: las 16 semanas y sus grabaciones
+     ------------------------------------------------------------------ */
+  var soloDisponibles = false;
+
+  function pintarRuta() {
+    var lista = document.querySelector("[data-ruta]");
+    if (!lista) return;
+
+    var actual = semanaActual();
+    lista.innerHTML = "";
+
+    SEMANAS.forEach(function (s) {
+      // El build puede ser más viejo que hoy: si la fecha ya pasó pero el dato
+      // llegó cerrado, es que todavía no se rebuildeó.
+      var yaEsFecha = s.libera <= HOY;
+      var abierta = s.abierta || false;
+
+      if (soloDisponibles && !(abierta && s.grabacion)) return;
+
+      var li = el("li", "ruta-item");
+      if (abierta && s.grabacion) li.classList.add("is-open");
+      else if (!abierta) li.classList.add("is-locked");
+      if (s.numero === actual) li.classList.add("is-current");
+
+      li.appendChild(
+        el("div", "ruta-num", String(s.numero).padStart(2, "0"))
+      );
+
+      var main = el("div", "ruta-main");
+      var top = el("div", "ruta-top");
+      top.appendChild(el("h3", null, s.titulo || "Semana " + s.numero));
+      if (s.numero === actual) top.appendChild(el("span", "chip chip-now", "Semana actual"));
+      if (s.encuentro) top.appendChild(el("span", "chip chip-live", "Encuentro en vivo"));
+      main.appendChild(top);
+
+      if (s.resumen) main.appendChild(el("p", "ruta-resumen", s.resumen));
+
+      var meta;
+      if (abierta && s.grabacion) {
+        meta = "Disponible desde el " + fechaCorta(s.libera);
+        if (s.duracion) meta += " · " + s.duracion;
+      } else if (abierta || yaEsFecha) {
+        meta = "Se libera el " + fechaCorta(s.libera) + " · subiendo la grabación";
+      } else {
+        meta = "Se libera el " + fechaCorta(s.libera) + " · " + enDias(diasHasta(s.libera));
+      }
+      main.appendChild(el("p", "ruta-meta", meta));
+
+      if (s.material && s.material.length) {
+        var mat = el("div", "ruta-material");
+        mat.appendChild(el("span", "ruta-material-label", "Material"));
+        s.material.forEach(function (m) {
+          var a = el("a", null, m.nombre);
+          a.href = m.url;
+          a.target = "_blank";
+          a.rel = "noopener";
+          mat.appendChild(a);
+        });
+        main.appendChild(mat);
+      }
+
+      li.appendChild(main);
+
+      var acciones = el("div", "ruta-actions");
+      if (abierta && s.grabacion) {
+        var ver = el("a", "btn btn-cta btn-sm", "Ver grabación");
+        ver.href = s.grabacion;
+        ver.target = "_blank";
+        ver.rel = "noopener";
+        acciones.appendChild(ver);
+      } else {
+        var lock = el("span", "lock");
+        lock.innerHTML =
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+          'stroke-linecap="round" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2"/>' +
+          '<path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>';
+        lock.appendChild(
+          el(
+            "span",
+            null,
+            abierta || yaEsFecha ? "En camino" : "Se libera " + enDias(diasHasta(s.libera))
+          )
+        );
+        acciones.appendChild(lock);
+      }
+
+      if (s.encuentro && s.encuentro.abierta && s.encuentro.grabacion) {
+        var verEnc = el("a", "btn btn-outline btn-sm", "Grabación del encuentro");
+        verEnc.href = s.encuentro.grabacion;
+        verEnc.target = "_blank";
+        verEnc.rel = "noopener";
+        acciones.appendChild(verEnc);
+      }
+
+      li.appendChild(acciones);
+      lista.appendChild(li);
+    });
+
+    if (!lista.children.length) {
+      lista.appendChild(
+        el("li", "ruta-vacio", "Todavía no hay grabaciones publicadas. Volvé después del primer encuentro.")
+      );
+    }
+  }
+
+  var toggle = document.querySelector("[data-solo-disponibles]");
+  if (toggle) {
+    toggle.addEventListener("change", function () {
+      soloDisponibles = toggle.checked;
+      pintarRuta();
+    });
   }
 
   /* ------------------------------------------------------------------
      Copiar link de Zoom
      ------------------------------------------------------------------ */
-  var btnCopiar = $("[data-copy-zoom]");
+  var btnCopiar = document.querySelector("[data-copy-zoom]");
   if (btnCopiar) {
     btnCopiar.addEventListener("click", function () {
-      var texto = CONFIG.zoom;
       if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(texto).then(
+        navigator.clipboard.writeText(CONFIG.zoom).then(
           function () {
             toast("Link de Zoom copiado ✓");
           },
@@ -334,15 +462,13 @@
     return lineas.join("\r\n");
   }
 
-  var btnIcs = $("[data-download-ics]");
+  var btnIcs = document.querySelector("[data-download-ics]");
   if (btnIcs) {
     if (!encuentros.length) {
       btnIcs.hidden = true;
     } else {
       btnIcs.addEventListener("click", function () {
-        var blob = new Blob([construirIcs()], {
-          type: "text/calendar;charset=utf-8"
-        });
+        var blob = new Blob([construirIcs()], { type: "text/calendar;charset=utf-8" });
         var url = URL.createObjectURL(blob);
         var a = document.createElement("a");
         a.href = url;
@@ -359,27 +485,32 @@
   }
 
   /* ------------------------------------------------------------------
-     WhatsApp — el botón aparece solo si hay link cargado en CONFIG
+     WhatsApp — el botón aparece solo si hay link cargado
      ------------------------------------------------------------------ */
-  var notaWsp = $("[data-whatsapp-note]");
+  var notaWsp = document.querySelector("[data-whatsapp-note]");
   if (notaWsp && CONFIG.whatsapp) {
     notaWsp.innerHTML = "";
-    var aWsp = document.createElement("a");
+    var aWsp = el("a", null, "Entrar al grupo de WhatsApp →");
     aWsp.href = CONFIG.whatsapp;
     aWsp.target = "_blank";
     aWsp.rel = "noopener";
-    aWsp.textContent = "Entrar al grupo de WhatsApp →";
     notaWsp.appendChild(aWsp);
   }
 
   /* ------------------------------------------------------------------
      Arranque
      ------------------------------------------------------------------ */
-  var zoomLink = $("[data-zoom-link]");
-  if (zoomLink) zoomLink.href = CONFIG.zoom;
+  var zoomLink = document.querySelector("[data-zoom-link]");
+  if (zoomLink && CONFIG.zoom) zoomLink.href = CONFIG.zoom;
+  var zoomTexto = document.querySelector("[data-zoom-text]");
+  if (zoomTexto && CONFIG.zoom) {
+    zoomTexto.href = CONFIG.zoom;
+    zoomTexto.textContent = CONFIG.zoom;
+  }
 
   pintarProgreso();
   var proximo = proximoEncuentro();
   pintarAgenda(proximo);
   pintarProximo(proximo);
+  pintarRuta();
 })();

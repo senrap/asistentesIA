@@ -168,10 +168,31 @@ a:hover {
   color: var(--green);
 }
 
+.btn-outline {
+  background: transparent;
+  color: var(--navy);
+  border: 2px solid var(--navy);
+  padding: 11px 23px;
+}
+
+.btn-outline:hover {
+  background: var(--navy);
+  color: var(--white);
+}
+
 .btn-ghost {
   background: rgba(255, 255, 255, 0.08);
   color: var(--white);
   padding: 12px 20px;
+}
+
+.btn-sm {
+  font-size: 13px;
+  padding: 9px 18px;
+}
+
+.btn-outline.btn-sm {
+  padding: 8px 17px;
 }
 
 .btn-ghost:hover {
@@ -470,6 +491,222 @@ a:hover {
   font-weight: 300;
 }
 
+/* ============ Ruta del programa ============ */
+
+.ruta-head {
+  margin-top: 24px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.ruta-head .section-intro {
+  margin-top: 0;
+}
+
+.switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--navy);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.switch input {
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0;
+  width: 38px;
+  height: 22px;
+  border-radius: 100px;
+  background: var(--light);
+  border: 1px solid var(--light);
+  position: relative;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  flex: none;
+}
+
+.switch input::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--white);
+  box-shadow: 0 1px 3px rgba(0, 52, 77, 0.25);
+  transition: transform 0.15s ease;
+}
+
+.switch input:checked {
+  background: var(--green);
+  border-color: var(--green);
+}
+
+.switch input:checked::after {
+  transform: translateX(16px);
+}
+
+.ruta {
+  list-style: none;
+  margin: 28px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+  counter-reset: none;
+}
+
+.ruta-item {
+  display: grid;
+  grid-template-columns: 46px 1fr auto;
+  align-items: center;
+  gap: 20px;
+  background: var(--white);
+  border: 1px solid var(--light);
+  border-radius: var(--radius-card);
+  padding: 18px 22px;
+}
+
+.ruta-item.is-locked {
+  background: var(--off);
+  border-style: dashed;
+}
+
+.ruta-item.is-current {
+  border-color: var(--green);
+  box-shadow: 0 4px 20px rgba(0, 255, 144, 0.18);
+}
+
+.ruta-num {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--light);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.ruta-item.is-open .ruta-num {
+  color: var(--green-2);
+}
+
+.ruta-item.is-current .ruta-num {
+  color: var(--navy);
+}
+
+.ruta-main {
+  min-width: 0;
+}
+
+.ruta-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.ruta-top h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--navy);
+}
+
+.ruta-item.is-locked .ruta-top h3 {
+  color: var(--gray);
+  font-weight: 500;
+}
+
+.chip {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  border-radius: 100px;
+  padding: 3px 10px;
+  white-space: nowrap;
+}
+
+.chip-live {
+  background: var(--green-bg);
+  color: var(--green-2);
+  border: 1px solid var(--green);
+}
+
+.chip-now {
+  background: var(--navy);
+  color: var(--green);
+}
+
+.ruta-resumen {
+  margin-top: 6px;
+  font-size: 14px;
+  color: var(--gray);
+}
+
+.ruta-meta {
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--gray);
+}
+
+.ruta-material {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 13px;
+}
+
+.ruta-material-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gray);
+}
+
+.ruta-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.lock {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--gray);
+  white-space: nowrap;
+}
+
+.lock svg {
+  width: 14px;
+  height: 14px;
+  flex: none;
+}
+
+.ruta-vacio {
+  list-style: none;
+  padding: 32px;
+  text-align: center;
+  color: var(--gray);
+  font-size: 14px;
+  background: var(--off);
+  border-radius: var(--radius-card);
+}
+
 /* ============ Encuentros ============ */
 
 .meet-layout {
@@ -758,6 +995,26 @@ a:hover {
 
   .meet-actions .btn {
     flex: 1 1 100%;
+  }
+
+  .ruta-item {
+    grid-template-columns: 34px 1fr;
+    row-gap: 12px;
+    padding: 16px 18px;
+  }
+
+  .ruta-num {
+    font-size: 16px;
+    text-align: left;
+  }
+
+  .ruta-actions {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+  }
+
+  .ruta-head {
+    align-items: flex-start;
   }
 }
 

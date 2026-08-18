@@ -1,0 +1,173 @@
+{
+  "programa": {
+    "nombre": "Power People 2026",
+    "inicio": "2026-08-19",
+    "fin": "2026-12-02",
+    "zoom": "https://us02web.zoom.us/j/84283169271",
+    "whatsapp": null,
+    "horaArgentina": 19,
+    "duracionHoras": 1
+  },
+  "semanas": [
+    {
+      "numero": 1,
+      "libera": "2026-08-19",
+      "titulo": "",
+      "duracion": "",
+      "grabacion": "",
+      "material": [],
+      "encuentro": {
+        "libera": "2026-08-20",
+        "grabacion": ""
+      }
+    },
+    {
+      "numero": 2,
+      "libera": "2026-08-26",
+      "titulo": "",
+      "duracion": "",
+      "grabacion": "",
+      "material": []
+    },
+    {
+      "numero": 3,
+      "libera": "2026-09-02",
+      "titulo": "",
+      "duracion": "",
+      "grabacion": "",
+      "material": [],
+      "encuentro": {
+        "libera": "2026-09-03",
+        "grabacion": ""
+      }
+    },
+    {
+      "numero": 4,
+      "libera": "2026-09-09",
+      "titulo": "",
+      "duracion": "",
+      "grabacion": "",
+      "material": []
+    },
+    {
+      "numero": 5,
+      "libera": "2026-09-16",
+      "titulo": "",
+      "duracion": "",
+      "grabacion": "",
+      "material": [],
+      "encuentro": {
+        "libera": "2026-09-17",
+        "grabacion": ""
+      }
+    },
+    {
+      "numero": 6,
+      "libera": "2026-09-23",
+      "titulo": "",
+      "duracion": "",
+      "grabacion": "",
+      "material": []
+    },
+    {
+      "numero": 7,
+      "libera": "2026-09-30",
+      "titulo": "",
+      "duracion": "",
+      "grabacion": "",
+      "material": [],
+      "encuentro": {
+        "libera": "2026-10-01",
+        "grabacion": ""
+      }
+    },
+    {
+      "numero": 8,
+      "libera": "2026-10-07",
+      "titulo": "",
+      "duracion": "",
+      "grabacion": "",
+      "material": []
+    },
+    {
+      "numero": 9,
+      "libera": "2026-10-14",
+      "titulo": "",
+      "duracion": "",
+      "grabacion": "",
+      "material": [],
+      "encuentro": {
+        "libera": "2026-10-15",
+        "grabacion": ""
+      }
+    },
+    {
+      "numero": 10,
+      "libera": "2026-10-21",
+      "titulo": "",
+      "duracion": "",
+      "grabacion": "",
+      "material": []
+    },
+    {
+      "numero": 11,
+      "libera": "2026-10-28",
+      "titulo": "",
+      "duracion": "",
+      "grabacion": "",
+      "material": [],
+      "encuentro": {
+        "libera": "2026-10-29",
+        "grabacion": ""
+      }
+    },
+    {
+      "numero": 12,
+      "libera": "2026-11-04",
+      "titulo": "",
+      "duracion": "",
+      "grabacion": "",
+      "material": []
+    },
+    {
+      "numero": 13,
+      "libera": "2026-11-11",
+      "titulo": "",
+      "duracion": "",
+      "grabacion": "",
+      "material": [],
+      "encuentro": {
+        "libera": "2026-11-12",
+        "grabacion": ""
+      }
+    },
+    {
+      "numero": 14,
+      "libera": "2026-11-18",
+      "titulo": "",
+      "duracion": "",
+      "grabacion": "",
+      "material": []
+    },
+    {
+      "numero": 15,
+      "libera": "2026-11-25",
+      "titulo": "",
+      "duracion": "",
+      "grabacion": "",
+      "material": [],
+      "encuentro": {
+        "libera": "2026-11-26",
+        "grabacion": ""
+      }
+    },
+    {
+      "numero": 16,
+      "libera": "2026-12-02",
+      "titulo": "",
+      "duracion": "",
+      "grabacion": "",
+      "material": []
+    }
+  ]
+}

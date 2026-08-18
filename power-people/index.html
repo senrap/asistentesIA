@@ -42,6 +42,7 @@
         <nav class="header-links" aria-label="Secciones">
           <a href="#bienvenida">Bienvenida</a>
           <a href="#como-se-cursa">Cómo se cursa</a>
+          <a href="#grabaciones">Grabaciones</a>
           <a href="#encuentros">Encuentros</a>
           <a href="#dudas">Dudas</a>
         </nav>
@@ -192,8 +193,36 @@
         </div>
       </section>
 
+      <!-- ============ RUTA DEL PROGRAMA ============ -->
+      <section class="section" id="grabaciones">
+        <div class="wrap">
+          <p class="section-label">Contenido</p>
+          <h2>Ruta del programa</h2>
+          <span class="accent-line" aria-hidden="true"></span>
+
+          <div class="ruta-head">
+            <p class="section-intro">
+              Cada miércoles se libera la grabación de la semana. Las semanas con encuentro en
+              vivo suman después la grabación de la sesión de consultas.
+            </p>
+            <label class="switch">
+              <input type="checkbox" data-solo-disponibles />
+              <span>Ver solo lo disponible</span>
+            </label>
+          </div>
+
+          <ol class="ruta" data-ruta></ol>
+          <noscript>
+            <p class="ruta-vacio">
+              El calendario de grabaciones necesita JavaScript. Escribinos por WhatsApp y te
+              pasamos los links a mano.
+            </p>
+          </noscript>
+        </div>
+      </section>
+
       <!-- ============ ENCUENTROS SINCRÓNICOS ============ -->
-      <section class="section" id="encuentros">
+      <section class="section section-alt" id="encuentros">
         <div class="wrap">
           <p class="section-label">En vivo</p>
           <h2>Encuentros sincrónicos de consultas</h2>
@@ -233,7 +262,12 @@
 
               <p class="zoom-url">
                 <span class="zoom-url-label">Link fijo, siempre el mismo:</span>
-                <a href="https://us02web.zoom.us/j/84283169271" target="_blank" rel="noopener">
+                <a
+                  href="https://us02web.zoom.us/j/84283169271"
+                  target="_blank"
+                  rel="noopener"
+                  data-zoom-text
+                >
                   https://us02web.zoom.us/j/84283169271
                 </a>
               </p>
@@ -243,23 +277,14 @@
             <div class="agenda">
               <h3>Todas las fechas</h3>
               <p class="agenda-note">Miércoles, 19 a 20 hs GMT-3.</p>
-              <ol class="agenda-list" data-agenda>
-                <li data-date="2026-08-26"><span class="agenda-date">mié 26 ago</span></li>
-                <li data-date="2026-09-09"><span class="agenda-date">mié 9 sep</span></li>
-                <li data-date="2026-09-23"><span class="agenda-date">mié 23 sep</span></li>
-                <li data-date="2026-10-07"><span class="agenda-date">mié 7 oct</span></li>
-                <li data-date="2026-10-21"><span class="agenda-date">mié 21 oct</span></li>
-                <li data-date="2026-11-04"><span class="agenda-date">mié 4 nov</span></li>
-                <li data-date="2026-11-18"><span class="agenda-date">mié 18 nov</span></li>
-                <li data-date="2026-12-02"><span class="agenda-date">mié 2 dic</span></li>
-              </ol>
+              <ol class="agenda-list" data-agenda></ol>
             </div>
           </div>
         </div>
       </section>
 
       <!-- ============ DUDAS ============ -->
-      <section class="section section-alt" id="dudas">
+      <section class="section" id="dudas">
         <div class="wrap">
           <p class="section-label">Soporte</p>
           <h2>¿Te trabaste con algo?</h2>
@@ -321,6 +346,7 @@
 
     <div class="toast" data-toast role="status" aria-live="polite"></div>
 
+    <script src="assets/contenido.js"></script>
     <script src="assets/programa.js"></script>
   </body>
 </html>
