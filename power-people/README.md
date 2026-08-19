@@ -117,3 +117,28 @@ construyen en UTC y se formatean con `Intl` en la zona del navegador.
 ```bash
 npm run dev    # buildea y sirve en http://localhost:4173/power-people/
 ```
+
+## Publicar en Netlify
+
+El sitio tiene su propio proyecto: **power-people-2026**
+(`https://app.netlify.com/projects/power-people-2026`).
+
+Se conecta al repo desde la UI de Netlify, con:
+
+| Campo | Valor |
+|---|---|
+| Repositorio | `senrap/asistentesIA` |
+| Base directory | `power-people` |
+| Build command | `node scripts/build.mjs` (lo toma solo de `power-people/netlify.toml`) |
+| Publish directory | `.` (idem) |
+
+Con **Base directory** en `power-people`, Netlify lee `power-people/netlify.toml` en vez del de la
+raíz y publica esta carpeta como raíz del sitio: el programa queda en `/`, no en `/power-people/`.
+El `netlify.toml` de la raíz sigue siendo el de la Biblioteca de Asistentes, que se despliega en su
+propio proyecto sin tocar este.
+
+Una vez conectado, cada push a la rama configurada redeploya solo. El contenido del programa no
+necesita deploy: sale del Sheet en vivo.
+
+Si el build no consigue leer el Sheet (todavía no es público, por ejemplo) no falla: avisa y
+conserva la copia de respaldo que ya estaba commiteada.

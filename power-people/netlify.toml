@@ -1,0 +1,25 @@
+# Config del sitio del programa, para cuando Netlify lo despliega con
+# "Base directory: power-people". Con esa base, Netlify lee este archivo en vez
+# del netlify.toml de la raíz, y publica esta carpeta como raíz del sitio.
+#
+# El de la raíz sigue siendo el de la Biblioteca de Asistentes.
+
+[build]
+  command = "node scripts/build.mjs"
+  publish = "."
+
+[build.environment]
+  NODE_VERSION = "20"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Los assets los regenera cada build y el contenido sale del Sheet en vivo,
+# así que no conviene cachearlos mucho.
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=300"
