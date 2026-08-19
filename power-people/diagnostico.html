@@ -199,10 +199,35 @@
               var semanas = S.aplicarBloqueo(S.mapearSemanas(S.aObjetos(filas)), new Date());
               var facil = S.mapearFacilitadores(S.aObjetos(S.parseCsv(hojas[CFG.sheet.hojaFacilitadores].texto)));
               var abiertas = semanas.filter(function (s) { return s.abierta; });
+              var cabeceras = filas[0] || [];
+
+              // Leer la planilla no alcanza: si ninguna fila tiene fecha válida,
+              // el sitio no puede armar el programa y cae al respaldo igual.
+              if (!semanas.length) {
+                $("veredicto").innerHTML =
+                  '<div class="veredicto mal"><h3>⚠️ Lee la planilla, pero no entiende las filas</h3>' +
+                  "<p>Google devuelve el CSV sin problema, pero ninguna fila tiene una fecha " +
+                  "válida en la columna <code>Fecha</code>, así que el sitio no puede armar el " +
+                  "programa y cae a la copia guardada.</p>" +
+                  "<p>Columnas que encontró en la fila 1:</p><pre>" +
+                  esc(cabeceras.join("  |  ")) + "</pre>" +
+                  "<p><strong>Revisá:</strong></p><ol>" +
+                  "<li>Que la primera fila de la hoja sean los encabezados, sin ninguna fila " +
+                  "de título arriba.</li>" +
+                  "<li>Que exista una columna llamada <code>Fecha</code>.</li>" +
+                  "<li>Que las fechas estén como <code>AAAA-MM-DD</code> o <code>D/M/AAAA</code>.</li>" +
+                  "</ol></div>";
+                $("datos").innerHTML =
+                  "<p>Primeras filas tal como llegaron:</p><pre>" +
+                  esc(filas.slice(0, 4).map(function (f) { return f.join(" | "); }).join("\n")) +
+                  "</pre>";
+                return;
+              }
 
               $("veredicto").innerHTML =
                 '<div class="veredicto"><h3>✅ El sitio está leyendo la planilla</h3>' +
-                "<p>Si aun así no ves un cambio que hiciste, es caché del navegador: " +
+                "<p>Se entendieron <strong>" + semanas.length + " semanas</strong>. " +
+                "Si aun así no ves un cambio que hiciste, es caché del navegador: " +
                 "recargá con <code>Ctrl+Shift+R</code> (o <code>Cmd+Shift+R</code>).</p></div>";
 
               $("datos").innerHTML =
@@ -215,7 +240,9 @@
                 semanas.filter(function (s) { return s.sesion; }).length + "</td></tr>" +
                 "<tr><td>Facilitadores</td><td>" +
                 facil.map(function (f) { return esc(f.modulo + ": " + f.nombre); }).join(" · ") +
-                "</td></tr></table>" +
+                "</td></tr>" +
+                "<tr><td>Columnas leídas</td><td>" + esc(cabeceras.join(", ")) + "</td></tr>" +
+                "</table>" +
                 "<pre>" +
                 semanas
                   .map(function (s) {

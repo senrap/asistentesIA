@@ -1,6 +1,6 @@
 /* Copia de respaldo del Google Sheet — no editar a mano.
    El sitio la usa solo si no consigue leer la planilla en vivo.
-   Generada el 2026-08-19T02:52:06.127Z desde fixtures/ (--local).
+   Generada el 2026-08-19T02:58:29.417Z desde fixtures/ (--local).
    Las grabaciones posteriores a ese momento no están acá. */
 window.PROGRAMA = {
   "programa": {
@@ -12,7 +12,7 @@ window.PROGRAMA = {
     "horaArgentina": 19,
     "duracionHoras": 1
   },
-  "generado": "2026-08-19T02:52:06.127Z",
+  "generado": "2026-08-19T02:58:29.417Z",
   "semanas": [
     {
       "numero": 1,

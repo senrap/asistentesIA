@@ -17,7 +17,7 @@
 
   var MS_DIA = 86400000;
   var HOY = new Date().toISOString().slice(0, 10);
-  var TIMEOUT_SHEET = 8000;
+  var TIMEOUT_SHEET = 20000;
 
   var $ = function (sel) {
     return document.querySelector(sel);
@@ -212,22 +212,46 @@
     return siguiente();
   }
 
+  /**
+   * Las dos hojas se piden una después de la otra, no en paralelo: pedirle dos
+   * cosas a la vez a Google desde el mismo cliente hace que a veces una de las
+   * dos vuelva redirigida, y antes eso tiraba abajo la carga entera.
+   *
+   * Y el fallo es por hoja, no total. Si Contenido se lee pero Facilitadores
+   * no, mostramos el programa igual y usamos los facilitadores del respaldo:
+   * que falte una bio no justifica mandar al alumno a la copia vieja.
+   */
   function cargar() {
     if (!S || !CFG.sheet || !CFG.sheet.id) return Promise.reject(new Error("sin config"));
-    return Promise.all([
-      traerHoja(CFG.sheet.hojaContenido),
-      traerHoja(CFG.sheet.hojaFacilitadores)
-    ]).then(function (csvs) {
-      var semanas = S.aplicarBloqueo(
-        S.mapearSemanas(S.aObjetos(S.parseCsv(csvs[0]))),
-        new Date()
-      );
-      if (!semanas.length) throw new Error("la hoja de contenido está vacía");
-      return {
-        semanas: semanas,
-        facilitadores: S.mapearFacilitadores(S.aObjetos(S.parseCsv(csvs[1])))
-      };
-    });
+
+    return traerHoja(CFG.sheet.hojaContenido)
+      .then(function (csv) {
+        var filas = S.parseCsv(csv);
+        var semanas = S.aplicarBloqueo(S.mapearSemanas(S.aObjetos(filas)), new Date());
+
+        if (!semanas.length) {
+          var cabeceras = (filas[0] || []).join(", ");
+          throw new Error(
+            "leí la planilla pero ninguna fila tiene una fecha válida en la columna Fecha. " +
+              "Columnas encontradas: " + cabeceras
+          );
+        }
+        return semanas;
+      })
+      .then(function (semanas) {
+        return traerHoja(CFG.sheet.hojaFacilitadores).then(
+          function (csv) {
+            return {
+              semanas: semanas,
+              facilitadores: S.mapearFacilitadores(S.aObjetos(S.parseCsv(csv)))
+            };
+          },
+          function (e) {
+            DIAG.push("facilitadores: se usa el respaldo (" + e.message + ")");
+            return { semanas: semanas, facilitadores: RESPALDO.facilitadores || [] };
+          }
+        );
+      });
   }
 
   /* ------------------------------------------------------------------
@@ -767,6 +791,8 @@
   /* ------------------------------------------------------------------
      Arranque
      ------------------------------------------------------------------ */
+  var MOTIVO = "";
+
   function render(fuente) {
     pintarEnlacesFijos();
     pintarProgreso();
@@ -782,7 +808,8 @@
         aviso.classList.add("es-alerta");
         aviso.textContent =
           "No pudimos leer la planilla del programa: estás viendo la última copia guardada. " +
-          "Si falta contenido, recargá en un rato.";
+          "Si falta contenido, recargá en un rato." +
+          (debug && MOTIVO ? " · Motivo: " + MOTIVO : "");
         aviso.hidden = false;
       } else if (debug) {
         aviso.classList.remove("es-alerta");
@@ -807,6 +834,7 @@
       render("sheet");
     })
     .catch(function (e) {
+      MOTIVO = e.message;
       DATOS = { semanas: RESPALDO.semanas || [], facilitadores: RESPALDO.facilitadores || [] };
       if (window.console) {
         console.warn("[Power People] No se pudo leer el Sheet:", e.message);
