@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Diagnóstico · Power People 2026</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --navy: #00344d;
+        --green: #00ff90;
+        --green-2: #00cc72;
+        --off: #f4f5f7;
+        --gray: #6b7280;
+        --light: #e8edf2;
+        --rojo: #b3261e;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        padding: 40px 24px 80px;
+        font-family: "Poppins", system-ui, sans-serif;
+        color: var(--navy);
+        background: #fff;
+        line-height: 1.6;
+      }
+      .wrap { max-width: 860px; margin: 0 auto; }
+      h1 { font-size: 28px; font-weight: 800; margin: 0 0 6px; }
+      .sub { color: var(--gray); font-size: 14px; margin: 0 0 28px; font-weight: 300; }
+      h2 {
+        font-size: 12px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
+        color: var(--gray); margin: 32px 0 12px;
+      }
+      .caso {
+        border: 1px solid var(--light); border-radius: 12px; padding: 16px 18px;
+        margin-bottom: 10px; background: #fff;
+      }
+      .caso.ok { border-color: var(--green); background: #e6fff3; }
+      .caso.mal { border-color: #f2c7c4; background: #fdf3f2; }
+      .caso-top { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+      .pill {
+        font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+        border-radius: 100px; padding: 2px 10px; background: var(--light); color: var(--gray);
+      }
+      .ok .pill { background: var(--navy); color: var(--green); }
+      .mal .pill { background: var(--rojo); color: #fff; }
+      .nombre { font-weight: 600; font-size: 15px; }
+      .detalle { font-size: 13px; color: var(--gray); margin-top: 6px; word-break: break-all; }
+      code {
+        background: var(--off); border-radius: 4px; padding: 1px 6px;
+        font-size: 12px; font-family: ui-monospace, monospace;
+      }
+      pre {
+        background: var(--navy); color: #cfe8f0; border-radius: 8px; padding: 14px 16px;
+        overflow-x: auto; font-size: 12px; line-height: 1.5; margin: 8px 0 0;
+      }
+      .veredicto {
+        border-left: 4px solid var(--green); background: var(--off);
+        padding: 18px 22px; border-radius: 0 12px 12px 0; margin: 12px 0 0;
+      }
+      .veredicto.mal { border-left-color: var(--rojo); }
+      .veredicto h3 { margin: 0 0 8px; font-size: 17px; }
+      .veredicto p { margin: 0 0 8px; font-size: 15px; }
+      .veredicto ol { margin: 8px 0 0; padding-left: 20px; font-size: 15px; }
+      .veredicto li { margin-bottom: 6px; }
+      a { color: var(--green-2); }
+      table { border-collapse: collapse; width: 100%; font-size: 13px; margin-top: 8px; }
+      th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--light); }
+      th { font-weight: 600; color: var(--gray); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+      .volver { display: inline-block; margin-top: 32px; font-size: 14px; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Diagnóstico del contenido</h1>
+      <p class="sub">
+        Esta página prueba si el sitio puede leer el Google Sheet y te dice qué corregir.
+        No es parte del programa: no la compartas con los alumnos.
+      </p>
+
+      <div id="veredicto"></div>
+
+      <h2>Configuración que está usando el sitio</h2>
+      <div id="config"></div>
+
+      <h2>Pruebas contra Google</h2>
+      <div id="pruebas">Probando…</div>
+
+      <h2>Qué se leyó</h2>
+      <div id="datos">—</div>
+
+      <a class="volver" href="./">← Volver al sitio</a>
+    </div>
+
+    <script src="assets/config.js"></script>
+    <script src="assets/sheet.js"></script>
+    <script>
+      (function () {
+        "use strict";
+        var S = window.PPSheet;
+        var CFG = window.PPCONFIG || {};
+        var $ = function (id) { return document.getElementById(id); };
+
+        function esc(s) {
+          return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+
+        if (!S || !CFG.sheet) {
+          $("veredicto").innerHTML =
+            '<div class="veredicto mal"><h3>No cargaron los archivos del sitio</h3>' +
+            "<p>Falta <code>assets/config.js</code> o <code>assets/sheet.js</code>. " +
+            "Suele significar que el deploy no corrió el build.</p></div>";
+          return;
+        }
+
+        $("config").innerHTML =
+          "<table><tr><th>Dato</th><th>Valor</th></tr>" +
+          "<tr><td>ID de la planilla</td><td><code>" + esc(CFG.sheet.id) + "</code></td></tr>" +
+          "<tr><td>Hoja de contenido</td><td><code>" + esc(CFG.sheet.hojaContenido) + "</code></td></tr>" +
+          "<tr><td>Hoja de facilitadores</td><td><code>" + esc(CFG.sheet.hojaFacilitadores) + "</code></td></tr>" +
+          "<tr><td>Respaldo generado</td><td>" +
+          esc((window.PROGRAMA && window.PROGRAMA.generado) || "sin respaldo") +
+          "</td></tr></table>";
+
+        var resultados = [];
+
+        function probar(hoja) {
+          var urls = S.urlsHoja(CFG.sheet, hoja);
+          var cadena = Promise.resolve();
+          urls.forEach(function (url, i) {
+            cadena = cadena.then(function () {
+              var t0 = Date.now();
+              return fetch(url, { cache: "no-store" }).then(
+                function (res) {
+                  return res.text().then(function (txt) {
+                    var csv = S.pareceCsv(txt);
+                    resultados.push({
+                      hoja: hoja,
+                      n: i + 1,
+                      url: url,
+                      ok: res.ok && csv,
+                      estado: "HTTP " + res.status + (csv ? " · CSV" : " · no es CSV"),
+                      ms: Date.now() - t0,
+                      muestra: txt.slice(0, 140),
+                      texto: csv ? txt : null
+                    });
+                    pintar();
+                  });
+                },
+                function (e) {
+                  resultados.push({
+                    hoja: hoja,
+                    n: i + 1,
+                    url: url,
+                    ok: false,
+                    estado: "no respondió — " + (e && e.name === "AbortError" ? "timeout" : "bloqueado por CORS o sin red"),
+                    ms: Date.now() - t0,
+                    muestra: "",
+                    texto: null
+                  });
+                  pintar();
+                }
+              );
+            });
+          });
+          return cadena;
+        }
+
+        function pintar() {
+          $("pruebas").innerHTML = resultados
+            .map(function (r) {
+              return (
+                '<div class="caso ' + (r.ok ? "ok" : "mal") + '">' +
+                '<div class="caso-top"><span class="pill">' + (r.ok ? "anda" : "falla") + "</span>" +
+                '<span class="nombre">' + esc(r.hoja) + " · endpoint " + r.n + "</span>" +
+                '<span class="detalle" style="margin:0">' + esc(r.estado) + " · " + r.ms + " ms</span></div>" +
+                '<div class="detalle">' + esc(r.url.replace(/&_cb=\d+/, "")) + "</div>" +
+                (r.ok || !r.muestra ? "" : "<pre>" + esc(r.muestra) + "</pre>") +
+                "</div>"
+              );
+            })
+            .join("");
+        }
+
+        probar(CFG.sheet.hojaContenido)
+          .then(function () { return probar(CFG.sheet.hojaFacilitadores); })
+          .then(function () {
+            var buenos = resultados.filter(function (r) { return r.ok; });
+            var hojas = {};
+            buenos.forEach(function (r) { if (!hojas[r.hoja]) hojas[r.hoja] = r; });
+            var completo = hojas[CFG.sheet.hojaContenido] && hojas[CFG.sheet.hojaFacilitadores];
+
+            if (completo) {
+              var filas = S.parseCsv(hojas[CFG.sheet.hojaContenido].texto);
+              var semanas = S.aplicarBloqueo(S.mapearSemanas(S.aObjetos(filas)), new Date());
+              var facil = S.mapearFacilitadores(S.aObjetos(S.parseCsv(hojas[CFG.sheet.hojaFacilitadores].texto)));
+              var abiertas = semanas.filter(function (s) { return s.abierta; });
+
+              $("veredicto").innerHTML =
+                '<div class="veredicto"><h3>✅ El sitio está leyendo la planilla</h3>' +
+                "<p>Si aun así no ves un cambio que hiciste, es caché del navegador: " +
+                "recargá con <code>Ctrl+Shift+R</code> (o <code>Cmd+Shift+R</code>).</p></div>";
+
+              $("datos").innerHTML =
+                "<table><tr><th>Qué</th><th>Cuánto</th></tr>" +
+                "<tr><td>Semanas con fecha válida</td><td>" + semanas.length + "</td></tr>" +
+                "<tr><td>Semanas ya liberadas</td><td>" + abiertas.length + "</td></tr>" +
+                "<tr><td>Semanas con grabación</td><td>" +
+                semanas.filter(function (s) { return s.videos.length; }).length + "</td></tr>" +
+                "<tr><td>Encuentros sincrónicos</td><td>" +
+                semanas.filter(function (s) { return s.sesion; }).length + "</td></tr>" +
+                "<tr><td>Facilitadores</td><td>" +
+                facil.map(function (f) { return esc(f.modulo + ": " + f.nombre); }).join(" · ") +
+                "</td></tr></table>" +
+                "<pre>" +
+                semanas
+                  .map(function (s) {
+                    return (
+                      String(s.numero).padStart(2, "0") + "  " + s.fecha + " " + s.hora +
+                      "  " + (s.abierta ? "abierta " : "cerrada ") +
+                      (s.videos.length ? s.videos.length + " video(s) " : "sin video ") +
+                      (s.texto ? "con texto " : "") +
+                      (s.archivos.length ? s.archivos.length + " archivo(s) " : "") +
+                      " · " + esc(s.titulo || s.etiqueta)
+                    );
+                  })
+                  .join("\n") +
+                "</pre>";
+              return;
+            }
+
+            var todoCors = resultados.every(function (r) { return !r.ok; });
+            $("veredicto").innerHTML =
+              '<div class="veredicto mal"><h3>❌ El sitio no puede leer la planilla</h3>' +
+              "<p>Por eso ves el contenido viejo: está usando la copia de respaldo guardada " +
+              "en el último deploy.</p>" +
+              "<p><strong>Probá en este orden:</strong></p><ol>" +
+              "<li>Abrí la planilla → <strong>Compartir</strong> → " +
+              "<em>Acceso general</em> en <strong>Cualquier persona con el enlace · Lector</strong>.</li>" +
+              "<li>Si ya está así: <strong>Archivo → Compartir → Publicar en la Web</strong>, " +
+              'elegí <em>Documento completo</em> y <em>CSV</em>, y publicá. Copiá el link que te da ' +
+              "y pasámelo: tiene un id distinto (<code>2PACX-…</code>) que hay que poner en la config.</li>" +
+              "<li>Revisá que las hojas se sigan llamando <code>" + esc(CFG.sheet.hojaContenido) +
+              "</code> y <code>" + esc(CFG.sheet.hojaFacilitadores) + "</code>.</li>" +
+              (todoCors
+                ? "<li>Si estás en una red corporativa, probá desde otra red: puede estar " +
+                  "bloqueando <code>docs.google.com</code>.</li>"
+                : "") +
+              "</ol></div>";
+          });
+      })();
+    </script>
+  </body>
+</html>

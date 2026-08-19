@@ -20,7 +20,8 @@ import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
-  urlHoja,
+  urlsHoja,
+  pareceCsv,
   parseCsv,
   aObjetos,
   mapearSemanas,
@@ -82,17 +83,26 @@ async function leerHoja(hoja, fixture) {
     if (!existsSync(ruta)) throw new Error(`falta fixtures/${fixture}`);
     return readFileSync(ruta, 'utf8');
   }
-  const res = await fetch(urlHoja(cfg.sheet.id, hoja), { redirect: 'follow' });
-  if (!res.ok) throw new Error(`${hoja}: HTTP ${res.status}`);
-  const texto = await res.text();
-  // Si la planilla no es pública, Google devuelve el HTML del login con un 200.
-  if (/^\s*</.test(texto)) {
-    throw new Error(
-      `${hoja}: Google devolvió HTML en vez de CSV. ` +
-        `Revisá que la planilla esté compartida como "cualquiera con el enlace".`
-    );
+  let ultimo = 'sin endpoints';
+  for (const url of urlsHoja(cfg.sheet, hoja)) {
+    try {
+      const res = await fetch(url, { redirect: 'follow' });
+      if (!res.ok) {
+        ultimo = `HTTP ${res.status}`;
+        continue;
+      }
+      const texto = await res.text();
+      // Si la planilla no es pública, Google devuelve el HTML del login con un 200.
+      if (!pareceCsv(texto)) {
+        ultimo = 'Google devolvió HTML en vez de CSV (¿la planilla no es pública?)';
+        continue;
+      }
+      return texto;
+    } catch (e) {
+      ultimo = e.message;
+    }
   }
-  return texto;
+  throw new Error(`${hoja}: ${ultimo}`);
 }
 
 function respaldoPrevio() {

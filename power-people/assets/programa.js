@@ -158,23 +158,58 @@
   /* ------------------------------------------------------------------
      Traer el Sheet
      ------------------------------------------------------------------ */
-  function traerHoja(hoja) {
+  var DIAG = [];
+
+  function traerUrl(url) {
     var ctrl = typeof AbortController !== "undefined" ? new AbortController() : null;
     var t = setTimeout(function () {
       if (ctrl) ctrl.abort();
     }, TIMEOUT_SHEET);
 
-    return fetch(S.urlHoja(CFG.sheet.id, hoja), ctrl ? { signal: ctrl.signal } : {})
-      .then(function (res) {
+    var opciones = { cache: "no-store" };
+    if (ctrl) opciones.signal = ctrl.signal;
+
+    return fetch(url, opciones).then(
+      function (res) {
         clearTimeout(t);
         if (!res.ok) throw new Error("HTTP " + res.status);
         return res.text();
-      })
-      .then(function (txt) {
-        // Si la planilla no es pública, Google responde el HTML del login.
-        if (/^\s*</.test(txt)) throw new Error("la planilla no es pública");
-        return txt;
-      });
+      },
+      function (e) {
+        clearTimeout(t);
+        // Un fetch que falla sin status casi siempre es CORS o red.
+        throw new Error(e && e.name === "AbortError" ? "timeout" : "red/CORS");
+      }
+    );
+  }
+
+  /** Prueba las URLs candidatas y devuelve el CSV de la primera que sirva. */
+  function traerHoja(hoja) {
+    var urls = S.urlsHoja(CFG.sheet, hoja);
+    var i = -1;
+
+    function siguiente(motivoPrevio) {
+      i++;
+      if (i >= urls.length) {
+        return Promise.reject(new Error(hoja + ": " + (motivoPrevio || "sin endpoints")));
+      }
+      return traerUrl(urls[i]).then(
+        function (txt) {
+          if (!S.pareceCsv(txt)) {
+            DIAG.push(hoja + " · endpoint " + (i + 1) + ": no devolvió CSV");
+            return siguiente("Google no devolvió CSV (¿la planilla no es pública?)");
+          }
+          DIAG.push(hoja + " · endpoint " + (i + 1) + ": OK");
+          return txt;
+        },
+        function (e) {
+          DIAG.push(hoja + " · endpoint " + (i + 1) + ": " + e.message);
+          return siguiente(e.message);
+        }
+      );
+    }
+
+    return siguiente();
   }
 
   function cargar() {
@@ -740,14 +775,29 @@
     pintarFacilitador();
 
     var aviso = $("[data-fuente]");
+    var debug = /[?&]debug\b/.test(location.search);
+
     if (aviso) {
       if (fuente === "respaldo") {
+        aviso.classList.add("es-alerta");
         aviso.textContent =
-          "Mostrando la última copia guardada del contenido. Si algo falta, recargá en un rato.";
+          "No pudimos leer la planilla del programa: estás viendo la última copia guardada. " +
+          "Si falta contenido, recargá en un rato.";
+        aviso.hidden = false;
+      } else if (debug) {
+        aviso.classList.remove("es-alerta");
+        aviso.textContent = "Leyendo la planilla en vivo · " + DIAG.join(" · ");
         aviso.hidden = false;
       } else {
         aviso.hidden = true;
       }
+    }
+
+    if (debug && window.console) {
+      console.log("[Power People] fuente:", fuente);
+      DIAG.forEach(function (d) {
+        console.log("[Power People]", d);
+      });
     }
   }
 
@@ -758,7 +808,12 @@
     })
     .catch(function (e) {
       DATOS = { semanas: RESPALDO.semanas || [], facilitadores: RESPALDO.facilitadores || [] };
-      if (window.console) console.warn("No se pudo leer el Sheet:", e.message);
+      if (window.console) {
+        console.warn("[Power People] No se pudo leer el Sheet:", e.message);
+        DIAG.forEach(function (d) {
+          console.warn("[Power People]", d);
+        });
+      }
       render("respaldo");
     });
 })();

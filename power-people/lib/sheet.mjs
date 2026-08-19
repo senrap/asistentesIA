@@ -6,14 +6,57 @@
    scripts/build.mjs lo empaqueta a assets/sheet.js para el navegador.
    ========================================================================== */
 
-/** URL del CSV de una hoja de un Sheet publicado como "cualquiera con el enlace". */
-export function urlHoja(id, hoja) {
-  return (
-    'https://docs.google.com/spreadsheets/d/' +
-    id +
-    '/gviz/tq?tqx=out:csv&sheet=' +
-    encodeURIComponent(hoja)
+/**
+ * URLs candidatas para leer una hoja como CSV, en orden de preferencia.
+ *
+ * Google expone varios endpoints y no todos responden igual según cómo esté
+ * compartida la planilla, así que probamos en orden y nos quedamos con el
+ * primero que devuelva CSV de verdad.
+ *
+ *  1. "Publicar en la web" (/d/e/.../pub). Es el más confiable para acceso
+ *     anónimo desde el navegador, pero necesita el id de publicación y el gid
+ *     de cada hoja. Solo se usa si están en la config.
+ *  2. gviz. Alcanza con "cualquiera con el enlace" y con el nombre de la hoja.
+ *  3. /export. Necesita el gid; queda como último recurso.
+ *
+ * El parámetro _cb evita que el navegador o Google sirvan una copia cacheada:
+ * sin él, un cambio recién hecho en la planilla puede tardar en aparecer.
+ */
+export function urlsHoja(sheet, hoja) {
+  var urls = [];
+  var cb = '&_cb=' + Date.now();
+  var gid = sheet.gids && sheet.gids[hoja];
+
+  if (sheet.pubId && gid != null) {
+    urls.push(
+      'https://docs.google.com/spreadsheets/d/e/' + sheet.pubId +
+        '/pub?gid=' + gid + '&single=true&output=csv' + cb
+    );
+  }
+
+  urls.push(
+    'https://docs.google.com/spreadsheets/d/' + sheet.id +
+      '/gviz/tq?tqx=out:csv&headers=1&sheet=' + encodeURIComponent(hoja) + cb
   );
+
+  if (gid != null) {
+    urls.push(
+      'https://docs.google.com/spreadsheets/d/' + sheet.id +
+        '/export?format=csv&gid=' + gid + cb
+    );
+  }
+
+  return urls;
+}
+
+/** true si la respuesta es CSV y no la página de login o de error de Google. */
+export function pareceCsv(texto) {
+  if (!texto) return false;
+  var t = texto.replace(/^\ufeff/, '').trimStart();
+  if (t.charAt(0) === '<') return false;
+  // gviz devuelve los errores como una llamada a google.visualization.
+  if (/^\/\*O_o\*\//.test(t) || /google\.visualization/.test(t.slice(0, 200))) return false;
+  return true;
 }
 
 /**

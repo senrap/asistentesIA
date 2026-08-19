@@ -142,3 +142,35 @@ necesita deploy: sale del Sheet en vivo.
 
 Si el build no consigue leer el Sheet (todavía no es público, por ejemplo) no falla: avisa y
 conserva la copia de respaldo que ya estaba commiteada.
+
+## Diagnóstico
+
+`/diagnostico.html` prueba en vivo si el sitio puede leer la planilla y muestra qué endpoint
+funcionó, qué devolvió Google y qué se llegó a parsear. Es la primera parada cuando el contenido
+no se actualiza. No está enlazada desde el sitio: es una herramienta interna.
+
+El sitio principal también acepta `?debug` en la URL: muestra la fuente que usó y el resultado de
+cada endpoint bajo la barra de progreso, y lo escribe en la consola.
+
+### Si el contenido no se actualiza
+
+1. Abrí `/diagnostico.html`. El veredicto de arriba dice si lee la planilla o está usando el
+   respaldo.
+2. Si **no la lee**: revisá que el Sheet esté compartido como *Cualquier persona con el enlace ·
+   Lector*. Si ya lo está, usá **Archivo → Compartir → Publicar en la Web** (CSV) y sumá a
+   `config.json` el `pubId` y los `gids` de cada hoja — el sitio prefiere ese endpoint, que es el
+   más confiable para acceso anónimo.
+3. Si **sí la lee** y aun así ves contenido viejo: es caché del navegador. `Ctrl+Shift+R`.
+   Las peticiones al Sheet ya van con `cache: no-store` y un parámetro anti-caché.
+
+### Config opcional para el endpoint publicado
+
+```json
+"sheet": {
+  "id": "…",
+  "pubId": "2PACX-…",
+  "gids": { "Contenido": "0", "Facilitadores": "123456" },
+  "hojaContenido": "Contenido",
+  "hojaFacilitadores": "Facilitadores"
+}
+```

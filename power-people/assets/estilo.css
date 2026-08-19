@@ -1178,6 +1178,12 @@ a:hover {
   padding-left: 10px;
 }
 
+.fuente-aviso.es-alerta {
+  font-weight: 400;
+  color: #b3261e;
+  border-left-color: #b3261e;
+}
+
 .next-host {
   margin-top: 4px;
   font-size: 13px;
