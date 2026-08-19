@@ -69,7 +69,9 @@ Tiene tres hojas. La de **Instrucciones** explica cada columna dentro de la prop
 | `Sesión Online` | Número del encuentro. Vacío = esa semana no hay. |
 | `Link Sesión` | Grabación del encuentro, cuando la subas. |
 | `Texto` | Markdown: `**negrita**`, `- listas`, `## títulos`, links. |
-| `Archivo 1/2/3` | Material. `Nombre \| https://drive.google.com/...` |
+| `Archivo 1` | Material descargable. Pegá el link, o `Nombre \| https://drive.google.com/...` |
+| `Archivo 2` | Segundo archivo, opcional. |
+| `Archivo 3` | Tercer archivo, opcional. |
 
 **Facilitadores** — una fila por módulo: `Módulo`, `Nombre`, `Rol`, `Iniciales`, `Bio`, `LinkedIn`,
 `Cita`. El sitio muestra el del módulo que se está cursando, calculado a partir de la última semana
@@ -80,7 +82,11 @@ Lector*. Sin eso el sitio no la puede leer y siempre cae al respaldo.
 
 ## Las bases de datos
 
-Van a Drive, compartidas como "cualquiera con el enlace", y el link se pega en `Archivo 1/2/3`.
+Van a Drive, compartidas como "cualquiera con el enlace", y el link se pega en una de las tres
+columnas `Archivo 1`, `Archivo 2` o `Archivo 3`. Son tres columnas separadas y todas opcionales.
+
+**Pegá el link sin formato** (`Ctrl+Shift+V`): si Sheets lo convierte en un chip, el CSV devuelve
+el nombre del archivo en vez de la URL y el sitio no lo puede usar.
 No las subas al repo: el sitio es público y un archivo del repo queda accesible por URL aunque su
 semana esté cerrada.
 

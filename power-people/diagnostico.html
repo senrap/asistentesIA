@@ -170,6 +170,52 @@
           return cadena;
         }
 
+        /**
+         * Las celdas de material son las que mas se rompen: si pegas un link de
+         * Drive, Sheets lo puede convertir en un "chip" y entonces el CSV trae
+         * el nombre del archivo en vez de la URL. Mostramos crudo lo que llego.
+         */
+        function material(filas, cabeceras) {
+          var cols = [];
+          cabeceras.forEach(function (c, i) {
+            if (/^archivo\s*[123]$/i.test(S.normalizarClave(c))) cols.push({ i: i, nombre: c });
+          });
+          if (!cols.length) {
+            return "<p><strong>Ojo:</strong> no hay ninguna columna llamada " +
+              "<code>Archivo 1</code>, <code>Archivo 2</code> ni <code>Archivo 3</code>.</p>";
+          }
+
+          var filasConAlgo = [];
+          filas.slice(1).forEach(function (f, n) {
+            cols.forEach(function (c) {
+              var crudo = (f[c.i] || "").trim();
+              if (!crudo) return;
+              var parseado = S.aArchivo(crudo, 1);
+              filasConAlgo.push(
+                "<tr><td>" + (n + 2) + "</td><td>" + esc(c.nombre) + "</td><td>" +
+                esc(crudo.slice(0, 90)) + "</td><td>" +
+                (parseado
+                  ? '✅ <strong>' + esc(parseado.nombre) + "</strong>"
+                  : '❌ no se entendió como link') +
+                "</td></tr>"
+              );
+            });
+          });
+
+          if (!filasConAlgo.length) {
+            return "<p>Las columnas de material existen pero están todas vacías.</p>";
+          }
+
+          return (
+            "<p><strong>Material cargado en la planilla</strong></p>" +
+            "<table><tr><th>Fila</th><th>Columna</th><th>Lo que llegó</th><th>Resultado</th></tr>" +
+            filasConAlgo.join("") + "</table>" +
+            "<p style='font-size:13px;color:#6b7280'>Si dice <em>no se entendió como link</em>, " +
+            "lo más probable es que Sheets haya convertido el link en un chip. Borrá la celda y " +
+            "volvé a pegar con <code>Ctrl+Shift+V</code> (pegar sin formato).</p>"
+          );
+        }
+
         function pintar() {
           $("pruebas").innerHTML = resultados
             .map(function (r) {
@@ -243,6 +289,7 @@
                 "</td></tr>" +
                 "<tr><td>Columnas leídas</td><td>" + esc(cabeceras.join(", ")) + "</td></tr>" +
                 "</table>" +
+                material(filas, cabeceras) +
                 "<pre>" +
                 semanas
                   .map(function (s) {
