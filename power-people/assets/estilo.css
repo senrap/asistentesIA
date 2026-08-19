@@ -1214,6 +1214,19 @@ a:hover {
   font-weight: 800;
   letter-spacing: 1px;
   margin-bottom: 18px;
+  overflow: hidden;
+}
+
+.profe-avatar.has-foto {
+  background: var(--navy-soft);
+  border: 2px solid var(--green);
+}
+
+.profe-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .profe-nombre {

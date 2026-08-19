@@ -1,6 +1,6 @@
 /* Copia de respaldo del Google Sheet — no editar a mano.
    El sitio la usa solo si no consigue leer la planilla en vivo.
-   Generada el 2026-08-18T23:46:32.363Z desde fixtures/ (--local).
+   Generada el 2026-08-19T02:29:29.546Z desde fixtures/ (--local).
    Las grabaciones posteriores a ese momento no están acá. */
 window.PROGRAMA = {
   "programa": {
@@ -12,7 +12,7 @@ window.PROGRAMA = {
     "horaArgentina": 19,
     "duracionHoras": 1
   },
-  "generado": "2026-08-18T23:46:32.363Z",
+  "generado": "2026-08-19T02:29:29.546Z",
   "semanas": [
     {
       "numero": 1,
@@ -289,6 +289,7 @@ window.PROGRAMA = {
       "modulo": "Power BI",
       "nombre": "Pablo Senra",
       "rol": "Director académico de la Academia Power People",
+      "foto": "",
       "iniciales": "PS",
       "bio": "Pablo es un apasionado por traducir datos en acciones que potencien a las organizaciones. Esta historia comenzó muchos años atrás, cuando trabajaba en el área y notó con preocupación que muchas veces en HR nos cuesta sustentar nuestras decisiones como sí lo hacen otras áreas de la organización.\n\nComenzó a investigar con datos y se enamoró de la capacidad que tienen para impulsar conversaciones significativas con el resto de la organización. ¡Ya no pudo dejarlo atrás! Así es que decidió fundar HACHE, y hoy es consultor, profesor en ITBA, speaker e influencer reconocido en el mundo de People Analytics y HR.\n\nCuando no está sumergido en conversaciones sobre datos y talento, disfruta de ser papá de Baltu, hincha de Racing y un viajero incansable. Sueña con salir en roadtrip conectándose con la comunidad de People Analytics en cada ciudad que visite 🚙",
       "linkedin": "https://www.linkedin.com/in/pablosenra/",
@@ -298,6 +299,7 @@ window.PROGRAMA = {
       "modulo": "Talent",
       "nombre": "Lito",
       "rol": "Facilitador del módulo de Talent",
+      "foto": "",
       "iniciales": "L",
       "bio": "",
       "linkedin": "",
@@ -307,6 +309,7 @@ window.PROGRAMA = {
       "modulo": "Compensaciones",
       "nombre": "Nico",
       "rol": "Facilitador del módulo de Compensaciones",
+      "foto": "",
       "iniciales": "N",
       "bio": "",
       "linkedin": "",
@@ -316,6 +319,7 @@ window.PROGRAMA = {
       "modulo": "DataViz",
       "nombre": "Charlie",
       "rol": "Facilitador del módulo de DataViz",
+      "foto": "",
       "iniciales": "C",
       "bio": "",
       "linkedin": "",
@@ -325,6 +329,7 @@ window.PROGRAMA = {
       "modulo": "Cierre",
       "nombre": "Pablo Senra",
       "rol": "Director académico de la Academia Power People",
+      "foto": "",
       "iniciales": "PS",
       "bio": "Pablo es un apasionado por traducir datos en acciones que potencien a las organizaciones. Esta historia comenzó muchos años atrás, cuando trabajaba en el área y notó con preocupación que muchas veces en HR nos cuesta sustentar nuestras decisiones como sí lo hacen otras áreas de la organización.\n\nComenzó a investigar con datos y se enamoró de la capacidad que tienen para impulsar conversaciones significativas con el resto de la organización. ¡Ya no pudo dejarlo atrás! Así es que decidió fundar HACHE, y hoy es consultor, profesor en ITBA, speaker e influencer reconocido en el mundo de People Analytics y HR.\n\nCuando no está sumergido en conversaciones sobre datos y talento, disfruta de ser papá de Baltu, hincha de Racing y un viajero incansable. Sueña con salir en roadtrip conectándose con la comunidad de People Analytics en cada ciudad que visite 🚙",
       "linkedin": "https://www.linkedin.com/in/pablosenra/",

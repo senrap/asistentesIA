@@ -227,11 +227,17 @@ export function mapearFacilitadores(objetos) {
     })
     .map(function (o) {
       var nombre = o['nombre'].trim();
+      // La columna Iniciales acepta las dos cosas: una o dos letras, o la URL
+      // de una foto. Las iniciales calculadas quedan igual como respaldo por
+      // si la imagen no carga.
+      var ini = (o['iniciales'] || '').trim();
+      var foto = /^(https?:\/\/|www\.)/i.test(ini) ? aUrl(ini) : '';
       return {
         modulo: o['modulo'].trim(),
         nombre: nombre,
         rol: (o['rol'] || '').trim(),
-        iniciales: (o['iniciales'] || '').trim() || iniciales(nombre),
+        foto: foto,
+        iniciales: foto ? iniciales(nombre) : ini || iniciales(nombre),
         bio: (o['bio'] || '').trim(),
         linkedin: aUrl(o['linkedin']),
         cita: (o['cita'] || '').trim()

@@ -565,7 +565,19 @@
     caja.innerHTML = "";
 
     var side = el("div", "profe-side");
-    side.appendChild(el("div", "profe-avatar", f.iniciales));
+    var avatar = el("div", "profe-avatar", f.iniciales);
+    if (f.foto) {
+      var img = new Image();
+      img.src = f.foto;
+      img.alt = "";
+      // Si la imagen no carga, quedan las iniciales que ya están debajo.
+      img.onload = function () {
+        avatar.textContent = "";
+        avatar.classList.add("has-foto");
+        avatar.appendChild(img);
+      };
+    }
+    side.appendChild(avatar);
     side.appendChild(el("p", "profe-nombre", f.nombre));
     if (f.rol) side.appendChild(el("p", "profe-rol", f.rol));
     if (modulo) {
@@ -574,7 +586,7 @@
       side.appendChild(tags);
     }
     if (f.linkedin) {
-      var a = el("a", "profe-link", "Ver perfil en LinkedIn →");
+      var a = el("a", "profe-link", "Conectar en LinkedIn →");
       a.href = f.linkedin;
       a.target = "_blank";
       a.rel = "noopener";
@@ -596,8 +608,6 @@
     }
     caja.appendChild(bio);
 
-    var titulo = $("[data-facilitador-titulo]");
-    if (titulo && modulo) titulo.textContent = "Quién te acompaña en " + modulo;
   }
 
   /* ------------------------------------------------------------------
