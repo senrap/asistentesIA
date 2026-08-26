@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Bloque · PoweRH</title>
+    <!--
+      Esta página no tiene contenido propio: dibuja el bloque que pide la URL.
+
+        /b/bloque-1-los-datos-pueden-transformar-hr   ← la ruta linda
+        bloque.html?b=bloque-1-los-datos-...          ← la misma página, sin reescritura
+
+      El slug sale del nombre del bloque en la planilla. Cuando aparece un
+      bloque nuevo en el Sheet, su sub-página existe sola: no hay que crear un
+      archivo ni volver a deployar. La reescritura de /b/* la define netlify.toml.
+    -->
+    <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#00344D" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2300344D'/%3E%3Ctext x='16' y='23' font-family='Poppins,sans-serif' font-size='19' font-weight='800' fill='%2300FF90' text-anchor='middle'%3EH%3C/text%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="/assets/estilo.css" />
+  </head>
+
+  <body>
+    <a class="skip" href="#contenido">Ir al contenido</a>
+
+    <header class="site-header">
+      <div class="wrap">
+        <a class="brand" href="/">
+          <span class="brand-mark" aria-hidden="true">H</span>
+          <span class="brand-text"
+            ><span data-ajuste="subtitulo">Workshop</span>
+            <strong data-ajuste="nombre">PoweRH</strong></span
+          >
+        </a>
+        <nav class="header-links" aria-label="Secciones">
+          <a href="/#bloques">Todos los bloques</a>
+          <a href="/#encuentros">Encuentros</a>
+          <a href="/#dudas">Dudas</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="contenido">
+      <!-- Portada del bloque: la arma bloque.js con lo que dice la planilla. -->
+      <section class="bloque-hero on-dark" data-bloque-hero hidden>
+        <div class="wrap">
+          <a class="volver" href="/#bloques">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M19 12H5M11 18l-6-6 6-6" />
+            </svg>
+            Volver al workshop
+          </a>
+          <span class="bloque-emoji" data-bloque-emoji hidden></span>
+          <p class="section-label green" data-bloque-orden></p>
+          <h1 data-bloque-titulo></h1>
+          <p class="bloque-meta" data-bloque-meta></p>
+          <div class="bloque-objetivo" data-bloque-objetivo hidden>
+            <p class="section-label green">El objetivo de este bloque</p>
+            <div class="prosa" data-bloque-objetivo-texto></div>
+          </div>
+          <p class="fuente-aviso" data-fuente hidden></p>
+        </div>
+      </section>
+
+      <!-- Las tarjetas del bloque -->
+      <section class="section" data-seccion-tarjetas hidden>
+        <div class="wrap">
+          <div class="tarjetas" data-tarjetas></div>
+        </div>
+      </section>
+
+      <!-- Las grabaciones de sus encuentros -->
+      <section class="section section-alt" data-seccion-grabaciones hidden>
+        <div class="wrap">
+          <p class="section-label">En vivo</p>
+          <h2>Las grabaciones de este bloque</h2>
+          <span class="accent-line" aria-hidden="true"></span>
+          <div class="grabaciones" data-grabaciones></div>
+        </div>
+      </section>
+
+      <!-- Bloque anterior / siguiente -->
+      <section class="section" data-seccion-nav hidden>
+        <div class="wrap">
+          <nav class="bloque-nav" data-bloque-nav aria-label="Otros bloques"></nav>
+        </div>
+      </section>
+
+      <!-- Mientras llega la planilla -->
+      <section class="section" data-cargando>
+        <div class="wrap">
+          <div class="cargando" aria-hidden="true">
+            <span></span><span></span><span></span>
+          </div>
+          <p class="ruta-vacio">Cargando el bloque…</p>
+        </div>
+      </section>
+
+      <!-- La URL pide un bloque que no está en la planilla -->
+      <section class="section sin-bloque" data-sin-bloque hidden>
+        <div class="wrap">
+          <h1 data-sin-bloque-titulo>No encontramos este bloque</h1>
+          <p data-sin-bloque-texto>
+            Puede que todavía no esté publicado, o que el link haya cambiado de nombre.
+          </p>
+          <a class="btn btn-primary" href="/#bloques">Ver todos los bloques</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <div class="footer-bottom">
+          <span>HACHE Consultora · People Analytics</span>
+          <span data-ajuste="nombre">PoweRH</span>
+        </div>
+      </div>
+    </footer>
+
+    <div class="toast" data-toast role="status" aria-live="polite"></div>
+
+    <script src="/assets/config.js"></script>
+    <script src="/assets/sheet.js"></script>
+    <script src="/assets/contenido.js"></script>
+    <script src="/assets/comun.js"></script>
+    <script src="/assets/bloque.js"></script>
+  </body>
+</html>

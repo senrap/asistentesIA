@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Diagnóstico · PoweRH</title>
+    <meta name="robots" content="noindex" />
+    <link rel="stylesheet" href="/assets/estilo.css" />
+    <style>
+      /* Es una herramienta interna: no está linkeada desde el sitio y no
+         necesita el sistema de diseño completo. */
+      main { max-width: 940px; margin: 0 auto; padding: 40px 24px 80px; }
+      h1 { font-size: 26px; margin-bottom: 6px; }
+      .sub { color: var(--gray); font-size: 14px; margin-bottom: 28px; }
+      .veredicto { padding: 20px 24px; border-radius: 12px; margin-bottom: 28px; font-weight: 500; }
+      .veredicto.ok { background: var(--green-bg); border-left: 4px solid var(--green-2); }
+      .veredicto.mal { background: #fdeceb; border-left: 4px solid #b3261e; }
+      .veredicto.esperando { background: var(--off); border-left: 4px solid var(--light); }
+      table { width: 100%; border-collapse: collapse; margin-bottom: 28px; font-size: 13px; }
+      th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--light);
+               vertical-align: top; }
+      th { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gray); }
+      td.estado-ok { color: var(--green-2); font-weight: 600; }
+      td.estado-mal { color: #b3261e; font-weight: 600; }
+      code { background: var(--off); padding: 2px 6px; border-radius: 4px; font-size: 12px;
+             word-break: break-all; }
+      .pasos { background: var(--off); border-radius: 12px; padding: 22px 26px; font-size: 14px; }
+      .pasos li { margin-bottom: 10px; }
+      .tabla-wrap { overflow-x: auto; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Diagnóstico de la planilla</h1>
+      <p class="sub">
+        Prueba en vivo si el sitio puede leer el Google Sheet, y muestra qué endpoint funcionó y
+        qué llegó a parsear. Es la primera parada cuando el contenido no se actualiza.
+      </p>
+
+      <div class="veredicto esperando" id="veredicto">Probando…</div>
+
+      <h2 style="font-size: 18px; margin-bottom: 12px">Qué pasó con cada hoja</h2>
+      <div class="tabla-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Hoja</th>
+              <th>Estado</th>
+              <th>Filas útiles</th>
+              <th>Detalle</th>
+            </tr>
+          </thead>
+          <tbody id="hojas"></tbody>
+        </table>
+      </div>
+
+      <h2 style="font-size: 18px; margin-bottom: 12px">Las sub-páginas que salen de la planilla</h2>
+      <div class="tabla-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Bloque</th>
+              <th>Dirección</th>
+              <th>Se abre</th>
+              <th>Tarjetas</th>
+            </tr>
+          </thead>
+          <tbody id="bloques"></tbody>
+        </table>
+      </div>
+
+      <h2 style="font-size: 18px; margin-bottom: 12px">Si no lee la planilla</h2>
+      <ol class="pasos">
+        <li>
+          Revisá que el Sheet esté compartido como
+          <strong>Cualquier persona con el enlace · Lector</strong>.
+        </li>
+        <li>
+          Si ya lo está y sigue fallando, usá <strong>Archivo → Compartir → Publicar en la web</strong>
+          (formato CSV) y sumá a <code>config.json</code> el <code>pubId</code> y los
+          <code>gids</code> de cada hoja: ese endpoint es el más confiable para acceso anónimo.
+        </li>
+        <li>
+          Si <em>sí</em> la lee y aun así ves contenido viejo, es caché del navegador:
+          <strong>Ctrl+Shift+R</strong>.
+        </li>
+      </ol>
+    </main>
+
+    <script src="/assets/config.js"></script>
+    <script src="/assets/sheet.js"></script>
+    <script>
+      (function () {
+        "use strict";
+        var S = window.RHSheet;
+        var CFG = window.RHCONFIG || {};
+        var HOJAS = [
+          ["bloques", "mapearBloques"],
+          ["tarjetas", "mapearTarjetas"],
+          ["encuentros", "mapearEncuentros"],
+          ["facilitadores", "mapearFacilitadores"],
+          ["ajustes", "mapearAjustes"]
+        ];
+
+        function celda(fila, texto, clase) {
+          var td = document.createElement("td");
+          td.textContent = texto;
+          if (clase) td.className = clase;
+          fila.appendChild(td);
+          return td;
+        }
+
+        function veredicto(clase, texto) {
+          var v = document.getElementById("veredicto");
+          v.className = "veredicto " + clase;
+          v.textContent = texto;
+        }
+
+        if (!CFG.sheet || !CFG.sheet.id || /^PEGAR/.test(CFG.sheet.id)) {
+          veredicto("mal", "config.json todavía no tiene el id de la planilla.");
+          return;
+        }
+
+        var crudo = {};
+        var fallaron = 0;
+
+        function probar(i) {
+          if (i >= HOJAS.length) return terminar();
+
+          var clave = HOJAS[i][0];
+          var mapear = HOJAS[i][1];
+          var nombre = (CFG.sheet.hojas || {})[clave] || clave;
+          var urls = S.urlsHoja(CFG.sheet, nombre);
+          var j = -1;
+
+          function siguienteUrl(motivo) {
+            j++;
+            if (j >= urls.length) {
+              fallaron++;
+              filaHoja(nombre, false, 0, motivo || "ningún endpoint respondió");
+              return probar(i + 1);
+            }
+            return fetch(urls[j], { cache: "no-store" })
+              .then(function (r) {
+                if (!r.ok) throw new Error("HTTP " + r.status);
+                return r.text();
+              })
+              .then(function (txt) {
+                if (!S.pareceCsv(txt)) {
+                  return siguienteUrl("Google devolvió HTML, no CSV (¿no es pública?)");
+                }
+                var filas = S[mapear](S.aObjetos(S.parseCsv(txt)));
+                crudo[clave] = filas;
+                var n = Array.isArray(filas) ? filas.length : Object.keys(filas).length;
+                filaHoja(nombre, true, n, "endpoint " + (j + 1) + " · " + urls[j].split("?")[0]);
+                return probar(i + 1);
+              })
+              .catch(function (e) {
+                return siguienteUrl(e.message);
+              });
+          }
+
+          return siguienteUrl();
+        }
+
+        function filaHoja(nombre, ok, n, detalle) {
+          var tr = document.createElement("tr");
+          celda(tr, nombre);
+          celda(tr, ok ? "Leída" : "Falló", ok ? "estado-ok" : "estado-mal");
+          celda(tr, String(n));
+          celda(tr, detalle);
+          document.getElementById("hojas").appendChild(tr);
+        }
+
+        function terminar() {
+          if (!crudo.bloques || !crudo.bloques.length) {
+            veredicto("mal", "El sitio NO puede leer la planilla: está usando la copia de respaldo.");
+            return;
+          }
+          veredicto(
+            fallaron ? "esperando" : "ok",
+            fallaron
+              ? "Lee la planilla, pero " + fallaron + " hoja(s) fallaron y salen del respaldo."
+              : "Todo bien: el sitio lee la planilla en vivo."
+          );
+
+          var datos = S.armar(
+            {
+              bloques: crudo.bloques,
+              tarjetas: crudo.tarjetas || [],
+              encuentros: crudo.encuentros || [],
+              facilitadores: crudo.facilitadores || [],
+              ajustes: crudo.ajustes || {}
+            },
+            new Date()
+          );
+          var ruta = (CFG.sitio && CFG.sitio.rutaBloques) || "/b/";
+          var cuerpo = document.getElementById("bloques");
+          datos.bloques.forEach(function (b) {
+            var tr = document.createElement("tr");
+            celda(tr, b.nombre);
+            var td = celda(tr, "");
+            var a = document.createElement("a");
+            a.href = ruta + b.slug;
+            a.textContent = ruta + b.slug;
+            td.appendChild(a);
+            celda(tr, b.abierto ? "abierto" : b.fecha + " " + b.hora,
+                  b.abierto ? "estado-ok" : "");
+            celda(tr, String(b.tarjetas.length));
+            cuerpo.appendChild(tr);
+          });
+        }
+
+        probar(0);
+      })();
+    </script>
+  </body>
+</html>

@@ -5,9 +5,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "node scripts/build.mjs && node power-people/scripts/build.mjs",
+    "build": "node scripts/build.mjs && node power-people/scripts/build.mjs && node poweRH/scripts/build.mjs",
     "dev": "npm run build && python3 -m http.server 4173",
-    "build:programa": "node power-people/scripts/build.mjs"
+    "build:programa": "node power-people/scripts/build.mjs",
+    "build:powerh": "node poweRH/scripts/build.mjs"
   },
   "engines": {
     "node": ">=20"

@@ -1,0 +1,20 @@
+{
+  "sheet": {
+    "id": "PEGAR-EL-ID-DE-LA-PLANILLA",
+    "hojas": {
+      "bloques": "Bloques",
+      "tarjetas": "Tarjetas",
+      "encuentros": "Encuentros",
+      "facilitadores": "Facilitadores",
+      "ajustes": "Ajustes"
+    }
+  },
+  "sitio": {
+    "nombre": "PoweRH",
+    "titulo": "PoweRH · HACHE",
+    "descripcion": "El punto de partida del workshop PoweRH: los bloques, el material de cada uno, los encuentros en vivo y dónde llevar tus dudas.",
+    "rutaBloques": "/b/",
+    "horaArgentina": 19,
+    "duracionHoras": 1
+  }
+}

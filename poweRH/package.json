@@ -1,0 +1,15 @@
+{
+  "name": "powerh-sitio",
+  "version": "1.0.0",
+  "description": "Sitio del workshop PoweRH. El contenido vive en un Google Sheet.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "build:local": "node scripts/build.mjs --local",
+    "dev": "node scripts/build.mjs --local && node scripts/servir.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
