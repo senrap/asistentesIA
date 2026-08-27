@@ -73,8 +73,9 @@ export default {
   facilitador: {
     nombre: 'Pablo Senra',
     rol: 'Fundador de HACHE · People Analytics',
-    // El archivo va en assets/. Si no está o no carga, quedan las iniciales.
-    foto: '/assets/pablo.jpg',
+    // El archivo va en assets/, ya recortado en cuadrado. Si no está o no
+    // carga, quedan las iniciales.
+    foto: '/assets/pablo.png',
     iniciales: 'PS',
     linkedin: 'https://www.linkedin.com/in/pablosenra/',
     mail: 'pablo@hache.com.ar',

@@ -1,9 +1,9 @@
 /* Copia de respaldo del Google Sheet — no editar a mano.
    El sitio la usa solo si no consigue leer la planilla en vivo.
-   Generada el 2026-08-27T15:57:06.177Z desde fixtures/ (--local).
+   Generada el 2026-08-27T16:04:58.310Z desde fixtures/ (--local).
    Las grabaciones cargadas después de ese momento no están acá. */
 window.CURSOS = {
-  "generado": "2026-08-27T15:57:06.177Z",
+  "generado": "2026-08-27T16:04:58.310Z",
   "cursos": [
     {
       "id": "powerh-demo",

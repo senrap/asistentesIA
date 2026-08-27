@@ -47,9 +47,14 @@ tienen grabación, que es cuando terminó de verdad.
 
 ## La foto del facilitador
 
-Va en `assets/pablo.jpg`, y el currículo la apunta con
-`facilitador.foto: '/assets/pablo.jpg'`. Si el archivo no está o no carga,
+Va en `assets/pablo.png`, y el currículo la apunta con
+`facilitador.foto: '/assets/pablo.png'`. Si el archivo no está o no carga,
 quedan las iniciales — no se rompe nada, pero tampoco aparece la foto.
+
+**Subila ya recortada en cuadrado y chica.** Se ve en un círculo de 74px, así
+que con 400×400 sobra; el original de cámara pesaba 7 MB para eso. El CSS
+recorta desde arriba (`object-position: top`), que es lo que hay que hacer con
+un retrato vertical: centrado le corta la cabeza.
 
 ---
 

@@ -1205,6 +1205,10 @@ a:hover {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  /* Desde arriba, no desde el centro: en un retrato vertical el recorte
+     centrado deja el pecho y le corta la cabeza. El archivo ya viene cuadrado,
+     así que esto es la red por si alguna vez se sube uno sin recortar. */
+  object-position: top;
   display: block;
 }
 
