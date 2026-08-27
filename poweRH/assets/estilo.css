@@ -318,7 +318,7 @@ a:hover {
   font-size: 18px;
   font-weight: 300;
   color: rgba(255, 255, 255, 0.88);
-  max-width: 620px;
+  max-width: 840px;
 }
 
 .hero-facts {
@@ -1181,14 +1181,15 @@ a:hover {
 }
 
 .profe-avatar {
-  width: 64px;
-  height: 64px;
+  /* 64px + 15% */
+  width: 74px;
+  height: 74px;
   border-radius: 50%;
   background: var(--green);
   color: var(--navy);
   display: grid;
   place-items: center;
-  font-size: 22px;
+  font-size: 25px;
   font-weight: 800;
   letter-spacing: 1px;
   margin-bottom: 18px;
@@ -1247,12 +1248,13 @@ a:hover {
   color: var(--green);
 }
 
+/* Sin tope de ancho: la bio usa toda la columna que le toca. El de 68ch la
+   cortaba a media caja, igual que pasaba en las tarjetas. */
 .profe-bio {
   display: grid;
   gap: 14px;
   color: var(--gray);
   font-size: 15px;
-  max-width: 68ch;
 }
 
 .profe-bio p {

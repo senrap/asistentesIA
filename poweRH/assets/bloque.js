@@ -265,17 +265,21 @@
     // Si existe pero todavía está cerrado, lo decimos: no es lo mismo que un
     // link roto, y saber qué falta es justo lo que se quiere saber.
     var cerrado = null;
+    var anterior = null;
     for (var i = 0; i < bloques.length; i++) {
-      if (bloques[i].slug === slug) { cerrado = bloques[i]; break; }
+      if (bloques[i].slug === slug) {
+        cerrado = bloques[i];
+        anterior = bloques[i - 1] || null;
+        break;
+      }
     }
 
     if (cerrado) {
       if (titulo) titulo.textContent = "🔒 Este bloque todavía no se abrió";
-      // Alcanza con la grabación del primero de sus encuentros para destrabarlo.
-      var primera = (cerrado.sesiones || [])[0];
+      // Lo destraba que estén las grabaciones del bloque anterior.
       texto.textContent =
-        "«" + cerrado.nombre + "» se abre en cuanto publiquemos la grabación " +
-        (primera ? "del encuentro " + primera + "." : "de su encuentro.");
+        "«" + cerrado.nombre + "» se abre en cuanto publiquemos las grabaciones " +
+        (anterior ? "de «" + anterior.nombre + "»." : "del bloque anterior.");
     } else if (!slug) {
       texto.textContent = "Este link no dice a qué bloque entrar.";
     } else {

@@ -339,10 +339,19 @@ function mapearGrabaciones(objetos) {
  * Cada cursada se queda con sus grabaciones y con una copia propia de los
  * bloques del currículo.
  *
- * LO QUE ABRE UN BLOQUE ES LA GRABACIÓN, no una fecha: un bloque está abierto
- * cuando alguna de las sesiones que cubre ya tiene link cargado. Un bloque
- * cerrado se lista igual —para que se vea el recorrido completo— pero sin
- * objetivo, sin tarjetas y sin link a su página.
+ * CUÁNDO SE ABRE UN BLOQUE. No hay fechas: manda la grabación.
+ *
+ *   - El primero está abierto siempre. Es lo que se necesita antes de arrancar:
+ *     la base del ejercicio, la presentación, el objetivo.
+ *   - Los demás se abren cuando el bloque ANTERIOR ya tiene todas sus
+ *     grabaciones cargadas. O sea: terminás un bloque, subís sus grabaciones, y
+ *     con eso se destraba el siguiente.
+ *   - Y, por las dudas, un bloque que ya tiene grabaciones propias se abre
+ *     igual aunque el anterior esté incompleto. Sin esto, una grabación que
+ *     nunca se sube deja trabado todo lo que viene después.
+ *
+ * Un bloque cerrado se lista igual —para que se vea el recorrido completo— pero
+ * sin objetivo, sin tarjetas y sin link a su página.
  *
  * El recorte es de verdad, no un "display: none": así la copia de respaldo que
  * guarda el build sale sin el material que todavía no corresponde. En el
@@ -367,6 +376,7 @@ function armar(curriculo, datos) {
 
   cursos.forEach(function (c) {
     var vistos = {};
+    var anteriorCompleto = true; // el primer bloque no espera a nadie
 
     c.bloques = plantilla.map(function (b, i) {
       var numero = i + 1;
@@ -387,8 +397,22 @@ function armar(curriculo, datos) {
         return sesiones.indexOf(g.numero) > -1;
       });
 
-      var abierto = suyas.some(function (g) {
+      var tieneLoSuyo = suyas.some(function (g) {
         return !!g.link;
+      });
+      var abierto = i === 0 || anteriorCompleto || tieneLoSuyo;
+
+      // Lo que va a mirar el bloque siguiente. "Completo" = todas las sesiones
+      // que a este bloque le tocan dentro de la cursada tienen link. Las que
+      // caen fuera del total de sesiones no cuentan: si la cursada tiene 6
+      // encuentros, las sesiones 7 y 8 no existen y no pueden trabar nada.
+      var esperadas = sesiones.filter(function (n) {
+        return !c.sesiones || n <= c.sesiones;
+      });
+      anteriorCompleto = esperadas.every(function (n) {
+        return suyas.some(function (g) {
+          return g.numero === n && g.link;
+        });
       });
 
       return {
@@ -407,10 +431,17 @@ function armar(curriculo, datos) {
       };
     });
 
-    // La despedida se ofrece cuando ya está todo grabado.
-    c.completo = c.bloques.length > 0 && c.bloques.every(function (b) {
-      return b.abierto;
+    // La despedida no se ofrece porque estén todos los bloques abiertos —el
+    // primero lo está desde el día cero— sino cuando la cursada terminó de
+    // verdad: todos sus encuentros tienen grabación.
+    var conLink = {};
+    c.grabaciones.forEach(function (g) {
+      if (g.link && g.numero) conLink[g.numero] = true;
     });
+    c.completo = c.sesiones > 0;
+    for (var n = 1; n <= c.sesiones; n++) {
+      if (!conLink[n]) c.completo = false;
+    }
 
     c.facilitador = c.facilitador || (curriculo.facilitador || {}).nombre || '';
   });

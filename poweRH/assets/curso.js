@@ -111,6 +111,10 @@
       }
       if (f.link && f.link.url) {
         var a = el("a", "btn btn-cta btn-sm", f.link.texto || "Abrir");
+        // En pestaña nueva: son videos y descargas, y volver atrás desde ahí
+        // significaba perder la página del workshop.
+        a.target = "_blank";
+        a.rel = "noopener";
         if (RH.link(a, f.link.url)) art.appendChild(a);
       }
       caja.appendChild(art);
@@ -153,15 +157,13 @@
   }
 
   /**
-   * Qué le falta a un bloque para abrirse. Nombra solo el primero de sus
-   * encuentros porque alcanza con esa grabación para destrabarlo: decir "los
-   * encuentros 5 y 6" haría pensar que hacen falta las dos.
+   * Qué le falta a un bloque para abrirse: que estén las grabaciones del bloque
+   * anterior. Lo nombramos, que es más útil que decir "el anterior".
    */
-  function loQueFalta(b) {
-    var primera = (b.sesiones || [])[0];
-    return primera
-      ? "Se abre cuando publiquemos la grabación del encuentro " + primera
-      : "Se abre cuando publiquemos su grabación";
+  function loQueFalta(anterior) {
+    return anterior
+      ? "Se abre cuando publiquemos las grabaciones de «" + anterior.nombre + "»"
+      : "Se abre cuando publiquemos las grabaciones del bloque anterior";
   }
 
   function pintarBloques(c) {
@@ -172,7 +174,7 @@
     var actual = RH.S ? RH.S.bloqueActual(c.bloques) : null;
     lista.innerHTML = "";
 
-    c.bloques.forEach(function (b) {
+    c.bloques.forEach(function (b, i) {
       var li = el("li", "ruta-item");
       li.classList.add(b.abierto ? "is-open" : "is-locked");
       if (actual && b.slug === actual.slug) li.classList.add("is-current");
@@ -194,7 +196,7 @@
         var cuenta = cuentaDe(b);
         if (cuenta) main.appendChild(cuenta);
       } else {
-        main.appendChild(el("p", "ruta-meta", loQueFalta(b)));
+        main.appendChild(el("p", "ruta-meta", loQueFalta(c.bloques[i - 1])));
       }
       fila.appendChild(main);
 

@@ -1,9 +1,9 @@
 /* Copia de respaldo del Google Sheet — no editar a mano.
    El sitio la usa solo si no consigue leer la planilla en vivo.
-   Generada el 2026-08-27T15:07:13.302Z desde fixtures/ (--local).
+   Generada el 2026-08-27T15:57:06.177Z desde fixtures/ (--local).
    Las grabaciones cargadas después de ese momento no están acá. */
 window.CURSOS = {
-  "generado": "2026-08-27T15:07:13.302Z",
+  "generado": "2026-08-27T15:57:06.177Z",
   "cursos": [
     {
       "id": "powerh-demo",
@@ -281,9 +281,68 @@ window.CURSOS = {
             1,
             2
           ],
-          "abierto": false,
-          "objetivo": "",
-          "tarjetas": [],
+          "abierto": true,
+          "objetivo": "Al finalizar este bloque vas a tener mayor claridad sobre **qué es People Analytics** y cuáles son los beneficios de comenzar a tomar decisiones basadas en datos.\n\nTambién presentaremos **Power BI** y el caso de análisis que trabajaremos, y nos adentraremos en el mundo de **ETL** (Extracción, Transformación y Carga). Vamos a aprender a manipular nuestros datos para que sean más útiles y fáciles de analizar.",
+          "tarjetas": [
+            {
+              "tipo": "material",
+              "titulo": "Base para el ejercicio",
+              "texto": "Acá está **la base que vamos a utilizar** durante todo el workshop. Descargala antes de la primera sesión así arrancamos todos desde el mismo lugar.",
+              "imagen": "",
+              "link": "",
+              "archivos": [
+                {
+                  "nombre": "Nómina Panda",
+                  "url": "https://drive.google.com/file/d/1Y3zWC6LgODmkbRq0KFg2Rx4wwZ4GO-wd/view"
+                }
+              ]
+            },
+            {
+              "tipo": "material",
+              "titulo": "Presentación",
+              "texto": "Te dejamos la presentación que compartimos en este bloque.",
+              "imagen": "",
+              "link": "",
+              "archivos": [
+                {
+                  "nombre": "PoweRH · Bloque 1 (PDF)",
+                  "url": "https://drive.google.com/file/d/10PKtrIWRXgkc-MHKji9etu4gYKWEjB-g/view"
+                }
+              ]
+            },
+            {
+              "tipo": "tarea",
+              "titulo": "Tarea",
+              "texto": "Siempre es un excelente momento para practicar.\n\n1. Creá un nuevo archivo de Power BI e **importá** una base (puede ser la del curso u otra que tengas).\n2. Entrá a **Transformar datos** y creá al menos **5 pasos** de transformación. Acordate de chequear el tipo de datos de cada columna.\n3. **Documentá** alguno de esos pasos haciendo click derecho sobre el nombre del paso y entrando a Propiedades, para cambiarle el nombre y explicar qué hace. Es una excelente forma de recordar después el proceso.",
+              "imagen": "",
+              "link": "",
+              "archivos": []
+            },
+            {
+              "tipo": "contenido",
+              "titulo": "Las 4 vistas de Power BI",
+              "texto": "Power BI tiene **4 vistas** 😎, y según en cuál estés vas a poder hacer cosas distintas.\n\n- 🛠 **Transformar datos:** el editor donde preparás los datos para el posterior análisis.\n- 🎨 **Vista Informe:** el lugar donde vamos a graficar nuestro informe.\n- 🗃 **Vista de Datos:** nos permite ver la tabla, revisar formatos y crear columnas calculadas.\n- 🧩 **Vista de Modelo:** acá relacionamos nuestras diferentes tablas.",
+              "imagen": "",
+              "link": "",
+              "archivos": []
+            },
+            {
+              "tipo": "contenido",
+              "titulo": "Obtener datos",
+              "texto": "Power BI trabaja con datos que están en **orígenes externos**. Recordá que *lo primero que tenés que hacer* es conectar tus datos.\n\nPodés hacerlo desde el menú de Inicio con el botón de **Obtener datos**, o directamente desde Excel si vas a trabajar con ese origen.\n\nCuando conectes datos cargados manualmente en Excel, te recomendamos darles **formato de tabla** antes de importarlos.",
+              "imagen": "",
+              "link": "",
+              "archivos": []
+            },
+            {
+              "tipo": "contenido",
+              "titulo": "Transformar datos",
+              "texto": "Al importar una base de datos es importante pasar por **Transformar datos** y prepararlos antes de comenzar el análisis. Algunas transformaciones que hicimos:\n\n- Chequear el tipo de datos (mucho muy importante 😂)\n- Filtrar filas en blanco y elegir columnas\n- Modificar formatos (mayúsculas, minúsculas, etc.)\n- Combinar columnas\n- Reemplazar y extraer valores\n- Operaciones de fecha\n- Operaciones matemáticas y de redondeo\n- Crear columnas condicionales (generaciones, rangos de edad, etc.)\n\n## Tres cosas para no marearte\n\n- Si te aparece un paso llamado **\"Filas Filtradas\"** y no lo aplicaste intencionalmente, la recomendación es eliminarlo con la \"x\".\n- Si te aparece el cartel de **\"Insertar un paso\"**, salvo que lo estés haciendo a propósito, cancelá y posicionate en el último paso del menú de pasos aplicados antes de volver a crearlo.\n- Cuando termines de trabajar en esta vista, aplicá los cambios desde el menú de inicio clickeando en **Cerrar y aplicar**.",
+              "imagen": "",
+              "link": "",
+              "archivos": []
+            }
+          ],
           "grabaciones": []
         },
         {

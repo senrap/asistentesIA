@@ -73,6 +73,8 @@ export default {
   facilitador: {
     nombre: 'Pablo Senra',
     rol: 'Fundador de HACHE · People Analytics',
+    // El archivo va en assets/. Si no está o no carga, quedan las iniciales.
+    foto: '/assets/pablo.jpg',
     iniciales: 'PS',
     linkedin: 'https://www.linkedin.com/in/pablosenra/',
     mail: 'pablo@hache.com.ar',
@@ -520,14 +522,15 @@ No queremos despedirnos, por eso te dejamos algunas acciones para seguir en cont
     mail: 'info@hache.com.ar'
   },
 
-  /* ------------------------------------------------------------- Comunidad */
+  /* ------------------------------------------------------------- Comunidad
+     Sin "Conectar con Pablo": ese link ya está arriba, en la ficha de quién te
+     guía, y repetirlo acá gastaba un lugar de la grilla.
+     -------------------------------------------------------------------- */
   redes: [
     { emoji: '📷', titulo: 'Instagram', bajada: 'Conectemos en @consultora_hache',
       url: 'https://www.instagram.com/consultora_hache/' },
     { emoji: '🏢', titulo: 'HACHE en LinkedIn', bajada: 'Seguí a la consultora',
       url: 'https://www.linkedin.com/company/consultorahache/' },
-    { emoji: '🤝', titulo: 'Conectar con Pablo', bajada: 'Sumate a mi red',
-      url: 'https://www.linkedin.com/in/pablosenra/' },
     { emoji: '💙', titulo: 'Grupo de amigos de HACHE', bajada: 'La comunidad, en LinkedIn',
       url: 'https://www.linkedin.com/groups/12134403/' },
     { emoji: '▶️', titulo: 'YouTube', bajada: 'Tutoriales para seguir aprendiendo Power BI',

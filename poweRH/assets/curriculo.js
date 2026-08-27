@@ -33,6 +33,7 @@ window.CURRICULO = {
   "facilitador": {
     "nombre": "Pablo Senra",
     "rol": "Fundador de HACHE · People Analytics",
+    "foto": "/assets/pablo.jpg",
     "iniciales": "PS",
     "linkedin": "https://www.linkedin.com/in/pablosenra/",
     "mail": "pablo@hache.com.ar",
@@ -310,12 +311,6 @@ window.CURRICULO = {
       "titulo": "HACHE en LinkedIn",
       "bajada": "Seguí a la consultora",
       "url": "https://www.linkedin.com/company/consultorahache/"
-    },
-    {
-      "emoji": "🤝",
-      "titulo": "Conectar con Pablo",
-      "bajada": "Sumate a mi red",
-      "url": "https://www.linkedin.com/in/pablosenra/"
     },
     {
       "emoji": "💙",

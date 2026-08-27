@@ -21,7 +21,15 @@ currículo; si cambia de una a otra, es planilla.**
 
 ## Cómo se abre un bloque
 
-No hay fechas por bloque. **Lo que abre un bloque es su grabación.**
+No hay fechas por bloque. **Manda la grabación.**
+
+- **El bloque 1 está abierto siempre**, desde antes de que arranque la cursada:
+  ahí está la base del ejercicio y lo que hay que tener listo el primer día.
+- **Los demás se abren cuando el bloque anterior tiene todas sus grabaciones.**
+  Terminás un bloque, subís sus grabaciones, y con eso se destraba el siguiente.
+- Por las dudas, **un bloque con grabaciones propias se abre igual** aunque el
+  anterior esté incompleto. Sin esa salida, una grabación que nunca subís deja
+  trabado todo lo que viene después.
 
 Cada bloque declara en `lib/curriculo.mjs` qué encuentros cubre:
 
@@ -29,17 +37,19 @@ Cada bloque declara en `lib/curriculo.mjs` qué encuentros cubre:
 { nombre: 'Bloque 2: …', sesiones: [3, 4], … }
 ```
 
-Apenas una de esas sesiones tiene link cargado en la pestaña `Grabaciones`, el
-bloque se abre: aparece su página, su objetivo y sus tarjetas. Antes de eso se
-lista con candado y no lleva a ningún lado.
+Las sesiones que caen fuera del total de la cursada no cuentan: si tiene 6
+encuentros, las sesiones 7 y 8 no existen y no pueden trabar nada.
 
-Cuando **todas** las sesiones tienen grabación, se suma la página de cierre.
+La página de cierre aparece cuando **todos** los encuentros de la cursada
+tienen grabación, que es cuando terminó de verdad.
 
-> **Ojo con esto:** la tarjeta *Base para el ejercicio* está en el Bloque 1, así
-> que con esta regla no se ve hasta que cargues la grabación del encuentro 1.
-> Lo que sí se ve desde el primer día es la sección **Bienvenida**, con el paso
-> a paso para instalar Power BI. Si querés que la base también esté antes de
-> empezar, se mueve a `curriculo.antes` y listo.
+---
+
+## La foto del facilitador
+
+Va en `assets/pablo.jpg`, y el currículo la apunta con
+`facilitador.foto: '/assets/pablo.jpg'`. Si el archivo no está o no carga,
+quedan las iniciales — no se rompe nada, pero tampoco aparece la foto.
 
 ---
 
