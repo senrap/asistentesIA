@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Servidor de desarrollo. Sirve la carpeta y hace la misma reescritura que
- * netlify.toml: /b/lo-que-sea -> bloque.html.
+ * netlify.toml: /programa -> programa.html, /programa/bloque -> bloque.html.
  *
  * Sin esto, un `python3 -m http.server` devuelve 404 en las sub-páginas y no
  * se puede probar en local lo mismo que se ve publicado.
@@ -10,6 +10,7 @@
  */
 import { createServer } from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
 import { join, extname, normalize } from 'node:path';
 import { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -31,9 +32,15 @@ const TIPOS = {
 createServer(async (req, res) => {
   let ruta = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
 
-  // La reescritura de las sub-páginas, igual que en Netlify.
-  if (ruta.startsWith('/b/')) ruta = '/bloque.html';
   if (ruta === '/' || ruta.endsWith('/')) ruta += 'index.html';
+
+  // La reescritura de programas y bloques, igual que en Netlify: los archivos
+  // que existen de verdad ganan, y lo que queda cae en una de las dos páginas.
+  const tramos = ruta.replace(/^\/+/, '').split('/');
+  if (!existsSync(join(root, ruta))) {
+    if (tramos.length === 1 && tramos[0]) ruta = '/programa.html';
+    else if (tramos.length === 2) ruta = '/bloque.html';
+  }
 
   // Nada de salir de la carpeta con "..".
   const archivo = join(root, normalize(ruta).replace(/^(\.\.[/\\])+/, ''));

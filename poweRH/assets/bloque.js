@@ -1,9 +1,10 @@
 /* ==========================================================================
-   PoweRH — la sub-página de un bloque.
+   La sub-página de un bloque.
 
-   El slug que trae la URL busca su fila en la hoja Bloques y con eso se arma
-   toda la página: el objetivo, las tarjetas, las grabaciones y los links al
-   bloque anterior y al siguiente.
+   La URL trae dos cosas: el programa y el bloque. Con el primero se busca la
+   fila de Workshops, con el segundo la de Bloques, y de ahí sale toda la
+   página: el objetivo, las tarjetas, las grabaciones de ese bloque y los links
+   al anterior y al siguiente.
 
    Cuando en la planilla aparece un bloque nuevo, su página existe sola.
    ========================================================================== */
@@ -151,29 +152,27 @@
     if (!caja || !seccion) return;
 
     caja.innerHTML = "";
-    if (!bloque.encuentros.length) {
+    if (!bloque.grabaciones.length) {
       seccion.hidden = true;
       return;
     }
     seccion.hidden = false;
 
-    bloque.encuentros.forEach(function (e) {
+    bloque.grabaciones.forEach(function (g) {
       var titulo =
-        "Encuentro" + (e.numero ? " " + e.numero : "") + (e.titulo ? " · " + e.titulo : "");
-      if (e.grabacion) {
+        "Encuentro " + (g.sesion || g.numero) + (g.titulo ? " · " + g.titulo : "");
+      if (g.link) {
         caja.appendChild(
-          linkVideo(titulo, e.grabacion, "Sesión del " + RH.fechaCorta(e.fecha), "video-link-enc")
+          linkVideo(titulo, g.link, g.fecha ? "Sesión del " + RH.fechaCorta(g.fecha) : "",
+            "video-link-enc")
         );
         return;
       }
       var espera = el("div", "grabacion-espera");
       espera.appendChild(el("strong", null, titulo));
-      var dias = RH.diasHasta(e.fecha);
       espera.appendChild(
         el("span", null,
-          dias > 0
-            ? "· " + RH.capitalizar(RH.fechaCorta(e.fecha)) + ", " + RH.enDias(dias)
-            : "· la subimos en los próximos días")
+          g.fecha ? "· " + RH.capitalizar(RH.fechaCorta(g.fecha)) : "· todavía no está")
       );
       caja.appendChild(espera);
     });
@@ -182,7 +181,7 @@
   /* ------------------------------------------------------------------
      Bloque anterior / siguiente
      ------------------------------------------------------------------ */
-  function pintarNav(bloques, i) {
+  function pintarNav(programa, bloques, i) {
     var caja = $("[data-bloque-nav]");
     var seccion = $("[data-seccion-nav]");
     if (!caja || !seccion) return;
@@ -205,14 +204,14 @@
 
     if (anterior) {
       var la = el("a", "nav-anterior");
-      la.href = RH.urlBloque(anterior.slug);
+      la.href = RH.rutaBloque(programa.id, anterior.slug);
       la.appendChild(el("span", "nav-label", "← Bloque anterior"));
       la.appendChild(el("span", null, anterior.nombre));
       caja.appendChild(la);
     }
     if (siguiente) {
       var ls = el("a", "nav-siguiente");
-      ls.href = RH.urlBloque(siguiente.slug);
+      ls.href = RH.rutaBloque(programa.id, siguiente.slug);
       ls.appendChild(el("span", "nav-label", "Bloque siguiente →"));
       ls.appendChild(el("span", null, siguiente.nombre));
       caja.appendChild(ls);
@@ -243,14 +242,14 @@
     if (meta) {
       var partes = [];
       if (bloque.fecha) partes.push(RH.fechaLarga(bloque.fecha));
-      if (bloque.encuentros.length) {
+      if (bloque.grabaciones.length) {
         partes.push(
-          bloque.encuentros.length === 1
-            ? "1 encuentro en vivo"
-            : bloque.encuentros.length + " encuentros en vivo"
+          bloque.grabaciones.length === 1
+            ? "1 encuentro"
+            : bloque.grabaciones.length + " encuentros"
         );
       }
-      if (facilitador) partes.push("con " + facilitador.nombre);
+      if (facilitador && facilitador.nombre) partes.push("con " + facilitador.nombre);
       meta.textContent = partes.join(" · ");
     }
 
@@ -289,9 +288,7 @@
       if (titulo) titulo.textContent = "🔒 Este bloque todavía no se abrió";
       texto.textContent =
         "«" + cerrado.nombre + "» se abre el " + RH.fechaCorta(cerrado.fecha) +
-        (cerrado.hora ? " a las " + cerrado.hora + " hs" : "") +
         " · " + RH.enDias(RH.diasHasta(cerrado.fecha)) + ".";
-      document.title = cerrado.nombre + " · PoweRH";
     } else if (!slug) {
       texto.textContent = "Este link no dice a qué bloque entrar.";
     } else {
@@ -301,6 +298,31 @@
     }
   }
 
+  /** Los links que vuelven al programa, que no se conocen hasta tener el id. */
+  function pintarVuelta(programa) {
+    var destino = RH.rutaPrograma(programa.id);
+    RH.$$("[data-volver]").forEach(function (a) {
+      a.href = destino;
+    });
+    var marca = $("[data-volver-marca]");
+    if (marca) marca.href = destino;
+    [["[data-volver-bloques]", "#bloques"],
+     ["[data-volver-grabaciones]", "#grabaciones"],
+     ["[data-volver-ayuda]", "#ayuda"]].forEach(function (par) {
+      var a = $(par[0]);
+      if (a) a.href = destino + par[1];
+    });
+    var texto = $("[data-volver-texto]");
+    if (texto) texto.textContent = "Volver a " + programa.nombre;
+
+    var cliente = $("[data-programa-cliente]");
+    if (cliente) cliente.textContent = programa.cliente || "Workshop";
+    var marcaTxt = $("[data-programa-marca]");
+    if (marcaTxt) marcaTxt.textContent = programa.nombre;
+    var pie = $("[data-programa-pie]");
+    if (pie) pie.textContent = programa.nombre;
+  }
+
   /* ------------------------------------------------------------------
      Arranque
      ------------------------------------------------------------------ */
@@ -308,29 +330,41 @@
     var cargando = $("[data-cargando]");
     if (cargando) cargando.hidden = true;
 
-    var slug = RH.slugDeLaUrl();
-    var bloques = datos.bloques || [];
+    var pide = RH.loQuePideLaUrl();
+    var programa = RH.S ? RH.S.programaPorId(datos.programas || [], pide.programa) : null;
+
+    if (!programa) {
+      sinBloque("", []);
+      var t = $("[data-sin-bloque-texto]");
+      if (t) t.textContent = "No encontramos el workshop de este link.";
+      return;
+    }
+
+    pintarVuelta(programa);
+    RH.aplicarAjustes(programa.ajustes);
+
+    var bloques = programa.bloques || [];
     var i = -1;
     for (var k = 0; k < bloques.length; k++) {
-      if (bloques[k].slug === slug && bloques[k].abierto) { i = k; break; }
+      if (bloques[k].slug === pide.bloque && bloques[k].abierto) { i = k; break; }
     }
 
     if (i === -1) {
-      sinBloque(slug, bloques);
+      sinBloque(pide.bloque, bloques);
       return;
     }
 
     var bloque = bloques[i];
     bloque.total = bloques.length;
+    document.title = bloque.nombre + " · " + programa.nombre;
 
-    var nombre = (datos.ajustes && datos.ajustes.nombre) || "PoweRH";
-    document.title = bloque.nombre + " · " + nombre;
-
-    var facilitador = RH.S ? RH.S.facilitadorDe(datos.facilitadores || [], bloque) : null;
+    var facilitador = RH.S
+      ? RH.S.facilitadorDe(datos.facilitadores || [], programa.facilitador)
+      : null;
 
     pintarHero(bloque, facilitador);
     pintarTarjetas(bloque);
     pintarGrabaciones(bloque);
-    pintarNav(bloques, i);
+    pintarNav(programa, bloques, i);
   });
 })();

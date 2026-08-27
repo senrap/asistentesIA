@@ -7,12 +7,13 @@
     <!--
       Esta página no tiene contenido propio: dibuja el bloque que pide la URL.
 
-        /b/bloque-1-los-datos-pueden-transformar-hr   ← la ruta linda
-        bloque.html?b=bloque-1-los-datos-...          ← la misma página, sin reescritura
+        /powerh_1/bloque-1-los-datos-...              ← la ruta linda
+        bloque.html?p=powerh_1&b=bloque-1-los-datos-… ← la misma, sin reescritura
 
-      El slug sale del nombre del bloque en la planilla. Cuando aparece un
-      bloque nuevo en el Sheet, su sub-página existe sola: no hay que crear un
-      archivo ni volver a deployar. La reescritura de /b/* la define netlify.toml.
+      El primer tramo es el ID del programa en Workshops; el segundo sale del
+      nombre del bloque. Cuando aparece un bloque nuevo en la planilla, su
+      sub-página existe sola: no hay que crear un archivo ni volver a deployar.
+      La reescritura la define netlify.toml.
     -->
     <meta name="robots" content="noindex" />
     <meta name="theme-color" content="#00344D" />
@@ -35,17 +36,17 @@
 
     <header class="site-header">
       <div class="wrap">
-        <a class="brand" href="/">
+        <a class="brand" href="/" data-volver-marca>
           <span class="brand-mark" aria-hidden="true">H</span>
           <span class="brand-text"
-            ><span data-ajuste="subtitulo">Workshop</span>
-            <strong data-ajuste="nombre">PoweRH</strong></span
+            ><span data-programa-cliente>Workshop</span>
+            <strong data-programa-marca>HACHE</strong></span
           >
         </a>
         <nav class="header-links" aria-label="Secciones">
-          <a href="/#bloques">Todos los bloques</a>
-          <a href="/#encuentros">Encuentros</a>
-          <a href="/#dudas">Dudas</a>
+          <a href="#" data-volver-bloques>Todos los bloques</a>
+          <a href="#" data-volver-grabaciones>Grabaciones</a>
+          <a href="#" data-volver-ayuda>Ayuda</a>
         </nav>
       </div>
     </header>
@@ -54,12 +55,12 @@
       <!-- Portada del bloque: la arma bloque.js con lo que dice la planilla. -->
       <section class="bloque-hero on-dark" data-bloque-hero hidden>
         <div class="wrap">
-          <a class="volver" href="/#bloques">
+          <a class="volver" href="/" data-volver>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M19 12H5M11 18l-6-6 6-6" />
             </svg>
-            Volver al workshop
+            <span data-volver-texto>Volver al workshop</span>
           </a>
           <span class="bloque-emoji" data-bloque-emoji hidden></span>
           <p class="section-label green" data-bloque-orden></p>
@@ -114,7 +115,7 @@
           <p data-sin-bloque-texto>
             Puede que todavía no esté publicado, o que el link haya cambiado de nombre.
           </p>
-          <a class="btn btn-primary" href="/#bloques">Ver todos los bloques</a>
+          <a class="btn btn-primary" href="/" data-volver>Ver todos los bloques</a>
         </div>
       </section>
     </main>
@@ -122,8 +123,8 @@
     <footer class="site-footer">
       <div class="wrap">
         <div class="footer-bottom">
-          <span>HACHE Consultora · People Analytics</span>
-          <span data-ajuste="nombre">PoweRH</span>
+          <span>HACHE Consultora · Formación en datos</span>
+          <span data-programa-pie></span>
         </div>
       </div>
     </footer>

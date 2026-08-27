@@ -26,9 +26,10 @@ import {
   pareceCsv,
   parseCsv,
   aObjetos,
+  mapearProgramas,
   mapearBloques,
   mapearTarjetas,
-  mapearEncuentros,
+  mapearGrabaciones,
   mapearFacilitadores,
   mapearAjustes,
   armar,
@@ -44,7 +45,7 @@ const iAhora = args.indexOf('--ahora');
 let AHORA = new Date();
 if (iAhora > -1 && args[iAhora + 1]) {
   const v = args[iAhora + 1];
-  AHORA = v.includes('T') ? instanteAR(v.slice(0, 10), v.slice(11)) : instanteAR(v, '23:59');
+  AHORA = instanteAR(v.slice(0, 10));
 }
 
 /* ------------------------------------------------------------------
@@ -82,10 +83,13 @@ window.RHCONFIG = ${JSON.stringify({ sheet: cfg.sheet, sitio: cfg.sitio }, null,
 /* ------------------------------------------------------------------
    3. assets/contenido.js — copia de respaldo
    ------------------------------------------------------------------ */
+const ANIO = cfg.sitio.anioReferencia;
+
 const HOJAS = [
-  ['bloques', 'bloques.csv', mapearBloques],
-  ['tarjetas', 'tarjetas.csv', mapearTarjetas],
-  ['encuentros', 'encuentros.csv', mapearEncuentros],
+  ['programas', 'workshops.csv', (o) => mapearProgramas(o, ANIO)],
+  ['bloques', 'bloques.csv', (o) => mapearBloques(o, ANIO)],
+  ['tarjetas', 'tarjetas.csv', (o) => mapearTarjetas(o, ANIO)],
+  ['grabaciones', 'grabaciones.csv', (o) => mapearGrabaciones(o, ANIO)],
   ['facilitadores', 'facilitadores.csv', mapearFacilitadores],
   ['ajustes', 'ajustes.csv', mapearAjustes]
 ];
@@ -136,8 +140,8 @@ try {
     crudo[clave] = mapear(aObjetos(parseCsv(csv)));
   }
 
-  if (!crudo.bloques.length) {
-    throw new Error('la hoja de bloques no tiene ninguna fila con nombre');
+  if (!crudo.programas.length) {
+    throw new Error('la hoja de programas no tiene ninguna fila con ID');
   }
 
   const datos = armar(crudo, AHORA);
@@ -156,16 +160,23 @@ window.PROGRAMA = ${JSON.stringify(
 `
   );
 
-  const abiertos = datos.bloques.filter((b) => b.abierto).length;
-  const tarjetas = datos.bloques.reduce((n, b) => n + b.tarjetas.length, 0);
-  const grabadas = datos.encuentros.filter((e) => e.grabacion).length;
+  const conBloques = datos.programas.filter((p) => p.bloques.length);
+  const bloques = conBloques.reduce((n, p) => n + p.bloques.length, 0);
+  const abiertos = conBloques.reduce((n, p) => n + p.bloques.filter((b) => b.abierto).length, 0);
+  const tarjetas = conBloques.reduce(
+    (n, p) => n + p.bloques.reduce((m, b) => m + b.tarjetas.length, 0), 0);
+  const grabadas = datos.programas.reduce(
+    (n, p) => n + p.grabaciones.filter((g) => g.link).length, 0);
+
   console.log(
-    `OK — ${datos.bloques.length} bloques (${abiertos} liberados), ${tarjetas} tarjetas, ` +
-      `${datos.encuentros.length} encuentros (${grabadas} con grabación), ` +
-      `${datos.facilitadores.length} facilitadores, ${Object.keys(datos.ajustes).length} ajustes` +
+    `OK — ${datos.programas.length} programas (${conBloques.length} con contenido), ` +
+      `${bloques} bloques (${abiertos} liberados), ${tarjetas} tarjetas, ` +
+      `${grabadas} grabaciones cargadas, ${datos.facilitadores.length} facilitadores` +
       `${local ? ' [fixtures]' : ' [Sheet en vivo]'}`
   );
-  console.log('   Sub-páginas: ' + datos.bloques.map((b) => cfg.sitio.rutaBloques + b.slug).join('  '));
+  conBloques.forEach((p) => {
+    console.log(`   /${p.id} — ` + p.bloques.map((b) => `/${p.id}/${b.slug}`).join('  '));
+  });
 } catch (e) {
   // No romper el deploy por un problema de red o de permisos: el sitio lee el
   // Sheet en vivo igual, y el respaldo viejo sigue sirviendo como red de contención.

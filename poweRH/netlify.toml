@@ -1,6 +1,6 @@
-# Config del sitio de PoweRH, para cuando Netlify lo despliega con
+# Config del sitio de los workshops, para cuando Netlify lo despliega con
 # "Base directory: poweRH". Con esa base, Netlify lee este archivo y publica
-# esta carpeta como raíz del sitio: el workshop queda en /, no en /poweRH/.
+# esta carpeta como raíz del sitio: los workshops quedan en /, no en /poweRH/.
 #
 # El resto del repositorio —la Biblioteca de Asistentes en la raíz, Power People
 # en power-people/— no se toca: cada uno se despliega en su propio proyecto,
@@ -13,15 +13,23 @@
 [build.environment]
   NODE_VERSION = "20"
 
-# Las sub-páginas de los bloques.
+# Las páginas de cada programa y de cada bloque.
 #
-# No hay un archivo por bloque: los slugs salen del nombre que tiene cada uno
-# en la planilla, así que /b/lo-que-sea sirve siempre bloque.html y es el JS
-# el que decide qué mostrar. Un bloque nuevo en el Sheet estrena su página sin
-# tocar el repo ni volver a deployar.
+# No hay un archivo por programa ni por bloque: el id sale de la columna ID de
+# la hoja Workshops y el slug del nombre del bloque, así que /lo-que-sea sirve
+# siempre programa.html o bloque.html y es el JS el que decide qué mostrar.
+# Un workshop nuevo en la planilla estrena su página sin tocar el repo.
+#
+# Netlify sirve primero los archivos que existen de verdad, así que
+# /assets/…, /diagnostico.html y la portada ganan sobre estas reglas.
 [[redirects]]
-  from = "/b/*"
+  from = "/:programa/:bloque"
   to = "/bloque.html"
+  status = 200
+
+[[redirects]]
+  from = "/:programa"
+  to = "/programa.html"
   status = 200
 
 [[headers]]

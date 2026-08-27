@@ -1859,3 +1859,65 @@ a:hover {
     animation: none;
   }
 }
+
+/* ============ Ayuda y buscador de la portada ============ */
+
+/*
+ * La sección de ayuda reemplazó a la grilla de tres tarjetas: un título, una
+ * línea y el mail. Si hace falta decir algo más, va en el ajuste "ayuda".
+ */
+.ayuda {
+  max-width: 56ch;
+}
+
+.ayuda-texto {
+  margin: 18px 0 24px;
+  font-size: 16px;
+  color: var(--gray);
+}
+
+/* La portada no lista los programas: se entra con el código del workshop. */
+.buscador {
+  margin-top: 34px;
+  max-width: 480px;
+}
+
+.buscador label {
+  display: block;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 10px;
+}
+
+.buscador form {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.buscador input {
+  flex: 1 1 220px;
+  min-width: 0;
+  font-family: inherit;
+  font-size: 15px;
+  color: var(--navy);
+  background: var(--white);
+  border: 1px solid transparent;
+  border-radius: var(--radius-btn);
+  padding: 12px 16px;
+}
+
+.buscador input:focus-visible {
+  outline: 3px solid var(--green);
+  outline-offset: 2px;
+}
+
+.buscador-nota {
+  margin-top: 10px;
+  font-size: 13px;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.6);
+}

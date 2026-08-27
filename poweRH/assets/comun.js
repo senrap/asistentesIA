@@ -1,6 +1,6 @@
 /* ==========================================================================
-   PoweRH — HACHE Consultora
-   Lo que comparten la portada y las sub-páginas de cada bloque.
+   Workshops HACHE
+   Lo que comparten la portada, la página de cada programa y la de cada bloque.
 
    Sin dependencias. Todo corre en el navegador del alumno: el contenido sale
    del Google Sheet, leído en vivo. Si no se puede leer (permisos, Google
@@ -12,7 +12,7 @@ window.RH = (function () {
   "use strict";
 
   var S = window.RHSheet;
-  var RESPALDO = window.PROGRAMA || { bloques: [], encuentros: [], facilitadores: [], ajustes: {} };
+  var RESPALDO = window.PROGRAMA || { programas: [], facilitadores: [], ajustes: {} };
   var CFG = window.RHCONFIG || {};
   var SITIO = CFG.sitio || {};
 
@@ -57,9 +57,31 @@ window.RH = (function () {
       .replace(/`([^`]+)`/g, "<code>$1</code>");
   }
 
+  /*
+   * Un asterisco escapado (\*) es un asterisco de verdad, no marca de negrita.
+   * Hace falta: el contenido habla de cardinalidades (*:1) y de fórmulas DAX,
+   * y sin esto un "(\*:1)" adentro de una negrita rompía toda la línea.
+   * Se guardan como caracteres de control, que no pueden venir del texto.
+   */
+  var ESCAPES = [["\\*", "\u0001"], ["\\_", "\u0002"], ["\\`", "\u0003"]];
+
+  function guardarEscapes(s) {
+    ESCAPES.forEach(function (par) {
+      s = s.split(par[0]).join(par[1]);
+    });
+    return s;
+  }
+
+  function devolverEscapes(s) {
+    ESCAPES.forEach(function (par) {
+      s = s.split(par[1]).join(par[0].charAt(1));
+    });
+    return s;
+  }
+
   function markdown(texto) {
     if (!texto) return "";
-    var lineas = escapar(texto).replace(/\r/g, "").split("\n");
+    var lineas = guardarEscapes(escapar(texto)).replace(/\r/g, "").split("\n");
     var html = "";
     var listaAbierta = 0;
     var numerada = false;
@@ -115,7 +137,7 @@ window.RH = (function () {
     });
 
     cerrarListas(0);
-    return html;
+    return devolverEscapes(html);
   }
 
   /* ------------------------------------------------------------------
@@ -146,6 +168,12 @@ window.RH = (function () {
       month: "long",
       timeZone: "UTC"
     });
+  }
+
+  /** "10 de marzo". Sin día de la semana, que en "mar, 10 de marzo" confunde. */
+  function fechaDia(iso) {
+    if (!iso) return "";
+    return fmt(fechaSimple(iso), { day: "numeric", month: "long", timeZone: "UTC" });
   }
 
   function fechaLarga(iso) {
@@ -254,12 +282,17 @@ window.RH = (function () {
    * copia vieja del programa entero.
    */
   var HOJAS = [
-    { clave: "bloques", mapear: "mapearBloques", obligatoria: true },
-    { clave: "tarjetas", mapear: "mapearTarjetas", obligatoria: true },
-    { clave: "encuentros", mapear: "mapearEncuentros", obligatoria: false },
-    { clave: "facilitadores", mapear: "mapearFacilitadores", obligatoria: false },
-    { clave: "ajustes", mapear: "mapearAjustes", obligatoria: false }
+    { clave: "programas", mapear: "mapearProgramas", conAnio: true, obligatoria: true },
+    { clave: "bloques", mapear: "mapearBloques", conAnio: true, obligatoria: false },
+    { clave: "tarjetas", mapear: "mapearTarjetas", conAnio: true, obligatoria: false },
+    { clave: "grabaciones", mapear: "mapearGrabaciones", conAnio: true, obligatoria: false },
+    { clave: "facilitadores", mapear: "mapearFacilitadores", conAnio: false, obligatoria: false },
+    { clave: "ajustes", mapear: "mapearAjustes", conAnio: false, obligatoria: false }
   ];
+
+  function vacio(clave) {
+    return clave === "ajustes" ? { generales: {}, porPrograma: {} } : [];
+  }
 
   function cargar() {
     if (!S || !CFG.sheet || !CFG.sheet.id || /^PEGAR/.test(CFG.sheet.id)) {
@@ -278,7 +311,10 @@ window.RH = (function () {
 
       return traerHoja(nombreHoja).then(
         function (csv) {
-          crudo[h.clave] = S[h.mapear](S.aObjetos(S.parseCsv(csv)));
+          var objetos = S.aObjetos(S.parseCsv(csv));
+          crudo[h.clave] = h.conAnio
+            ? S[h.mapear](objetos, SITIO.anioReferencia)
+            : S[h.mapear](objetos);
           if (h.obligatoria && !crudo[h.clave].length) {
             throw new Error(
               "leí la hoja " + nombreHoja + " pero no tiene ninguna fila utilizable"
@@ -289,7 +325,7 @@ window.RH = (function () {
         function (e) {
           if (h.obligatoria) throw e;
           DIAG.push(h.clave + ": se usa el respaldo (" + e.message + ")");
-          crudo[h.clave] = RESPALDO[h.clave] || (h.clave === "ajustes" ? {} : []);
+          crudo[h.clave] = vacio(h.clave);
           return siguiente();
         }
       );
@@ -346,26 +382,48 @@ window.RH = (function () {
   }
 
   /* ------------------------------------------------------------------
-     Sub-páginas
-     ------------------------------------------------------------------ */
-  var RUTA = SITIO.rutaBloques || "/b/";
+     Direcciones
 
-  /** La dirección de la sub-página de un bloque. */
-  function urlBloque(slug) {
-    return RUTA + slug;
+     El id del programa en Workshops es su dirección, y el nombre del bloque
+     es el tramo que sigue:
+
+       /powerh_1                              la página del programa
+       /powerh_1/bloque-1-los-datos-...       la de uno de sus bloques
+
+     No hay un archivo por programa ni por bloque: la reescritura de
+     netlify.toml manda todo a programa.html o bloque.html, y el JS decide qué
+     mostrar con lo que dice la planilla.
+     ------------------------------------------------------------------ */
+
+  function rutaPrograma(id) {
+    return "/" + encodeURIComponent(id);
+  }
+
+  function rutaBloque(id, slug) {
+    return "/" + encodeURIComponent(id) + "/" + slug;
   }
 
   /**
-   * El slug que pide la URL actual, venga de la ruta linda (/b/mi-bloque) o
-   * del parámetro (bloque.html?b=mi-bloque). El segundo es el que sirve
-   * cuando el sitio se abre sin un servidor que haga la reescritura.
+   * Qué pide la URL actual. Sale de la ruta linda (/powerh_1/mi-bloque) o de
+   * los parámetros (?p=powerh_1&b=mi-bloque), que son los que sirven cuando el
+   * sitio se abre sin un servidor que haga la reescritura.
    */
-  function slugDeLaUrl() {
-    var q = new RegExp("[?&]b=([^&]+)").exec(location.search);
-    if (q) return decodeURIComponent(q[1]);
-    var partes = location.pathname.replace(/\/+$/, "").split("/");
-    var ultimo = partes[partes.length - 1] || "";
-    return /\.html?$/i.test(ultimo) ? "" : decodeURIComponent(ultimo);
+  function loQuePideLaUrl() {
+    var q = function (n) {
+      var m = new RegExp("[?&]" + n + "=([^&]+)").exec(location.search);
+      return m ? decodeURIComponent(m[1]) : "";
+    };
+    var programa = q("p");
+    var bloque = q("b");
+    if (programa) return { programa: programa, bloque: bloque };
+
+    var partes = location.pathname.replace(/^\/+|\/+$/g, "").split("/");
+    // Un .html en el último tramo es la página en crudo, sin programa.
+    if (partes.length && /\.html?$/i.test(partes[partes.length - 1])) partes.pop();
+    return {
+      programa: partes[0] ? decodeURIComponent(partes[0]) : "",
+      bloque: partes[1] ? decodeURIComponent(partes[1]) : ""
+    };
   }
 
   /* ------------------------------------------------------------------
@@ -435,11 +493,12 @@ window.RH = (function () {
     S: S, CFG: CFG, SITIO: SITIO, MS_DIA: MS_DIA,
     $: $, $$: $$, el: el,
     markdown: markdown, escapar: escapar,
-    fmt: fmt, fechaSimple: fechaSimple, fechaCorta: fechaCorta, fechaLarga: fechaLarga,
+    fmt: fmt, fechaSimple: fechaSimple, fechaCorta: fechaCorta, fechaDia: fechaDia,
+    fechaLarga: fechaLarga,
     capitalizar: capitalizar, diasHasta: diasHasta, enDias: enDias,
     toast: toast,
     aplicarAjustes: aplicarAjustes,
-    urlBloque: urlBloque, slugDeLaUrl: slugDeLaUrl,
+    rutaPrograma: rutaPrograma, rutaBloque: rutaBloque, loQuePideLaUrl: loQuePideLaUrl,
     arrancar: arrancar
   };
 })();
