@@ -136,7 +136,9 @@ try {
   // Una hoja por vez y no en paralelo: pedirle varias cosas a la vez a Google
   // desde el mismo cliente hace que a veces alguna vuelva redirigida.
   for (const [clave, fixture, mapear] of HOJAS) {
-    const csv = await leerHoja(cfg.sheet.hojas[clave], fixture);
+    const nombreHoja = (cfg.sheet.hojas || {})[clave];
+    if (!nombreHoja) throw new Error(`config.json no dice qué hoja es "${clave}"`);
+    const csv = await leerHoja(nombreHoja, fixture);
     crudo[clave] = mapear(aObjetos(parseCsv(csv)));
   }
 

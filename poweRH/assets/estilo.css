@@ -30,6 +30,16 @@
   box-sizing: border-box;
 }
 
+/*
+ * El sitio esconde cosas con el atributo [hidden] —botones que ese programa no
+ * tiene, secciones sin contenido— y cualquier regla que fije display le gana al
+ * "display: none" que trae el navegador. Con .btn en inline-flex, los botones de
+ * Zoom y del calendario aparecían igual. Esto lo corta de raíz.
+ */
+[hidden] {
+  display: none !important;
+}
+
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 84px;

@@ -49,6 +49,12 @@
     return a;
   }
 
+  /** "General" en la columna Cliente significa abierto, no un cliente. */
+  function nombreCliente(p) {
+    if (!p.cliente || RH.S.normalizarClave(p.cliente) === "general") return "Workshop";
+    return p.cliente;
+  }
+
   function mostrar(sel) {
     var n = $(sel);
     if (n) n.hidden = false;
@@ -67,7 +73,7 @@
     if (marca) marca.textContent = p.nombre;
 
     var cliente = $("[data-programa-cliente]");
-    if (cliente) cliente.textContent = p.cliente || "Workshop";
+    if (cliente) cliente.textContent = nombreCliente(p);
 
     var pie = $("[data-programa-pie]");
     if (pie) pie.textContent = p.nombre;
@@ -230,6 +236,22 @@
     mostrar("[data-seccion-grabaciones]");
     caja.innerHTML = "";
 
+    // Sin ninguna grabación cargada, listar las sesiones una por una es una
+    // pared de "todavía no está". Alcanza con decirlo una vez.
+    var hayAlguna = filas.some(function (g) {
+      return g.link;
+    });
+    if (!hayAlguna) {
+      var aviso = el("div", "grabacion-espera");
+      aviso.appendChild(
+        el("strong", null,
+          filas.length + (filas.length === 1 ? " encuentro" : " encuentros"))
+      );
+      aviso.appendChild(el("span", null, "· las grabaciones aparecen acá apenas las subamos"));
+      caja.appendChild(aviso);
+      return;
+    }
+
     filas.forEach(function (g) {
       var titulo =
         "Encuentro " + (g.sesion || g.numero) + (g.titulo ? " · " + g.titulo : "");
@@ -319,6 +341,19 @@
     });
   }
 
+  /**
+   * Los links del encabezado apuntan a secciones que no todos los programas
+   * tienen. El que quedó sin destino se saca: un link que no lleva a ningún
+   * lado es peor que no tenerlo.
+   */
+  function limpiarNav() {
+    RH.$$(".header-links a[href^='#']").forEach(function (a) {
+      var destino = document.querySelector(a.getAttribute("href"));
+      // offsetParent en null = está escondido, por el atributo hidden o por CSS.
+      if (!destino || destino.offsetParent === null) a.hidden = true;
+    });
+  }
+
   /* ------------------------------------------------------------------
      Arranque
      ------------------------------------------------------------------ */
@@ -335,6 +370,8 @@
       if (texto && !pide.programa) {
         texto.textContent = "Este link no dice a qué workshop entrar.";
       }
+      // Sin programa no hay ninguna de esas secciones: el menú sobra entero.
+      limpiarNav();
       return;
     }
 
@@ -356,5 +393,6 @@
     mostrar("[data-seccion-bienvenida]");
     mostrar("[data-seccion-ayuda]");
     mostrar("[data-seccion-redes]");
+    limpiarNav();
   });
 })();

@@ -316,7 +316,8 @@
     if (texto) texto.textContent = "Volver a " + programa.nombre;
 
     var cliente = $("[data-programa-cliente]");
-    if (cliente) cliente.textContent = programa.cliente || "Workshop";
+    var esGeneral = !programa.cliente || RH.S.normalizarClave(programa.cliente) === "general";
+    if (cliente) cliente.textContent = esGeneral ? "Workshop" : programa.cliente;
     var marcaTxt = $("[data-programa-marca]");
     if (marcaTxt) marcaTxt.textContent = programa.nombre;
     var pie = $("[data-programa-pie]");

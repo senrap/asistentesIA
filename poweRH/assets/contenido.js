@@ -1,9 +1,9 @@
 /* Copia de respaldo del Google Sheet — no editar a mano.
    El sitio la usa solo si no consigue leer la planilla en vivo.
-   Generada el 2026-08-27T00:10:17.159Z desde fixtures/ (--local).
+   Generada el 2026-08-27T11:05:24.636Z desde fixtures/ (--local).
    El contenido posterior a ese momento no está acá. */
 window.PROGRAMA = {
-  "generado": "2026-08-27T00:10:17.159Z",
+  "generado": "2026-08-27T11:05:24.636Z",
   "programas": [
     {
       "id": "powerh_1",

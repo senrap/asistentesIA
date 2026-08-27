@@ -237,6 +237,8 @@ function dosPuntos(y, m, d) {
 export function aUrl(valor) {
   var v = String(valor || '').trim();
   if (!v || v === '-' || v === '—') return '';
+  // Una celda de la planilla no puede convertirse en "javascript:…".
+  if (/^mailto:/i.test(v)) return v;
   if (/^https?:\/\//i.test(v)) return v;
   if (/^www\./i.test(v) || /^[a-z0-9-]+\.[a-z]{2,}\//i.test(v)) return 'https://' + v;
   return '';
@@ -544,7 +546,11 @@ export function armar(datos, ahora) {
     b.abierto = !b.fecha || instanteAR(b.fecha).getTime() <= t;
     b.tarjetas = [];
     b.grabaciones = [];
-    bloquePorClave[b.programa + '/' + aSlug(b.nombre)] = b;
+    // Las tarjetas apuntan al bloque por su NOMBRE, así que el índice va por
+    // el slug base. Si dos bloques del mismo programa normalizan igual, gana
+    // el primero: es ambiguo de origen y pisarlo dejaba al primero sin nada.
+    var base = b.programa + '/' + aSlug(b.nombre);
+    if (!bloquePorClave[base]) bloquePorClave[base] = b;
     p.bloques.push(b);
   });
 

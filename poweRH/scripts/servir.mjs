@@ -30,7 +30,16 @@ const TIPOS = {
 };
 
 createServer(async (req, res) => {
-  let ruta = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
+  let ruta;
+  try {
+    ruta = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
+  } catch {
+    // Un "%" suelto en la URL hacía explotar decodeURIComponent y, sin nadie
+    // que lo atajara, se llevaba puesto el servidor entero.
+    res.writeHead(400, { 'Content-Type': 'text/html; charset=utf-8' });
+    res.end('<h1>400</h1><p>La dirección está mal escrita.</p>');
+    return;
+  }
 
   if (ruta === '/' || ruta.endsWith('/')) ruta += 'index.html';
 

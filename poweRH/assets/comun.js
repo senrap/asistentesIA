@@ -17,7 +17,9 @@ window.RH = (function () {
   var SITIO = CFG.sitio || {};
 
   var MS_DIA = 86400000;
-  var HOY = new Date().toISOString().slice(0, 10);
+  // En hora de Argentina, no en UTC: pasadas las 21 hs UTC ya es el día
+  // siguiente, y todos los "se abre en N días" se corrían uno.
+  var HOY = new Date(Date.now() - 3 * 3600000).toISOString().slice(0, 10);
   var TIMEOUT_SHEET = 20000;
   var DIAG = [];
   var MOTIVO = "";
@@ -45,7 +47,11 @@ window.RH = (function () {
     return String(s)
       .replace(/&/g, "&amp;")
       .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;");
+      .replace(/>/g, "&gt;")
+      // Las comillas importan: el href de los links se arma interpolando, y
+      // sin esto una URL con comillas se escapaba del atributo.
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
   }
 
   function enLinea(s) {
@@ -83,60 +89,60 @@ window.RH = (function () {
     if (!texto) return "";
     var lineas = guardarEscapes(escapar(texto)).replace(/\r/g, "").split("\n");
     var html = "";
-    var listaAbierta = 0;
-    var numerada = false;
+    // Una pila con la etiqueta de cada nivel abierto: así una lista con guiones
+    // anidada bajo una numerada se cierra con la etiqueta que le corresponde.
+    var abiertas = [];
 
-    function cerrarListas(hasta) {
-      while (listaAbierta > hasta) {
-        html += numerada ? "</ol>" : "</ul>";
-        listaAbierta--;
+    function cerrarHasta(n) {
+      while (abiertas.length > n) html += "</" + abiertas.pop() + ">";
+    }
+
+    function abrir(tag, nivel) {
+      // Si el nivel ya está abierto con otra etiqueta, se cierra y se rehace.
+      if (abiertas.length >= nivel && abiertas[nivel - 1] !== tag) cerrarHasta(nivel - 1);
+      while (abiertas.length < nivel) {
+        html += "<" + tag + ">";
+        abiertas.push(tag);
       }
-      if (!listaAbierta) numerada = false;
     }
 
     lineas.forEach(function (linea) {
       if (!linea.trim()) {
-        cerrarListas(0);
+        cerrarHasta(0);
         return;
       }
 
       var titulo = linea.match(/^(#{2,4})\s+(.*)$/);
       if (titulo) {
-        cerrarListas(0);
+        cerrarHasta(0);
         var nivel = Math.min(titulo[1].length + 1, 5);
         html += "<h" + nivel + ">" + enLinea(titulo[2]) + "</h" + nivel + ">";
         return;
       }
 
-      // Listas numeradas: "1. Paso uno"
       var num = linea.match(/^(\s*)\d+[.)]\s+(.*)$/);
       if (num) {
-        if (!listaAbierta) {
-          numerada = true;
-          html += "<ol>";
-          listaAbierta = 1;
-        }
+        var nOl = Math.floor(num[1].length / 2) + 1;
+        abrir("ol", nOl);
+        cerrarHasta(nOl);
         html += "<li>" + enLinea(num[2]) + "</li>";
         return;
       }
 
       var item = linea.match(/^(\s*)[-*•]\s+(.*)$/);
       if (item) {
-        var nivelLista = Math.floor(item[1].length / 2) + 1;
-        while (listaAbierta < nivelLista) {
-          html += "<ul>";
-          listaAbierta++;
-        }
-        cerrarListas(nivelLista);
+        var nUl = Math.floor(item[1].length / 2) + 1;
+        abrir("ul", nUl);
+        cerrarHasta(nUl);
         html += "<li>" + enLinea(item[2]) + "</li>";
         return;
       }
 
-      cerrarListas(0);
+      cerrarHasta(0);
       html += "<p>" + enLinea(linea.trim()) + "</p>";
     });
 
-    cerrarListas(0);
+    cerrarHasta(0);
     return devolverEscapes(html);
   }
 
@@ -368,15 +374,25 @@ window.RH = (function () {
     });
 
     $$("[data-ajuste-href]").forEach(function (nodo) {
-      var clave = nodo.getAttribute("data-ajuste-href");
-      var v = ajustes[clave];
-      if (v === undefined) return;
+      var v = ajustes[nodo.getAttribute("data-ajuste-href")];
+
       if (!v) {
+        // Sin valor —falte la clave o esté vacía— el link se esconde, salvo
+        // que el HTML ya traiga uno de verdad como respaldo. Dejar el "#" que
+        // viene por defecto sería un link muerto que recarga la página.
+        var puesto = nodo.getAttribute("href") || "";
+        if (!puesto || puesto === "#") nodo.hidden = true;
+        return;
+      }
+
+      var destino = /@/.test(v) && !/^https?:|^mailto:/i.test(v) ? "mailto:" + v : v;
+      // Solo protocolos que son links. Una celda no puede meter "javascript:".
+      if (!/^(https?:|mailto:)/i.test(destino)) {
         nodo.hidden = true;
         return;
       }
       nodo.hidden = false;
-      nodo.href = /@/.test(v) && !/^https?:|^mailto:/i.test(v) ? "mailto:" + v : v;
+      nodo.href = destino;
       if (nodo.hasAttribute("data-ajuste-href-texto")) nodo.textContent = v;
     });
   }
@@ -408,10 +424,19 @@ window.RH = (function () {
    * los parámetros (?p=powerh_1&b=mi-bloque), que son los que sirven cuando el
    * sitio se abre sin un servidor que haga la reescritura.
    */
+  /** decodeURIComponent explota con un "%" suelto; acá eso no puede tirar la página. */
+  function decodificar(s) {
+    try {
+      return decodeURIComponent(s);
+    } catch (e) {
+      return s;
+    }
+  }
+
   function loQuePideLaUrl() {
     var q = function (n) {
       var m = new RegExp("[?&]" + n + "=([^&]+)").exec(location.search);
-      return m ? decodeURIComponent(m[1]) : "";
+      return m ? decodificar(m[1]) : "";
     };
     var programa = q("p");
     var bloque = q("b");
@@ -421,8 +446,8 @@ window.RH = (function () {
     // Un .html en el último tramo es la página en crudo, sin programa.
     if (partes.length && /\.html?$/i.test(partes[partes.length - 1])) partes.pop();
     return {
-      programa: partes[0] ? decodeURIComponent(partes[0]) : "",
-      bloque: partes[1] ? decodeURIComponent(partes[1]) : ""
+      programa: partes[0] ? decodificar(partes[0]) : "",
+      bloque: partes[1] ? decodificar(partes[1]) : ""
     };
   }
 
@@ -430,10 +455,12 @@ window.RH = (function () {
      Aviso de qué fuente se usó
      ------------------------------------------------------------------ */
   function avisoFuente(fuente) {
-    var aviso = $("[data-fuente]");
     var debug = /[?&]debug\b/.test(location.search);
 
-    if (aviso) {
+    // Puede haber más de un lugar donde mostrarlo: el de la portada del
+    // programa queda escondido justo cuando el programa no se encuentra, que
+    // es cuando más importa saber que se está mirando una copia vieja.
+    $$("[data-fuente]").forEach(function (aviso) {
       if (fuente === "respaldo") {
         aviso.classList.add("es-alerta");
         aviso.textContent =
@@ -448,7 +475,7 @@ window.RH = (function () {
       } else {
         aviso.hidden = true;
       }
-    }
+    });
 
     if (debug && window.console) {
       console.log("[PoweRH] fuente:", fuente);
