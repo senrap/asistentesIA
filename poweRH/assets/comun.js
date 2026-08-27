@@ -1,25 +1,26 @@
 /* ==========================================================================
-   Workshops HACHE
-   Lo que comparten la portada, la página de cada programa y la de cada bloque.
+   PoweRH
+   Lo que comparten la portada, la página de cada cursada, la de cada bloque y
+   la de cierre.
 
-   Sin dependencias. Todo corre en el navegador del alumno: el contenido sale
-   del Google Sheet, leído en vivo. Si no se puede leer (permisos, Google
-   caído, una red corporativa que bloquea docs.google.com) se usa la copia de
-   respaldo de assets/contenido.js, que arma el build.
+   Sin dependencias. Dos fuentes:
+
+     window.CURRICULO   el contenido del programa. Fijo, viene con el sitio.
+     el Google Sheet    lo que cambia en cada cursada, leído en vivo. Si no se
+                        puede leer (permisos, Google caído, una red corporativa
+                        que bloquea docs.google.com) se usa la copia de
+                        respaldo de assets/cursos.js, que arma el build.
    ========================================================================== */
 
 window.RH = (function () {
   "use strict";
 
   var S = window.RHSheet;
-  var RESPALDO = window.PROGRAMA || { programas: [], facilitadores: [], ajustes: {} };
+  var CURRICULO = window.CURRICULO || { bloques: [] };
+  var RESPALDO = window.CURSOS || { cursos: [] };
   var CFG = window.RHCONFIG || {};
   var SITIO = CFG.sitio || {};
 
-  var MS_DIA = 86400000;
-  // En hora de Argentina, no en UTC: pasadas las 21 hs UTC ya es el día
-  // siguiente, y todos los "se abre en N días" se corrían uno.
-  var HOY = new Date(Date.now() - 3 * 3600000).toISOString().slice(0, 10);
   var TIMEOUT_SHEET = 20000;
   var DIAG = [];
   var MOTIVO = "";
@@ -40,8 +41,9 @@ window.RH = (function () {
   }
 
   /* ------------------------------------------------------------------
-     Markdown mínimo para las columnas de texto del Sheet.
-     Escapamos primero: el texto viene de una planilla, no de acá.
+     Markdown mínimo para los textos del currículo.
+     Escapamos primero, siempre: es más barato que acordarse de cuándo hace
+     falta.
      ------------------------------------------------------------------ */
   function escapar(s) {
     return String(s)
@@ -166,16 +168,6 @@ window.RH = (function () {
     return s.charAt(0).toUpperCase() + s.slice(1);
   }
 
-  function fechaCorta(iso) {
-    if (!iso) return "";
-    return fmt(fechaSimple(iso), {
-      weekday: "short",
-      day: "numeric",
-      month: "long",
-      timeZone: "UTC"
-    });
-  }
-
   /** "10 de marzo". Sin día de la semana, que en "mar, 10 de marzo" confunde. */
   function fechaDia(iso) {
     if (!iso) return "";
@@ -194,16 +186,18 @@ window.RH = (function () {
     );
   }
 
-  function diasHasta(iso) {
-    return Math.ceil((fechaSimple(iso) - fechaSimple(HOY)) / MS_DIA);
-  }
-
-  function enDias(dias) {
-    if (dias <= 0) return "hoy";
-    if (dias === 1) return "mañana";
-    if (dias < 7) return "en " + dias + " días";
-    var sem = Math.round(dias / 7);
-    return "en " + sem + (sem === 1 ? " semana" : " semanas");
+  /**
+   * Hoy en dd/mm/aaaa, hora de Argentina — es el formato que pide LinkedIn en
+   * la fecha de emisión del certificado. En UTC, pasadas las 21 hs de acá ya
+   * sería mañana.
+   */
+  function hoyAR() {
+    var d = new Date(Date.now() - 3 * 3600000);
+    return (
+      String(d.getUTCDate()).padStart(2, "0") + "/" +
+      String(d.getUTCMonth() + 1).padStart(2, "0") + "/" +
+      d.getUTCFullYear()
+    );
   }
 
   /* ------------------------------------------------------------------
@@ -220,6 +214,58 @@ window.RH = (function () {
     toastTimer = setTimeout(function () {
       caja.classList.remove("is-visible");
     }, 2600);
+  }
+
+  /* ------------------------------------------------------------------
+     El currículo en el HTML
+
+       data-c="hero.titulo"        reemplaza el texto del elemento
+       data-c-md="bienvenida.lead" lo mismo, interpretando markdown
+
+     Es la contracara de los viejos data-ajuste: ahora estos textos no salen de
+     la planilla sino de lib/curriculo.mjs, que se edita y se commitea.
+     ------------------------------------------------------------------ */
+  function valorDe(ruta) {
+    var partes = String(ruta || "").split(".");
+    var v = CURRICULO;
+    for (var i = 0; i < partes.length; i++) {
+      if (v == null) return "";
+      v = v[partes[i]];
+    }
+    return v == null ? "" : v;
+  }
+
+  function aplicarCurriculo(raiz) {
+    $$("[data-c]", raiz).forEach(function (nodo) {
+      var v = valorDe(nodo.getAttribute("data-c"));
+      if (v) nodo.textContent = v;
+    });
+    $$("[data-c-md]", raiz).forEach(function (nodo) {
+      var v = valorDe(nodo.getAttribute("data-c-md"));
+      if (v) nodo.innerHTML = markdown(v);
+    });
+  }
+
+  /**
+   * Un link que puede no existir: con URL se muestra y apunta ahí, sin URL se
+   * esconde. Dejar el "#" que viene por defecto sería un link muerto.
+   * Solo se aceptan protocolos que son links: una celda de la planilla no
+   * puede convertirse en "javascript:…".
+   */
+  function link(nodo, url, texto) {
+    if (!nodo) return false;
+    var destino = String(url || "").trim();
+    if (destino && /@/.test(destino) && !/^https?:|^mailto:/i.test(destino)) {
+      destino = "mailto:" + destino;
+    }
+    if (!destino || !/^(https?:|mailto:)/i.test(destino)) {
+      nodo.hidden = true;
+      return false;
+    }
+    nodo.href = destino;
+    if (texto) nodo.textContent = texto;
+    nodo.hidden = false;
+    return true;
   }
 
   /* ------------------------------------------------------------------
@@ -278,140 +324,55 @@ window.RH = (function () {
   }
 
   /**
-   * Las hojas se piden una después de la otra, no en paralelo: pedirle varias
-   * cosas a la vez a Google desde el mismo cliente hace que a veces alguna
-   * vuelva redirigida, y eso tiraba abajo la carga entera.
+   * Las dos hojas se piden una después de la otra, no en paralelo: pedirle
+   * varias cosas a la vez a Google desde el mismo cliente hace que a veces
+   * alguna vuelva redirigida.
    *
-   * Bloques y Tarjetas son obligatorias — sin ellas no hay sitio. Encuentros,
-   * Facilitadores y Ajustes son opcionales: si una falla se usa la del
-   * respaldo, porque que falte una bio no justifica mandar al alumno a la
-   * copia vieja del programa entero.
+   * Cursos es obligatoria — sin ella no se sabe qué cursada mostrar.
+   * Grabaciones no: una cursada recién empezada no tiene ninguna, y eso es un
+   * estado normal, no un error.
    */
-  var HOJAS = [
-    { clave: "programas", mapear: "mapearProgramas", conAnio: true, obligatoria: true },
-    { clave: "bloques", mapear: "mapearBloques", conAnio: true, obligatoria: false },
-    { clave: "tarjetas", mapear: "mapearTarjetas", conAnio: true, obligatoria: false },
-    { clave: "grabaciones", mapear: "mapearGrabaciones", conAnio: true, obligatoria: false },
-    { clave: "facilitadores", mapear: "mapearFacilitadores", conAnio: false, obligatoria: false },
-    { clave: "ajustes", mapear: "mapearAjustes", conAnio: false, obligatoria: false }
-  ];
-
-  function vacio(clave) {
-    return clave === "ajustes" ? { generales: {}, porPrograma: {} } : [];
-  }
-
   function cargar() {
     if (!S || !CFG.sheet || !CFG.sheet.id || /^PEGAR/.test(CFG.sheet.id)) {
       return Promise.reject(new Error("falta el id de la planilla en config.json"));
     }
 
-    var crudo = {};
-    var i = -1;
+    var hojas = CFG.sheet.hojas || {};
 
-    function siguiente() {
-      i++;
-      if (i >= HOJAS.length) return Promise.resolve(S.armar(crudo, new Date()));
-
-      var h = HOJAS[i];
-      var nombreHoja = (CFG.sheet.hojas || {})[h.clave] || h.clave;
-
-      return traerHoja(nombreHoja).then(
-        function (csv) {
-          var objetos = S.aObjetos(S.parseCsv(csv));
-          crudo[h.clave] = h.conAnio
-            ? S[h.mapear](objetos, SITIO.anioReferencia)
-            : S[h.mapear](objetos);
-          if (h.obligatoria && !crudo[h.clave].length) {
-            throw new Error(
-              "leí la hoja " + nombreHoja + " pero no tiene ninguna fila utilizable"
-            );
-          }
-          return siguiente();
-        },
-        function (e) {
-          if (h.obligatoria) throw e;
-          DIAG.push(h.clave + ": se usa el respaldo (" + e.message + ")");
-          crudo[h.clave] = vacio(h.clave);
-          return siguiente();
+    return traerHoja(hojas.cursos || "Cursos")
+      .then(function (csv) {
+        var cursos = S.mapearCursos(S.aObjetos(S.parseCsv(csv)), SITIO.anioReferencia);
+        if (!cursos.length) {
+          throw new Error("leí la hoja de Cursos pero no tiene ninguna fila con ID curso");
         }
-      );
-    }
-
-    return siguiente();
-  }
-
-  /* ------------------------------------------------------------------
-     Ajustes: los textos y links editables desde la planilla
-     ------------------------------------------------------------------ */
-
-  /**
-   * Rellena el HTML con lo que dice la hoja Ajustes:
-   *
-   *   data-ajuste="clave"        reemplaza el texto del elemento
-   *   data-ajuste-md="clave"     lo mismo, pero interpretando markdown
-   *   data-ajuste-href="clave"   reemplaza el href (y esconde el link si está vacío)
-   *   data-ajuste-si="clave"     esconde el elemento entero si la clave está vacía
-   *
-   * Una clave que la planilla no trae deja el texto que ya estaba en el HTML:
-   * así el sitio nunca queda en blanco por una fila borrada de más.
-   */
-  function aplicarAjustes(ajustes) {
-    ajustes = ajustes || {};
-
-    $$("[data-ajuste-si]").forEach(function (nodo) {
-      var v = ajustes[nodo.getAttribute("data-ajuste-si")];
-      if (v !== undefined && !v) nodo.hidden = true;
-    });
-
-    $$("[data-ajuste]").forEach(function (nodo) {
-      var v = ajustes[nodo.getAttribute("data-ajuste")];
-      if (v) nodo.textContent = v;
-    });
-
-    $$("[data-ajuste-md]").forEach(function (nodo) {
-      var v = ajustes[nodo.getAttribute("data-ajuste-md")];
-      if (v) nodo.innerHTML = markdown(v);
-    });
-
-    $$("[data-ajuste-href]").forEach(function (nodo) {
-      var v = ajustes[nodo.getAttribute("data-ajuste-href")];
-
-      if (!v) {
-        // Sin valor —falte la clave o esté vacía— el link se esconde, salvo
-        // que el HTML ya traiga uno de verdad como respaldo. Dejar el "#" que
-        // viene por defecto sería un link muerto que recarga la página.
-        var puesto = nodo.getAttribute("href") || "";
-        if (!puesto || puesto === "#") nodo.hidden = true;
-        return;
-      }
-
-      var destino = /@/.test(v) && !/^https?:|^mailto:/i.test(v) ? "mailto:" + v : v;
-      // Solo protocolos que son links. Una celda no puede meter "javascript:".
-      if (!/^(https?:|mailto:)/i.test(destino)) {
-        nodo.hidden = true;
-        return;
-      }
-      nodo.hidden = false;
-      nodo.href = destino;
-      if (nodo.hasAttribute("data-ajuste-href-texto")) nodo.textContent = v;
-    });
+        return traerHoja(hojas.grabaciones || "Grabaciones").then(
+          function (csvG) {
+            return { cursos: cursos, grabaciones: S.mapearGrabaciones(S.aObjetos(S.parseCsv(csvG))) };
+          },
+          function (e) {
+            DIAG.push("grabaciones: sin datos (" + e.message + ")");
+            return { cursos: cursos, grabaciones: [] };
+          }
+        );
+      })
+      .then(function (crudo) {
+        return S.armar(CURRICULO, crudo);
+      });
   }
 
   /* ------------------------------------------------------------------
      Direcciones
 
-     El id del programa en Workshops es su dirección, y el nombre del bloque
-     es el tramo que sigue:
+       /powerh-acme                            la página de la cursada
+       /powerh-acme/bloque-1-los-datos-...     la de uno de sus bloques
+       /powerh-acme/cierre                     la despedida
 
-       /powerh_1                              la página del programa
-       /powerh_1/bloque-1-los-datos-...       la de uno de sus bloques
-
-     No hay un archivo por programa ni por bloque: la reescritura de
-     netlify.toml manda todo a programa.html o bloque.html, y el JS decide qué
-     mostrar con lo que dice la planilla.
+     No hay un archivo por cursada: la reescritura de netlify.toml manda todo a
+     curso.html, bloque.html o cierre.html, y el JS decide qué mostrar.
      ------------------------------------------------------------------ */
+  var RUTA_CIERRE = "cierre";
 
-  function rutaPrograma(id) {
+  function rutaCurso(id) {
     return "/" + encodeURIComponent(id);
   }
 
@@ -419,11 +380,10 @@ window.RH = (function () {
     return "/" + encodeURIComponent(id) + "/" + slug;
   }
 
-  /**
-   * Qué pide la URL actual. Sale de la ruta linda (/powerh_1/mi-bloque) o de
-   * los parámetros (?p=powerh_1&b=mi-bloque), que son los que sirven cuando el
-   * sitio se abre sin un servidor que haga la reescritura.
-   */
+  function rutaCierre(id) {
+    return "/" + encodeURIComponent(id) + "/" + RUTA_CIERRE;
+  }
+
   /** decodeURIComponent explota con un "%" suelto; acá eso no puede tirar la página. */
   function decodificar(s) {
     try {
@@ -433,20 +393,25 @@ window.RH = (function () {
     }
   }
 
+  /**
+   * Qué pide la URL actual. Sale de la ruta linda (/powerh-acme/mi-bloque) o de
+   * los parámetros (?c=powerh-acme&b=mi-bloque), que son los que sirven cuando
+   * el sitio se abre sin un servidor que haga la reescritura.
+   */
   function loQuePideLaUrl() {
     var q = function (n) {
       var m = new RegExp("[?&]" + n + "=([^&]+)").exec(location.search);
       return m ? decodificar(m[1]) : "";
     };
-    var programa = q("p");
+    var curso = q("c") || q("p");
     var bloque = q("b");
-    if (programa) return { programa: programa, bloque: bloque };
+    if (curso) return { curso: curso, bloque: bloque };
 
     var partes = location.pathname.replace(/^\/+|\/+$/g, "").split("/");
-    // Un .html en el último tramo es la página en crudo, sin programa.
+    // Un .html en el último tramo es la página en crudo, sin cursada.
     if (partes.length && /\.html?$/i.test(partes[partes.length - 1])) partes.pop();
     return {
-      programa: partes[0] ? decodificar(partes[0]) : "",
+      curso: partes[0] ? decodificar(partes[0]) : "",
       bloque: partes[1] ? decodificar(partes[1]) : ""
     };
   }
@@ -457,15 +422,15 @@ window.RH = (function () {
   function avisoFuente(fuente) {
     var debug = /[?&]debug\b/.test(location.search);
 
-    // Puede haber más de un lugar donde mostrarlo: el de la portada del
-    // programa queda escondido justo cuando el programa no se encuentra, que
-    // es cuando más importa saber que se está mirando una copia vieja.
+    // Puede haber más de un lugar donde mostrarlo: el de la portada queda
+    // escondido justo cuando la cursada no se encuentra, que es cuando más
+    // importa saber que se está mirando una copia vieja.
     $$("[data-fuente]").forEach(function (aviso) {
       if (fuente === "respaldo") {
         aviso.classList.add("es-alerta");
         aviso.textContent =
-          "No pudimos leer la planilla del workshop: estás viendo la última copia guardada. " +
-          "Si falta contenido, recargá en un rato." +
+          "No pudimos leer la planilla: estás viendo la última copia guardada. " +
+          "Si falta alguna grabación, recargá en un rato." +
           (debug && MOTIVO ? " · Motivo: " + MOTIVO : "");
         aviso.hidden = false;
       } else if (debug) {
@@ -486,12 +451,13 @@ window.RH = (function () {
   }
 
   /**
-   * Arranque común: lee el Sheet, cae al respaldo si no puede, aplica los
-   * ajustes y le pasa los datos a la página para que dibuje lo suyo.
+   * Arranque común: pinta lo que es fijo, lee el Sheet, cae al respaldo si no
+   * puede, y le pasa las cursadas a la página para que dibuje lo suyo.
    */
   function arrancar(pintar) {
+    aplicarCurriculo();
+
     function conDatos(datos, fuente) {
-      aplicarAjustes(datos.ajustes);
       try {
         pintar(datos, fuente);
       } finally {
@@ -516,16 +482,26 @@ window.RH = (function () {
     );
   }
 
+  /**
+   * El nombre que va arriba de todo. "General" en la columna Cliente significa
+   * abierto al público, no un cliente.
+   */
+  function nombreCliente(c) {
+    if (!c || !c.cliente || S.normalizarClave(c.cliente) === "general") return "Workshop";
+    return c.cliente;
+  }
+
   return {
-    S: S, CFG: CFG, SITIO: SITIO, MS_DIA: MS_DIA,
+    S: S, CFG: CFG, SITIO: SITIO, CURRICULO: CURRICULO, RUTA_CIERRE: RUTA_CIERRE,
     $: $, $$: $$, el: el,
     markdown: markdown, escapar: escapar,
-    fmt: fmt, fechaSimple: fechaSimple, fechaCorta: fechaCorta, fechaDia: fechaDia,
-    fechaLarga: fechaLarga,
-    capitalizar: capitalizar, diasHasta: diasHasta, enDias: enDias,
+    fmt: fmt, fechaSimple: fechaSimple, fechaDia: fechaDia, fechaLarga: fechaLarga,
+    capitalizar: capitalizar, hoyAR: hoyAR,
     toast: toast,
-    aplicarAjustes: aplicarAjustes,
-    rutaPrograma: rutaPrograma, rutaBloque: rutaBloque, loQuePideLaUrl: loQuePideLaUrl,
+    aplicarCurriculo: aplicarCurriculo, valorDe: valorDe, link: link,
+    nombreCliente: nombreCliente,
+    rutaCurso: rutaCurso, rutaBloque: rutaBloque, rutaCierre: rutaCierre,
+    loQuePideLaUrl: loQuePideLaUrl,
     arrancar: arrancar
   };
 })();

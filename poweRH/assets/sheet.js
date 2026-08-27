@@ -2,39 +2,35 @@
 (function (global) {
   "use strict";
 /* ==========================================================================
-   Lectura del Google Sheet "Asistencia HACHE".
+   Lectura del Google Sheet de las cursadas de PoweRH.
 
    Este archivo es la ÚNICA fuente del parseo: corre en el navegador (el sitio
    lee la planilla en vivo) y en Node (el build guarda una copia de respaldo).
    scripts/build.mjs lo empaqueta a assets/sheet.js para el navegador.
 
-   La planilla ya existía y la usa otro desarrollo. De sus pestañas, el sitio
-   SOLO LEE — nunca escribe, y no depende de ninguna columna nueva en ellas:
+   La planilla es chica a propósito. El contenido del programa —los bloques, el
+   material, los textos— NO está acá: vive en lib/curriculo.mjs, versionado.
+   La planilla solo tiene lo que cambia de una cursada a la otra.
 
-     Workshops      una fila por programa. Define el id, el nombre, las fechas,
-                    la cantidad de sesiones y el facilitador. NO SE TOCA.
+     Cursos       una fila por cursada.
+                  ID curso · Cliente · Sesiones · Inicio · Fin
+                  y, opcionales: Link calendario · Link Zoom · Facilitador
 
-   Y suma estas, que son del sitio:
+     Grabaciones  una fila por sesión grabada.
+                  ID curso · Sesión · Link
+                  y, opcionales: Título · Bloque
 
-     Bloques        una fila por bloque. El nombre del bloque es su sub-página.
-     Tarjetas       una fila por tarjeta, colgada de un bloque.
-     Grabaciones    una fila por sesión grabada.
-     Facilitadores  una fila por persona, buscada por el nombre de Workshops.
-     Ajustes        clave/valor con los textos y links del sitio.
-
-   Todo lo del sitio se asocia a un programa por su "ID programa", que es el
-   ID de Workshops y también la dirección de su página: /Pope17.
+   El "ID curso" es la dirección de su página: /powerh-acme. Y es lo que ata
+   las dos pestañas.
    ========================================================================== */
 
 /**
  * URLs candidatas para leer una hoja como CSV, en orden de preferencia.
  *
- *  1. "Publicar en la web" (/d/e/.../pub). Es el camino recomendado para esta
- *     planilla: publica SOLO las pestañas elegidas, sin abrir el documento
- *     entero — que tiene mails de participantes en otras hojas. Necesita el id
- *     de publicación y el gid de cada hoja, los dos en config.json.
- *  2. gviz. Alcanza con "cualquiera con el enlace", pero eso abre el documento
- *     completo: sirve para una planilla que no tenga datos personales.
+ *  1. "Publicar en la web" (/d/e/.../pub). Publica SOLO las pestañas elegidas,
+ *     sin abrir el documento entero. Necesita el id de publicación y el gid de
+ *     cada hoja, los dos en config.json.
+ *  2. gviz. Alcanza con "cualquiera con el enlace".
  *  3. /export. Necesita el gid; queda como último recurso.
  *
  * El parámetro _cb evita que el navegador o Google sirvan una copia cacheada:
@@ -79,7 +75,7 @@ function pareceCsv(texto) {
 
 /**
  * Parser de CSV (RFC 4180): respeta comillas, comas y saltos de línea dentro
- * de una celda — la columna Texto los va a tener.
+ * de una celda.
  */
 function parseCsv(texto) {
   var filas = [];
@@ -152,7 +148,7 @@ function aObjetos(filas) {
   });
 }
 
-/** "ID programa" -> "id programa". Sin tildes, sin mayúsculas. */
+/** "ID curso" -> "id curso". Sin tildes, sin mayúsculas. */
 function normalizarClave(s) {
   return String(s || '')
     .normalize('NFD')
@@ -170,9 +166,9 @@ function campo(o, nombres) {
   return '';
 }
 
-/** La columna que asocia una fila a un programa, en sus formas habituales. */
-function idPrograma(o) {
-  return campo(o, ['id programa', 'idprograma', 'id', 'programa', 'workshop id', 'workshop_id']);
+/** La columna que asocia una fila a una cursada, en sus formas habituales. */
+function idCurso(o) {
+  return campo(o, ['id curso', 'idcurso', 'id', 'curso', 'id programa', 'programa']);
 }
 
 /**
@@ -180,10 +176,6 @@ function idPrograma(o) {
  *
  * "Bloque 1: Los datos pueden transformar HR 🚀"
  *   -> "bloque-1-los-datos-pueden-transformar-hr"
- *
- * Es lo que hace que la planilla pueda crear páginas nuevas: si mañana aparece
- * una fila con un nombre que no existía, aparece la sub-página que le
- * corresponde sin tocar el código ni volver a deployar.
  */
 function aSlug(nombre) {
   return String(nombre || '')
@@ -196,11 +188,8 @@ function aSlug(nombre) {
 }
 
 /**
- * Fechas. En Workshops vienen como "20/01" o "8/4": día y mes, sin año. Se le
- * pone el año de referencia, y si el resultado queda muy en el pasado se
- * asume el que viene (una planilla que se sigue usando habla del año en curso).
- * También acepta "AAAA-MM-DD" y "D/M/AAAA" por si alguna fila trae el año.
- * Devuelve "AAAA-MM-DD" o "".
+ * Fechas. Acepta "AAAA-MM-DD", "D/M/AAAA", "D/M/AA" y "D/M" (a esta última le
+ * pone el año de referencia de config.json). Devuelve "AAAA-MM-DD" o "".
  */
 function aISO(valor, anioRef) {
   var v = String(valor || '').trim();
@@ -222,7 +211,7 @@ function aISO(valor, anioRef) {
   var cortito = v.match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{2})$/);
   if (cortito) return dosPuntos(2000 + +cortito[3], +cortito[2], +cortito[1]);
 
-  // D/M — el caso de Workshops.
+  // D/M — sin año.
   var sinAnio = v.match(/^(\d{1,2})[/-](\d{1,2})$/);
   if (sinAnio) {
     var anio = anioRef || new Date().getFullYear();
@@ -247,196 +236,92 @@ function aUrl(valor) {
   return '';
 }
 
-/** "Nómina Panda | https://..." -> {nombre, url}. Sin nombre -> nombre por defecto. */
-function aArchivo(valor, indice) {
-  var v = String(valor || '').trim();
-  if (!v || v === '-') return null;
-  var partes = v.split('|');
-  if (partes.length > 1) {
-    var url = aUrl(partes.slice(1).join('|'));
-    if (!url) return null;
-    return { nombre: partes[0].trim() || 'Archivo ' + indice, url: url };
-  }
-  var solo = aUrl(v);
-  return solo ? { nombre: 'Archivo ' + indice, url: solo } : null;
-}
-
-/** Medianoche de un "AAAA-MM-DD" en hora de Argentina (GMT-3). */
-function instanteAR(fecha) {
-  var f = fecha.split('-').map(Number);
-  return new Date(Date.UTC(f[0], f[1] - 1, f[2]) + 3 * 3600000);
-}
-
 /* --------------------------------------------------------------------------
    Mapeos: de filas de la planilla a lo que consume el sitio
    -------------------------------------------------------------------------- */
 
 /**
- * Hoja Workshops -> los programas del sitio. Es de otro desarrollo, así que
- * acá solo se lee, y solo las columnas que hacen falta:
+ * Hoja Cursos -> una cursada por fila.
  *
- *   A ID           el id del programa. Es su dirección: /Pope17
- *   B Actividad    el nombre que se muestra
- *   C Inicio       fecha de inicio
- *   D Sesiones     cuántos encuentros tiene
- *   G Fin          fecha de fin
- *   M FACILITADOR  el nombre, que se busca en la hoja Facilitadores
- *
- * Cliente, Logo y COMENTARIOS se leen si están, para la portada del programa.
+ *   ID curso         obligatoria. Es la dirección de la página: /powerh-acme
+ *   Cliente          el nombre que se muestra arriba de todo
+ *   Sesiones         cuántos encuentros tiene
+ *   Inicio · Fin     las fechas de la portada
+ *   Link calendario  opcional; sin él no aparece el botón
+ *   Link Zoom        opcional; sin él no aparece el botón
+ *   Facilitador      opcional; sin él va el del currículo
  */
-function mapearProgramas(objetos, anioRef) {
-  var programas = [];
+function mapearCursos(objetos, anioRef) {
+  var cursos = [];
 
   objetos.forEach(function (o) {
-    var id = (o['id'] || '').trim();
+    var id = idCurso(o);
     if (!id) return; // fila vacía o de totales: se ignora en silencio
 
-    var inicio = aISO(o['inicio'], anioRef);
-    var fin = aISO(o['fin'], anioRef);
-    // Un fin anterior al inicio significa que el programa cruza el año.
+    var inicio = aISO(campo(o, ['inicio', 'fecha de inicio', 'desde']), anioRef);
+    var fin = aISO(campo(o, ['fin', 'fecha de fin', 'hasta']), anioRef);
+    // Un fin anterior al inicio significa que la cursada cruza el año.
     if (inicio && fin && fin < inicio) {
-      fin = aISO(o['fin'], (anioRef || new Date().getFullYear()) + 1);
+      fin = aISO(campo(o, ['fin', 'fecha de fin', 'hasta']),
+        (anioRef || new Date().getFullYear()) + 1);
     }
 
-    var sesiones = parseInt(o['sesiones'], 10);
+    var sesiones = parseInt(campo(o, ['sesiones', 'encuentros', 'cantidad de sesiones']), 10);
 
-    programas.push({
+    cursos.push({
       id: id,
-      slug: id,
-      nombre: (o['actividad'] || '').trim() || id,
+      cliente: campo(o, ['cliente', 'nombre del cliente', 'empresa']),
+      sesiones: isNaN(sesiones) ? 0 : sesiones,
       inicio: inicio,
       fin: fin,
-      sesiones: isNaN(sesiones) ? 0 : sesiones,
-      facilitador: (o['facilitador'] || '').trim(),
-      cliente: (o['cliente'] || '').trim(),
-      logo: aUrl(o['logo']),
-      comentarios: (o['comentarios'] || '').trim(),
+      calendario: aUrl(campo(o, ['link calendario', 'link al calendario', 'calendario',
+        'calendar', 'link calendar'])),
+      zoom: aUrl(campo(o, ['link zoom', 'zoom', 'link de zoom'])),
+      facilitador: campo(o, ['facilitador', 'facilitadora', 'quien lo dicta']),
       bloques: [],
-      grabaciones: [],
-      ajustes: {}
+      grabaciones: []
     });
   });
 
-  return programas;
-}
-
-/** Hoja Bloques -> las sub-páginas de cada programa. */
-function mapearBloques(objetos, anioRef) {
-  var vistos = {};
-
-  return objetos
-    .map(function (o, i) {
-      var nombre = campo(o, ['bloque', 'nombre']);
-      var programa = idPrograma(o);
-      if (!nombre || !programa) return null;
-
-      // El slug es único dentro de su programa: dos programas pueden tener
-      // un "Bloque 1" cada uno sin pisarse, porque la dirección los separa.
-      var base = aSlug(nombre) || 'bloque';
-      var clave = programa + '/' + base;
-      var slug = base;
-      if (vistos[clave]) {
-        vistos[clave]++;
-        slug = base + '-' + vistos[clave];
-      } else {
-        vistos[clave] = 1;
-      }
-
-      var orden = parseFloat(o['orden']);
-
-      return {
-        programa: programa,
-        nombre: nombre,
-        slug: slug,
-        titulo: (o['titulo'] || '').trim(),
-        emoji: (o['emoji'] || '').trim(),
-        bajada: (o['bajada'] || '').trim(),
-        objetivo: (o['objetivo'] || '').trim(),
-        fecha: aISO(o['fecha'], anioRef),
-        orden: isNaN(orden) ? i : orden,
-        _fila: i,
-        tarjetas: [],
-        grabaciones: []
-      };
-    })
-    .filter(Boolean)
-    .sort(function (a, b) {
-      return a.orden - b.orden || a._fila - b._fila;
-    });
+  return cursos;
 }
 
 /**
- * Tipos de tarjeta que el sitio sabe dibujar, en el orden en que se muestran.
- * El texto largo va al final: primero lo que el alumno viene a buscar
- * —el material, la presentación, la tarea— y después la explicación.
- * La columna Orden pisa este orden cuando hace falta.
+ * Hoja Grabaciones -> una fila por sesión grabada.
+ *
+ *   ID curso   obligatoria, la ata a su cursada
+ *   Sesión     el número de encuentro
+ *   Link       la grabación. Es lo que abre el bloque.
+ *   Título     opcional, para nombrar el encuentro
+ *   Bloque     opcional. Solo hace falta si una cursada agrupa las sesiones
+ *              distinto de lo que dice el currículo. Acepta el número (3) o el
+ *              nombre del bloque.
+ *
+ * Sin fecha a propósito: no llevamos registro de cuándo fue cada encuentro.
  */
-var ORDEN_TIPO = { material: 0, enlace: 1, grabacion: 2, tarea: 3, contenido: 4 };
-
-/** Hoja Tarjetas -> las tarjetas de cada bloque. */
-function mapearTarjetas(objetos, anioRef) {
-  return objetos
-    .map(function (o, i) {
-      var titulo = (o['titulo'] || '').trim();
-      var texto = (o['texto'] || '').trim();
-      var bloque = (o['bloque'] || '').trim();
-      var programa = idPrograma(o);
-      if (!bloque || !programa || (!titulo && !texto)) return null;
-
-      var archivos = [];
-      [1, 2, 3].forEach(function (n) {
-        var a = aArchivo(o['archivo ' + n], n);
-        if (a) archivos.push(a);
-      });
-
-      var tipo = normalizarClave(o['tipo']);
-      if (!(tipo in ORDEN_TIPO)) tipo = 'contenido';
-
-      var orden = parseFloat(o['orden']);
-
-      return {
-        programa: programa,
-        bloque: bloque,
-        slugBloque: aSlug(bloque),
-        tipo: tipo,
-        titulo: titulo,
-        texto: texto,
-        imagen: aUrl(o['imagen']),
-        link: aUrl(o['link']),
-        archivos: archivos,
-        fecha: aISO(o['fecha'], anioRef),
-        // Sin Orden manda el tipo: el texto queda debajo del material y la tarea.
-        orden: isNaN(orden) ? ORDEN_TIPO[tipo] : orden,
-        _fila: i
-      };
-    })
-    .filter(Boolean)
-    .sort(function (a, b) {
-      return a.orden - b.orden || a._fila - b._fila;
-    });
-}
-
-/** Hoja Grabaciones -> una fila por sesión grabada. */
-function mapearGrabaciones(objetos, anioRef) {
+function mapearGrabaciones(objetos) {
   return objetos
     .map(function (o) {
-      var programa = idPrograma(o);
-      if (!programa) return null;
-      var link = aUrl(campo(o, ['link de la grabacion', 'link', 'grabacion', 'url']));
-      var sesion = campo(o, ['sesion', 'sesion n', 'n', 'nro', 'numero', 'encuentro']);
+      var curso = idCurso(o);
+      if (!curso) return null;
+
+      var link = aUrl(campo(o, ['link de la grabacion', 'link', 'grabacion', 'url', 'video']));
+      var sesion = campo(o, ['sesion', 'sesion n', 'n', 'nro', 'numero', 'encuentro', 'orden']);
       if (!link && !sesion) return null;
 
-      var bloque = (o['bloque'] || '').trim();
       var n = parseInt(sesion, 10);
+      var bloque = campo(o, ['bloque', 'nro bloque', 'numero de bloque']);
+      var nBloque = parseInt(bloque, 10);
 
       return {
-        programa: programa,
+        curso: curso,
         sesion: sesion,
         numero: isNaN(n) ? 0 : n,
         titulo: (o['titulo'] || '').trim(),
-        fecha: aISO(o['fecha'], anioRef),
-        bloque: bloque,
-        slugBloque: bloque ? aSlug(bloque) : '',
+        // El bloque se puede indicar por número o por nombre; guardamos las dos
+        // lecturas y armar() usa la que sirva.
+        bloqueNumero: isNaN(nBloque) ? 0 : nBloque,
+        bloqueSlug: bloque && isNaN(nBloque) ? aSlug(bloque) : '',
         link: link
       };
     })
@@ -446,203 +331,144 @@ function mapearGrabaciones(objetos, anioRef) {
     });
 }
 
-/**
- * Hoja Facilitadores -> las personas.
- * Se buscan por el nombre que aparece en la columna FACILITADOR de Workshops,
- * así que la clave es el nombre y no hace falta repetirlo por programa.
- */
-function mapearFacilitadores(objetos) {
-  return objetos
-    .filter(function (o) {
-      return (o['nombre'] || '').trim();
-    })
-    .map(function (o) {
-      var nombre = o['nombre'].trim();
-      // La columna Foto acepta las dos cosas: una o dos letras, o la URL de una
-      // imagen. Las iniciales calculadas quedan como respaldo por si no carga.
-      var ini = campo(o, ['foto', 'iniciales']);
-      var foto = /^(https?:\/\/|www\.)/i.test(ini) ? aUrl(ini) : '';
-      return {
-        nombre: nombre,
-        rol: (o['rol'] || '').trim(),
-        foto: foto,
-        iniciales: foto ? iniciales(nombre) : ini || iniciales(nombre),
-        bio: (o['bio'] || '').trim(),
-        linkedin: aUrl(o['linkedin']),
-        mail: (o['mail'] || '').trim(),
-        cita: (o['cita'] || '').trim()
-      };
-    });
-}
-
-function iniciales(nombre) {
-  return nombre
-    .split(/\s+/)
-    .slice(0, 2)
-    .map(function (p) {
-      return p[0] || '';
-    })
-    .join('')
-    .toUpperCase();
-}
+/* --------------------------------------------------------------------------
+   Unir el currículo (fijo) con la planilla (variable)
+   -------------------------------------------------------------------------- */
 
 /**
- * Hoja Ajustes -> los textos y links del sitio, por programa.
+ * Cada cursada se queda con sus grabaciones y con una copia propia de los
+ * bloques del currículo.
  *
- * Una fila sin "ID programa" vale para todos; una con id pisa ese valor para
- * ese programa. Así el Zoom de cada workshop se carga una vez y los textos
- * comunes no se repiten fila por fila.
+ * LO QUE ABRE UN BLOQUE ES LA GRABACIÓN, no una fecha: un bloque está abierto
+ * cuando alguna de las sesiones que cubre ya tiene link cargado. Un bloque
+ * cerrado se lista igual —para que se vea el recorrido completo— pero sin
+ * objetivo, sin tarjetas y sin link a su página.
+ *
+ * El recorte es de verdad, no un "display: none": así la copia de respaldo que
+ * guarda el build sale sin el material que todavía no corresponde. En el
+ * navegador el currículo entero ya viajó igual, así que esto ordena la
+ * experiencia, no protege un secreto.
  */
-function mapearAjustes(objetos) {
-  var generales = {};
-  var porPrograma = {};
-
-  objetos.forEach(function (o) {
-    var clave = campo(o, ['clave', 'key']);
-    if (!clave) return;
-    var valor = (o['valor'] || '').trim();
-    var programa = idPrograma(o);
-
-    if (!programa) {
-      generales[clave] = valor;
-      return;
-    }
-    if (!porPrograma[programa]) porPrograma[programa] = {};
-    porPrograma[programa][clave] = valor;
-  });
-
-  return { generales: generales, porPrograma: porPrograma };
-}
-
-/**
- * Une todo: cada programa se queda con sus bloques, sus tarjetas, sus
- * grabaciones y sus ajustes, y se aplica el bloqueo por fecha.
- *
- * Bloqueo: un bloque cuya fecha todavía no llegó se muestra con candado —
- * conserva nombre, fecha y bajada, pero pierde tarjetas, objetivo y links. Una
- * tarjeta con Fecha propia posterior se libera después que su bloque.
- *
- * OJO: cuando esto corre en el navegador, el CSV completo ya viajó hasta ahí.
- * El bloqueo evita mostrar el contenido, no que alguien lo busque a mano.
- * El bloqueo duro solo existe en la copia que arma el build.
- */
-function armar(datos, ahora) {
-  var t = ahora instanceof Date ? ahora.getTime() : Date.now();
-  var programas = datos.programas || [];
+function armar(curriculo, datos) {
+  var cursos = (datos.cursos || []).slice();
   var porId = {};
-  var ajustes = datos.ajustes || { generales: {}, porPrograma: {} };
 
-  programas.forEach(function (p) {
-    porId[p.id] = p;
-    p.bloques = [];
-    p.grabaciones = [];
-    p.ajustes = Object.assign({}, ajustes.generales, (ajustes.porPrograma || {})[p.id] || {});
-  });
-
-  var bloquePorClave = {};
-
-  (datos.bloques || []).forEach(function (b) {
-    var p = porId[b.programa];
-    if (!p) return; // bloque de un programa que no está en Workshops
-    b.numero = p.bloques.length + 1;
-    // Sin fecha, el bloque está abierto: sirve para material permanente.
-    b.abierto = !b.fecha || instanteAR(b.fecha).getTime() <= t;
-    b.tarjetas = [];
-    b.grabaciones = [];
-    // Las tarjetas apuntan al bloque por su NOMBRE, así que el índice va por
-    // el slug base. Si dos bloques del mismo programa normalizan igual, gana
-    // el primero: es ambiguo de origen y pisarlo dejaba al primero sin nada.
-    var base = b.programa + '/' + aSlug(b.nombre);
-    if (!bloquePorClave[base]) bloquePorClave[base] = b;
-    p.bloques.push(b);
-  });
-
-  (datos.tarjetas || []).forEach(function (tar) {
-    var b = bloquePorClave[tar.programa + '/' + tar.slugBloque];
-    if (!b) return; // tarjeta huérfana: su bloque no existe (todavía)
-    var propia = tar.fecha ? instanteAR(tar.fecha).getTime() <= t : true;
-    tar.abierta = b.abierto && propia;
-    b.tarjetas.push(tar);
+  cursos.forEach(function (c) {
+    porId[String(c.id).toLowerCase()] = c;
+    c.grabaciones = [];
   });
 
   (datos.grabaciones || []).forEach(function (g) {
-    var p = porId[g.programa];
-    if (!p) return;
-    p.grabaciones.push(g);
-    var b = g.slugBloque ? bloquePorClave[g.programa + '/' + g.slugBloque] : null;
-    if (b) b.grabaciones.push(g);
+    var c = porId[String(g.curso).toLowerCase()];
+    if (c) c.grabaciones.push(g);
   });
 
-  // El bloqueo se aplica recortando de verdad, no escondiendo con CSS: así la
-  // copia de respaldo que guarda el build sale ya sin los links futuros.
-  programas.forEach(function (p) {
-    p.bloques.forEach(function (b) {
-      if (b.abierto) {
-        b.tarjetas = b.tarjetas.map(function (tar) {
-          return tar.abierta ? tar : recortarTarjeta(tar);
-        });
-        return;
+  var plantilla = curriculo.bloques || [];
+
+  cursos.forEach(function (c) {
+    var vistos = {};
+
+    c.bloques = plantilla.map(function (b, i) {
+      var numero = i + 1;
+      var base = aSlug(b.nombre) || 'bloque-' + numero;
+      // Dos bloques que normalizan igual no pueden compartir dirección.
+      var slug = base;
+      if (vistos[base]) {
+        vistos[base]++;
+        slug = base + '-' + vistos[base];
+      } else {
+        vistos[base] = 1;
       }
-      b.objetivo = '';
-      b.tarjetas = [];
-      b.grabaciones = [];
+
+      var sesiones = b.sesiones || [];
+      var suyas = c.grabaciones.filter(function (g) {
+        if (g.bloqueNumero) return g.bloqueNumero === numero;
+        if (g.bloqueSlug) return g.bloqueSlug === base;
+        return sesiones.indexOf(g.numero) > -1;
+      });
+
+      var abierto = suyas.some(function (g) {
+        return !!g.link;
+      });
+
+      return {
+        numero: numero,
+        total: plantilla.length,
+        nombre: b.nombre,
+        slug: slug,
+        titulo: b.titulo || '',
+        emoji: b.emoji || '',
+        bajada: b.bajada || '',
+        sesiones: sesiones,
+        abierto: abierto,
+        objetivo: abierto ? b.objetivo || '' : '',
+        tarjetas: abierto ? (b.tarjetas || []).map(copiarTarjeta) : [],
+        grabaciones: suyas
+      };
     });
-    // Una grabación de un bloque cerrado tampoco se lista en el programa.
-    p.grabaciones = p.grabaciones.map(function (g) {
-      var b = g.slugBloque ? bloquePorClave[g.programa + '/' + g.slugBloque] : null;
-      if (b && !b.abierto) {
-        return { programa: g.programa, sesion: g.sesion, numero: g.numero,
-                 titulo: g.titulo, fecha: g.fecha, bloque: g.bloque,
-                 slugBloque: g.slugBloque, link: '' };
-      }
-      return g;
+
+    // La despedida se ofrece cuando ya está todo grabado.
+    c.completo = c.bloques.length > 0 && c.bloques.every(function (b) {
+      return b.abierto;
     });
+
+    c.facilitador = c.facilitador || (curriculo.facilitador || {}).nombre || '';
   });
 
+  return { cursos: cursos };
+}
+
+function copiarTarjeta(t) {
   return {
-    programas: programas,
-    facilitadores: datos.facilitadores || [],
-    ajustes: ajustes.generales
+    tipo: t.tipo || 'contenido',
+    titulo: t.titulo || '',
+    texto: t.texto || '',
+    imagen: t.imagen || '',
+    link: t.link || '',
+    archivos: (t.archivos || []).slice()
   };
 }
 
-function recortarTarjeta(tar) {
-  return {
-    programa: tar.programa, bloque: tar.bloque, slugBloque: tar.slugBloque,
-    tipo: tar.tipo, titulo: tar.titulo, texto: '', imagen: '', link: '',
-    archivos: [], fecha: tar.fecha, orden: tar.orden, abierta: false
-  };
-}
-
-/** El programa que pide una dirección, comparando sin distinguir mayúsculas. */
-function programaPorId(programas, id) {
+/** La cursada que pide una dirección, comparando sin distinguir mayúsculas. */
+function cursoPorId(cursos, id) {
   if (!id) return null;
   var buscado = String(id).toLowerCase();
-  for (var i = 0; i < programas.length; i++) {
-    if (String(programas[i].id).toLowerCase() === buscado) return programas[i];
+  for (var i = 0; i < cursos.length; i++) {
+    if (String(cursos[i].id).toLowerCase() === buscado) return cursos[i];
   }
   return null;
 }
 
-/** El bloque que se está cursando: el último ya liberado. */
+/** El bloque que se está cursando: el último ya abierto. */
 function bloqueActual(bloques) {
   for (var i = bloques.length - 1; i >= 0; i--) {
     if (bloques[i].abierto) return bloques[i];
   }
-  return bloques[0] || null;
+  return null;
 }
 
-/** La ficha del facilitador cuyo nombre figura en Workshops. */
-function facilitadorDe(facilitadores, nombre) {
-  if (!nombre) return null;
-  var buscado = normalizarClave(nombre);
-  for (var i = 0; i < facilitadores.length; i++) {
-    if (normalizarClave(facilitadores[i].nombre) === buscado) return facilitadores[i];
+/**
+ * Las sesiones de una cursada, con su grabación si ya está cargada. Sale de la
+ * columna Sesiones, así que una sesión sin fila en Grabaciones aparece igual.
+ */
+function sesionesDe(curso) {
+  var porNumero = {};
+  curso.grabaciones.forEach(function (g) {
+    if (g.numero) porNumero[g.numero] = g;
+  });
+
+  var filas = [];
+  for (var n = 1; n <= curso.sesiones; n++) {
+    filas.push(porNumero[n] || { numero: n, sesion: String(n), titulo: '', link: '' });
   }
-  // Sin ficha cargada, al menos mostramos el nombre que dice Workshops.
-  return { nombre: nombre, rol: '', foto: '', iniciales: iniciales(nombre),
-           bio: '', linkedin: '', mail: '', cita: '' };
+  // Una grabación con un número fuera de rango se suma igual: mejor mostrarla
+  // que perderla por un error de tipeo en la planilla.
+  curso.grabaciones.forEach(function (g) {
+    if (!g.numero || g.numero > curso.sesiones) filas.push(g);
+  });
+
+  return filas;
 }
 
-  global.RHSheet = { urlsHoja: urlsHoja, pareceCsv: pareceCsv, parseCsv: parseCsv, aObjetos: aObjetos, normalizarClave: normalizarClave, aSlug: aSlug, aISO: aISO, aUrl: aUrl, aArchivo: aArchivo, instanteAR: instanteAR, mapearProgramas: mapearProgramas, mapearBloques: mapearBloques, mapearTarjetas: mapearTarjetas, mapearGrabaciones: mapearGrabaciones, mapearFacilitadores: mapearFacilitadores, mapearAjustes: mapearAjustes, armar: armar, programaPorId: programaPorId, bloqueActual: bloqueActual, facilitadorDe: facilitadorDe };
+  global.RHSheet = { urlsHoja: urlsHoja, pareceCsv: pareceCsv, parseCsv: parseCsv, aObjetos: aObjetos, normalizarClave: normalizarClave, aSlug: aSlug, aISO: aISO, aUrl: aUrl, mapearCursos: mapearCursos, mapearGrabaciones: mapearGrabaciones, armar: armar, cursoPorId: cursoPorId, bloqueActual: bloqueActual, sesionesDe: sesionesDe };
 })(typeof window !== "undefined" ? window : this);

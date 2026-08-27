@@ -7,13 +7,12 @@
     <!--
       Esta página no tiene contenido propio: dibuja el bloque que pide la URL.
 
-        /powerh_1/bloque-1-los-datos-...              ← la ruta linda
-        bloque.html?p=powerh_1&b=bloque-1-los-datos-… ← la misma, sin reescritura
+        /powerh-acme/bloque-1-los-datos-...              ← la ruta linda
+        bloque.html?c=powerh-acme&b=bloque-1-los-datos-… ← la misma, sin reescritura
 
-      El primer tramo es el ID del programa en Workshops; el segundo sale del
-      nombre del bloque. Cuando aparece un bloque nuevo en la planilla, su
-      sub-página existe sola: no hay que crear un archivo ni volver a deployar.
-      La reescritura la define netlify.toml.
+      El primer tramo es el ID de la cursada en la hoja Cursos; el segundo sale
+      del nombre del bloque en lib/curriculo.mjs. La reescritura la define
+      netlify.toml.
     -->
     <meta name="robots" content="noindex" />
     <meta name="theme-color" content="#00344D" />
@@ -39,8 +38,8 @@
         <a class="brand" href="/" data-volver-marca>
           <span class="brand-mark" aria-hidden="true">H</span>
           <span class="brand-text"
-            ><span data-programa-cliente>Workshop</span>
-            <strong data-programa-marca>HACHE</strong></span
+            ><span data-curso-cliente>Workshop</span>
+            <strong data-c="nombre">PoweRH</strong></span
           >
         </a>
         <nav class="header-links" aria-label="Secciones">
@@ -52,7 +51,7 @@
     </header>
 
     <main id="contenido">
-      <!-- Portada del bloque: la arma bloque.js con lo que dice la planilla. -->
+      <!-- Portada del bloque: la arma bloque.js con lo que dice el currículo. -->
       <section class="bloque-hero on-dark" data-bloque-hero hidden>
         <div class="wrap">
           <a class="volver" href="/" data-volver>
@@ -108,14 +107,14 @@
         </div>
       </section>
 
-      <!-- La URL pide un bloque que no está en la planilla -->
+      <!-- La URL pide un bloque que todavía no se abrió, o que no existe -->
       <section class="section sin-bloque" data-sin-bloque hidden>
         <div class="wrap">
           <h1 data-sin-bloque-titulo>No encontramos este bloque</h1>
           <p data-sin-bloque-texto>
             Puede que todavía no esté publicado, o que el link haya cambiado de nombre.
           </p>
-          <a class="btn btn-primary" href="/" data-volver>Ver todos los bloques</a>
+          <a class="btn btn-outline" href="/" data-volver>Ver todos los bloques</a>
           <p class="fuente-aviso" data-fuente hidden></p>
         </div>
       </section>
@@ -124,8 +123,8 @@
     <footer class="site-footer">
       <div class="wrap">
         <div class="footer-bottom">
-          <span>HACHE Consultora · Formación en datos</span>
-          <span data-programa-pie></span>
+          <span>HACHE Consultora · Formación en People Analytics</span>
+          <span data-c="nombre"></span>
         </div>
       </div>
     </footer>
@@ -134,7 +133,8 @@
 
     <script src="/assets/config.js"></script>
     <script src="/assets/sheet.js"></script>
-    <script src="/assets/contenido.js"></script>
+    <script src="/assets/curriculo.js"></script>
+    <script src="/assets/cursos.js"></script>
     <script src="/assets/comun.js"></script>
     <script src="/assets/bloque.js"></script>
   </body>

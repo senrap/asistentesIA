@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Diagnóstico · Workshops HACHE</title>
+    <title>Diagnóstico · PoweRH</title>
     <meta name="robots" content="noindex" />
     <link rel="stylesheet" href="/assets/estilo.css" />
     <style>
@@ -34,7 +34,8 @@
       <h1>Diagnóstico de la planilla</h1>
       <p class="sub">
         Prueba en vivo si el sitio puede leer el Google Sheet, y muestra qué endpoint funcionó y
-        qué llegó a parsear. Es la primera parada cuando el contenido no se actualiza.
+        qué llegó a parsear. Es la primera parada cuando una cursada no aparece o una grabación
+        no se ve.
       </p>
 
       <div class="veredicto esperando" id="veredicto">Probando…</div>
@@ -59,13 +60,13 @@
         <table>
           <thead>
             <tr>
-              <th>Programa</th>
+              <th>Cursada</th>
               <th>Dirección</th>
-              <th>Bloques</th>
+              <th>Bloques abiertos</th>
               <th>Grabaciones</th>
             </tr>
           </thead>
-          <tbody id="programas"></tbody>
+          <tbody id="cursos"></tbody>
         </table>
       </div>
 
@@ -75,7 +76,7 @@
             <tr>
               <th>Bloque</th>
               <th>Dirección</th>
-              <th>Se abre</th>
+              <th>Estado</th>
               <th>Tarjetas</th>
             </tr>
           </thead>
@@ -86,15 +87,19 @@
       <h2 style="font-size: 18px; margin-bottom: 12px">Si no lee la planilla</h2>
       <ol class="pasos">
         <li>
-          Esta planilla tiene mails de participantes en otras hojas, así que
-          <strong>no</strong> se comparte entera. Usá
-          <strong>Archivo → Compartir → Publicar en la web</strong> (formato CSV) eligiendo solo
-          las pestañas que lee el sitio, y sumá a <code>config.json</code> el <code>pubId</code> y
-          los <code>gids</code> de cada una.
+          La planilla tiene que ser legible sin login. Lo más prolijo es
+          <strong>Archivo → Compartir → Publicar en la web</strong> (formato CSV) eligiendo las
+          dos pestañas, y sumar a <code>config.json</code> el <code>pubId</code> y los
+          <code>gids</code>. La otra opción es compartirla como
+          <strong>“cualquiera con el enlace puede ver”</strong>.
         </li>
         <li>
           El <code>gid</code> de cada pestaña sale de su URL: abrila y mirá el
           <code>#gid=…</code> del final.
+        </li>
+        <li>
+          Un bloque que no aparece casi siempre es una grabación sin cargar: los bloques se
+          abren con la grabación de su encuentro, no con una fecha.
         </li>
         <li>
           Si <em>sí</em> la lee y aun así ves contenido viejo, es caché del navegador:
@@ -105,19 +110,17 @@
 
     <script src="/assets/config.js"></script>
     <script src="/assets/sheet.js"></script>
+    <script src="/assets/curriculo.js"></script>
     <script>
       (function () {
         "use strict";
         var S = window.RHSheet;
         var CFG = window.RHCONFIG || {};
-        var ANIO = (window.RHCONFIG.sitio || {}).anioReferencia;
+        var CURRICULO = window.CURRICULO || { bloques: [] };
+        var ANIO = (CFG.sitio || {}).anioReferencia;
         var HOJAS = [
-          ["programas", "mapearProgramas", true],
-          ["bloques", "mapearBloques", true],
-          ["tarjetas", "mapearTarjetas", true],
-          ["grabaciones", "mapearGrabaciones", true],
-          ["facilitadores", "mapearFacilitadores", false],
-          ["ajustes", "mapearAjustes", false]
+          ["cursos", "mapearCursos", true],
+          ["grabaciones", "mapearGrabaciones", false]
         ];
 
         function celda(fila, texto, clase) {
@@ -171,10 +174,8 @@
                 var objetos = S.aObjetos(S.parseCsv(txt));
                 var filas = conAnio ? S[mapear](objetos, ANIO) : S[mapear](objetos);
                 crudo[clave] = filas;
-                var n = Array.isArray(filas)
-                  ? filas.length
-                  : Object.keys(filas.generales || filas).length;
-                filaHoja(nombre, true, n, "endpoint " + (j + 1) + " · " + urls[j].split("?")[0]);
+                filaHoja(nombre, true, filas.length,
+                  "endpoint " + (j + 1) + " · " + urls[j].split("?")[0]);
                 return probar(i + 1);
               })
               .catch(function (e) {
@@ -194,58 +195,68 @@
           document.getElementById("hojas").appendChild(tr);
         }
 
+        function link(td, href, texto) {
+          var a = document.createElement("a");
+          a.href = href;
+          a.textContent = texto;
+          td.appendChild(a);
+        }
+
         function terminar() {
-          if (!crudo.programas || !crudo.programas.length) {
+          if (!crudo.cursos || !crudo.cursos.length) {
             veredicto("mal", "El sitio NO puede leer la planilla: está usando la copia de respaldo.");
             return;
           }
           veredicto(
             fallaron ? "esperando" : "ok",
             fallaron
-              ? "Lee la planilla, pero " + fallaron + " hoja(s) fallaron y salen del respaldo."
+              ? "Lee Cursos, pero " + fallaron + " hoja(s) fallaron: las grabaciones salen del respaldo."
               : "Todo bien: el sitio lee la planilla en vivo."
           );
 
-          var datos = S.armar(
-            {
-              programas: crudo.programas,
-              bloques: crudo.bloques || [],
-              tarjetas: crudo.tarjetas || [],
-              grabaciones: crudo.grabaciones || [],
-              facilitadores: crudo.facilitadores || [],
-              ajustes: crudo.ajustes || { generales: {}, porPrograma: {} }
-            },
-            new Date()
-          );
+          var datos = S.armar(CURRICULO, {
+            cursos: crudo.cursos,
+            grabaciones: crudo.grabaciones || []
+          });
 
-          var cuerpoP = document.getElementById("programas");
+          var cuerpoC = document.getElementById("cursos");
           var cuerpoB = document.getElementById("bloques");
 
-          datos.programas.forEach(function (p) {
+          datos.cursos.forEach(function (c) {
+            var abiertos = c.bloques.filter(function (b) { return b.abierto; }).length;
             var tr = document.createElement("tr");
-            celda(tr, p.nombre + (p.cliente ? " · " + p.cliente : ""));
-            var td = celda(tr, "");
-            var a = document.createElement("a");
-            a.href = "/" + encodeURIComponent(p.id);
-            a.textContent = "/" + p.id;
-            td.appendChild(a);
-            celda(tr, String(p.bloques.length), p.bloques.length ? "estado-ok" : "");
-            celda(tr, p.grabaciones.filter(function (g) { return g.link; }).length +
-                      " de " + p.sesiones);
-            cuerpoP.appendChild(tr);
+            celda(tr, c.cliente ? c.cliente + " · " + c.id : c.id);
+            link(celda(tr, ""), "/" + encodeURIComponent(c.id), "/" + c.id);
+            celda(tr, abiertos + " de " + c.bloques.length, abiertos ? "estado-ok" : "");
+            celda(tr, c.grabaciones.filter(function (g) { return g.link; }).length +
+                      " de " + c.sesiones);
+            cuerpoC.appendChild(tr);
 
-            p.bloques.forEach(function (b) {
+            c.bloques.forEach(function (b) {
               var f = document.createElement("tr");
-              celda(f, p.id + " · " + b.nombre);
-              var td2 = celda(f, "");
-              var a2 = document.createElement("a");
-              a2.href = "/" + encodeURIComponent(p.id) + "/" + b.slug;
-              a2.textContent = "/" + p.id + "/" + b.slug;
-              td2.appendChild(a2);
-              celda(f, b.abierto ? "abierto" : b.fecha, b.abierto ? "estado-ok" : "");
+              celda(f, c.id + " · " + b.nombre);
+              var td = celda(f, "");
+              if (b.abierto) {
+                link(td, "/" + encodeURIComponent(c.id) + "/" + b.slug,
+                  "/" + c.id + "/" + b.slug);
+              } else {
+                td.textContent = "—";
+              }
+              celda(f, b.abierto ? "abierto" : "esperando la grabación",
+                b.abierto ? "estado-ok" : "");
               celda(f, String(b.tarjetas.length));
               cuerpoB.appendChild(f);
             });
+
+            if (c.completo) {
+              var fc = document.createElement("tr");
+              celda(fc, c.id + " · cierre");
+              link(celda(fc, ""), "/" + encodeURIComponent(c.id) + "/cierre",
+                "/" + c.id + "/cierre");
+              celda(fc, "abierto", "estado-ok");
+              celda(fc, "—");
+              cuerpoB.appendChild(fc);
+            }
           });
         }
 

@@ -1,7 +1,7 @@
 {
   "name": "powerh-sitio",
   "version": "1.0.0",
-  "description": "Sitio del workshop PoweRH. El contenido vive en un Google Sheet.",
+  "description": "Sitio del workshop PoweRH. El contenido vive en lib/curriculo.mjs; las cursadas, en un Google Sheet.",
   "private": true,
   "type": "module",
   "scripts": {

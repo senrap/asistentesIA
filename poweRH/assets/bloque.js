@@ -1,12 +1,13 @@
 /* ==========================================================================
    La sub-página de un bloque.
 
-   La URL trae dos cosas: el programa y el bloque. Con el primero se busca la
-   fila de Workshops, con el segundo la de Bloques, y de ahí sale toda la
-   página: el objetivo, las tarjetas, las grabaciones de ese bloque y los links
-   al anterior y al siguiente.
+   La URL trae dos cosas: la cursada y el bloque. Con la primera se busca la
+   fila de la hoja Cursos, con el segundo el bloque del currículo, y de ahí sale
+   toda la página: el objetivo, las tarjetas, las grabaciones de sus encuentros
+   y los links al bloque anterior y al siguiente.
 
-   Cuando en la planilla aparece un bloque nuevo, su página existe sola.
+   Un bloque solo tiene página si está abierto, y lo que lo abre es que su
+   grabación esté cargada en la planilla.
    ========================================================================== */
 
 (function () {
@@ -15,6 +16,7 @@
   var RH = window.RH;
   var $ = RH.$;
   var el = RH.el;
+  var C = RH.CURRICULO;
 
   /* ------------------------------------------------------------------
      Íconos por tipo de tarjeta
@@ -40,7 +42,7 @@
      Piezas sueltas
      ------------------------------------------------------------------ */
 
-  /** Un link de archivo descargable, como los de la bitácora de la sesión. */
+  /** Un link de archivo descargable. */
   function linkArchivo(a) {
     var link = el("a", "material-link");
     link.href = a.url;
@@ -54,8 +56,8 @@
     return link;
   }
 
-  /** Un link de video, con su botón de play. */
-  function linkVideo(titulo, url, nota, clase) {
+  /** Un link de video, con su botón de play. Sin fecha: no la registramos. */
+  function linkVideo(titulo, url, clase) {
     var a = el("a", "video-link" + (clase ? " " + clase : ""));
     a.href = url;
     a.target = "_blank";
@@ -65,7 +67,6 @@
       '<path d="M8 5.5v13l11-6.5z"/></svg></span>';
     var txt = el("span", "video-txt");
     txt.appendChild(el("span", "video-nombre", titulo));
-    if (nota) txt.appendChild(el("span", "video-nota", nota));
     a.appendChild(txt);
     return a;
   }
@@ -87,25 +88,16 @@
 
     bloque.tarjetas.forEach(function (t) {
       var art = el("article", "tarjeta es-" + t.tipo);
-      if (!t.abierta) art.classList.add("es-cerrada");
 
       var cabeza = el("div", "tarjeta-cabeza");
       cabeza.appendChild(svg(ICONOS[t.tipo] || ICONOS.contenido, "tarjeta-ico"));
       cabeza.appendChild(el("h3", null, t.titulo || "Sin título"));
-      if (!t.abierta) {
-        cabeza.appendChild(
-          el("span", "chip", "Se abre el " + RH.fechaCorta(t.fecha))
-        );
-      }
       art.appendChild(cabeza);
 
-      // Una tarjeta cerrada muestra el título y nada más: el resto todavía no
-      // le corresponde a quien está mirando.
-      if (!t.abierta) {
-        caja.appendChild(art);
-        return;
-      }
-
+      // Adentro de la tarjeta el texto va primero, porque es el que presenta la
+      // descarga ("acá está la base que vamos a usar" y abajo el botón). Lo que
+      // va al final es la tarjeta de texto largo respecto de las de material, y
+      // ese orden lo define el currículo.
       if (t.texto) {
         var prosa = el("div", "prosa");
         prosa.innerHTML = RH.markdown(t.texto);
@@ -121,7 +113,7 @@
         art.appendChild(img);
       }
 
-      if (t.archivos.length) {
+      if (t.archivos && t.archivos.length) {
         var mat = el("div", "tarjeta-archivos");
         t.archivos.forEach(function (a) {
           mat.appendChild(linkArchivo(a));
@@ -130,13 +122,13 @@
       }
 
       if (t.link) {
-        var caja2 = el("div", "tarjeta-link");
-        caja2.appendChild(
+        var cajaLink = el("div", "tarjeta-link");
+        cajaLink.appendChild(
           t.tipo === "grabacion"
-            ? linkVideo("Ver la grabación", t.link, "")
-            : linkVideo("Abrir", t.link, "")
+            ? linkVideo("Ver la grabación", t.link)
+            : linkVideo("Abrir", t.link)
         );
-        art.appendChild(caja2);
+        art.appendChild(cajaLink);
       }
 
       caja.appendChild(art);
@@ -151,37 +143,27 @@
     var seccion = $("[data-seccion-grabaciones]");
     if (!caja || !seccion) return;
 
+    var conLink = bloque.grabaciones.filter(function (g) {
+      return g.link;
+    });
+
     caja.innerHTML = "";
-    if (!bloque.grabaciones.length) {
+    if (!conLink.length) {
       seccion.hidden = true;
       return;
     }
     seccion.hidden = false;
 
-    bloque.grabaciones.forEach(function (g) {
-      var titulo =
-        "Encuentro " + (g.sesion || g.numero) + (g.titulo ? " · " + g.titulo : "");
-      if (g.link) {
-        caja.appendChild(
-          linkVideo(titulo, g.link, g.fecha ? "Sesión del " + RH.fechaCorta(g.fecha) : "",
-            "video-link-enc")
-        );
-        return;
-      }
-      var espera = el("div", "grabacion-espera");
-      espera.appendChild(el("strong", null, titulo));
-      espera.appendChild(
-        el("span", null,
-          g.fecha ? "· " + RH.capitalizar(RH.fechaCorta(g.fecha)) : "· todavía no está")
-      );
-      caja.appendChild(espera);
+    conLink.forEach(function (g) {
+      var titulo = "Encuentro " + (g.sesion || g.numero) + (g.titulo ? " · " + g.titulo : "");
+      caja.appendChild(linkVideo(titulo, g.link, "video-link-enc"));
     });
   }
 
   /* ------------------------------------------------------------------
      Bloque anterior / siguiente
      ------------------------------------------------------------------ */
-  function pintarNav(programa, bloques, i) {
+  function pintarNav(curso, bloques, i) {
     var caja = $("[data-bloque-nav]");
     var seccion = $("[data-seccion-nav]");
     if (!caja || !seccion) return;
@@ -196,26 +178,30 @@
       if (bloques[s].abierto) { siguiente = bloques[s]; break; }
     }
 
-    if (!anterior && !siguiente) {
-      seccion.hidden = true;
-      return;
-    }
-    seccion.hidden = false;
-
     if (anterior) {
       var la = el("a", "nav-anterior");
-      la.href = RH.rutaBloque(programa.id, anterior.slug);
+      la.href = RH.rutaBloque(curso.id, anterior.slug);
       la.appendChild(el("span", "nav-label", "← Bloque anterior"));
       la.appendChild(el("span", null, anterior.nombre));
       caja.appendChild(la);
     }
+
     if (siguiente) {
       var ls = el("a", "nav-siguiente");
-      ls.href = RH.rutaBloque(programa.id, siguiente.slug);
+      ls.href = RH.rutaBloque(curso.id, siguiente.slug);
       ls.appendChild(el("span", "nav-label", "Bloque siguiente →"));
       ls.appendChild(el("span", null, siguiente.nombre));
       caja.appendChild(ls);
+    } else if (curso.completo) {
+      // Después del último bloque viene la despedida.
+      var lc = el("a", "nav-siguiente");
+      lc.href = RH.rutaCierre(curso.id);
+      lc.appendChild(el("span", "nav-label", "Para cerrar →"));
+      lc.appendChild(el("span", null, "🎓 ¡Terminaste el workshop!"));
+      caja.appendChild(lc);
     }
+
+    seccion.hidden = !caja.childNodes.length;
   }
 
   /* ------------------------------------------------------------------
@@ -241,16 +227,15 @@
     var meta = $("[data-bloque-meta]");
     if (meta) {
       var partes = [];
-      if (bloque.fecha) partes.push(RH.fechaLarga(bloque.fecha));
-      if (bloque.grabaciones.length) {
-        partes.push(
-          bloque.grabaciones.length === 1
-            ? "1 encuentro"
-            : bloque.grabaciones.length + " encuentros"
-        );
+      var grabadas = bloque.grabaciones.filter(function (g) {
+        return g.link;
+      }).length;
+      if (grabadas) {
+        partes.push(grabadas === 1 ? "1 grabación" : grabadas + " grabaciones");
       }
-      if (facilitador && facilitador.nombre) partes.push("con " + facilitador.nombre);
+      if (facilitador) partes.push("con " + facilitador);
       meta.textContent = partes.join(" · ");
+      meta.hidden = !partes.length;
     }
 
     var obj = $("[data-bloque-objetivo]");
@@ -278,7 +263,7 @@
     if (!texto) return;
 
     // Si existe pero todavía está cerrado, lo decimos: no es lo mismo que un
-    // link roto, y la fecha de apertura es justo lo que se quiere saber.
+    // link roto, y saber qué falta es justo lo que se quiere saber.
     var cerrado = null;
     for (var i = 0; i < bloques.length; i++) {
       if (bloques[i].slug === slug) { cerrado = bloques[i]; break; }
@@ -286,21 +271,22 @@
 
     if (cerrado) {
       if (titulo) titulo.textContent = "🔒 Este bloque todavía no se abrió";
+      // Alcanza con la grabación del primero de sus encuentros para destrabarlo.
+      var primera = (cerrado.sesiones || [])[0];
       texto.textContent =
-        "«" + cerrado.nombre + "» se abre el " + RH.fechaCorta(cerrado.fecha) +
-        " · " + RH.enDias(RH.diasHasta(cerrado.fecha)) + ".";
+        "«" + cerrado.nombre + "» se abre en cuanto publiquemos la grabación " +
+        (primera ? "del encuentro " + primera + "." : "de su encuentro.");
     } else if (!slug) {
       texto.textContent = "Este link no dice a qué bloque entrar.";
     } else {
       texto.textContent =
-        "Puede que todavía no esté publicado, o que el bloque haya cambiado de nombre en la " +
-        "planilla —y con eso, su link.";
+        "Puede que el link haya cambiado de nombre, o que este bloque no sea de este workshop.";
     }
   }
 
-  /** Los links que vuelven al programa, que no se conocen hasta tener el id. */
-  function pintarVuelta(programa) {
-    var destino = RH.rutaPrograma(programa.id);
+  /** Los links que vuelven a la cursada, que no se conocen hasta tener el id. */
+  function pintarVuelta(curso) {
+    var destino = RH.rutaCurso(curso.id);
     RH.$$("[data-volver]").forEach(function (a) {
       a.href = destino;
     });
@@ -313,15 +299,10 @@
       if (a) a.href = destino + par[1];
     });
     var texto = $("[data-volver-texto]");
-    if (texto) texto.textContent = "Volver a " + programa.nombre;
+    if (texto) texto.textContent = "Volver al workshop";
 
-    var cliente = $("[data-programa-cliente]");
-    var esGeneral = !programa.cliente || RH.S.normalizarClave(programa.cliente) === "general";
-    if (cliente) cliente.textContent = esGeneral ? "Workshop" : programa.cliente;
-    var marcaTxt = $("[data-programa-marca]");
-    if (marcaTxt) marcaTxt.textContent = programa.nombre;
-    var pie = $("[data-programa-pie]");
-    if (pie) pie.textContent = programa.nombre;
+    var cliente = $("[data-curso-cliente]");
+    if (cliente) cliente.textContent = RH.nombreCliente(curso);
   }
 
   /* ------------------------------------------------------------------
@@ -332,19 +313,18 @@
     if (cargando) cargando.hidden = true;
 
     var pide = RH.loQuePideLaUrl();
-    var programa = RH.S ? RH.S.programaPorId(datos.programas || [], pide.programa) : null;
+    var curso = RH.S ? RH.S.cursoPorId(datos.cursos || [], pide.curso) : null;
 
-    if (!programa) {
+    if (!curso) {
       sinBloque("", []);
       var t = $("[data-sin-bloque-texto]");
       if (t) t.textContent = "No encontramos el workshop de este link.";
       return;
     }
 
-    pintarVuelta(programa);
-    RH.aplicarAjustes(programa.ajustes);
+    pintarVuelta(curso);
 
-    var bloques = programa.bloques || [];
+    var bloques = curso.bloques || [];
     var i = -1;
     for (var k = 0; k < bloques.length; k++) {
       if (bloques[k].slug === pide.bloque && bloques[k].abierto) { i = k; break; }
@@ -356,16 +336,11 @@
     }
 
     var bloque = bloques[i];
-    bloque.total = bloques.length;
-    document.title = bloque.nombre + " · " + programa.nombre;
+    document.title = bloque.nombre + " · " + C.nombre;
 
-    var facilitador = RH.S
-      ? RH.S.facilitadorDe(datos.facilitadores || [], programa.facilitador)
-      : null;
-
-    pintarHero(bloque, facilitador);
+    pintarHero(bloque, curso.facilitador || (C.facilitador || {}).nombre);
     pintarTarjetas(bloque);
     pintarGrabaciones(bloque);
-    pintarNav(programa, bloques, i);
+    pintarNav(curso, bloques, i);
   });
 })();

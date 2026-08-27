@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
  * Servidor de desarrollo. Sirve la carpeta y hace la misma reescritura que
- * netlify.toml: /programa -> programa.html, /programa/bloque -> bloque.html.
+ * netlify.toml: /curso -> curso.html, /curso/bloque -> bloque.html,
+ * /curso/cierre -> cierre.html.
  *
  * Sin esto, un `python3 -m http.server` devuelve 404 en las sub-páginas y no
  * se puede probar en local lo mismo que se ve publicado.
@@ -43,11 +44,13 @@ createServer(async (req, res) => {
 
   if (ruta === '/' || ruta.endsWith('/')) ruta += 'index.html';
 
-  // La reescritura de programas y bloques, igual que en Netlify: los archivos
-  // que existen de verdad ganan, y lo que queda cae en una de las dos páginas.
+  // La reescritura de cursadas, bloques y cierre, igual que en Netlify: los
+  // archivos que existen de verdad ganan, y lo que queda cae en una de las tres
+  // páginas. El orden es el mismo que en netlify.toml: /cierre primero.
   const tramos = ruta.replace(/^\/+/, '').split('/');
   if (!existsSync(join(root, ruta))) {
-    if (tramos.length === 1 && tramos[0]) ruta = '/programa.html';
+    if (tramos.length === 1 && tramos[0]) ruta = '/curso.html';
+    else if (tramos.length === 2 && tramos[1] === 'cierre') ruta = '/cierre.html';
     else if (tramos.length === 2) ruta = '/bloque.html';
   }
 

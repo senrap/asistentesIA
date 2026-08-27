@@ -430,12 +430,12 @@ a:hover {
 .section-intro {
   margin-top: 20px;
   color: var(--gray);
-  max-width: 620px;
+  max-width: 760px;
 }
 
 .welcome {
   margin-top: 24px;
-  max-width: 720px;
+  max-width: 940px;
   display: grid;
   gap: 14px;
   color: var(--gray);
@@ -524,6 +524,16 @@ a:hover {
 }
 
 .prep-card-alert strong {
+  color: var(--green);
+}
+
+/*
+ * El texto de estas tarjetas se dibuja adentro de un .prosa, y ".prosa strong"
+ * —que fija navy y viene más abajo en la hoja— le empataba en especificidad a
+ * la regla de acá arriba y le ganaba por orden. Resultado: sobre el fondo
+ * oscuro la negrita quedaba navy sobre navy, o sea invisible.
+ */
+.prep-card-alert .prosa strong {
   color: var(--green);
 }
 
@@ -867,9 +877,15 @@ a:hover {
   margin-top: 0;
 }
 
+/*
+ * Nada de max-width en ch acá dentro.
+ *
+ * El texto vive en tarjetas que ya tienen su propio ancho, y limitarlo otra vez
+ * por cantidad de caracteres lo cortaba mucho antes del borde: media tarjeta
+ * quedaba vacía. Quien manda es el contenedor, y el tope real lo pone .wrap.
+ */
 .prosa p {
   margin: 0 0 12px;
-  max-width: 68ch;
 }
 
 .prosa h2,
@@ -880,24 +896,35 @@ a:hover {
   margin: 22px 0 10px;
 }
 
-.prosa ul {
+/* Las dos listas con la misma sangría. La numerada no tenía regla propia y se
+   quedaba con los 40px que le pone el navegador: al lado de una lista con
+   guiones se notaba, y en la tarjeta de Tarea —que es toda una lista numerada—
+   dejaba el texto corrido hacia la derecha. */
+.prosa ul,
+.prosa ol {
   margin: 0 0 12px;
   padding-left: 20px;
   display: grid;
   gap: 6px;
+}
+
+.prosa ul {
   list-style: disc;
+}
+
+.prosa ol {
+  list-style: decimal;
 }
 
 .prosa ul ul {
   list-style: circle;
 }
 
-.prosa ul ul {
+.prosa ul ul,
+.prosa ol ol,
+.prosa ul ol,
+.prosa ol ul {
   margin: 6px 0 0;
-}
-
-.prosa li {
-  max-width: 68ch;
 }
 
 .prosa strong {
@@ -1604,7 +1631,6 @@ a:hover {
   border-left: 3px solid var(--green);
   border-radius: 0 var(--radius-card) var(--radius-card) 0;
   padding: 20px 24px;
-  max-width: 72ch;
 }
 
 .bloque-objetivo .prosa p,
@@ -1930,4 +1956,197 @@ a:hover {
   font-size: 13px;
   font-weight: 300;
   color: rgba(255, 255, 255, 0.6);
+}
+
+/* ============ La despedida: /idcurso/cierre ============ */
+
+/* El link del menú aparece recién cuando están todas las grabaciones, así que
+   conviene que se note que es otra cosa. */
+.nav-cierre {
+  color: var(--green);
+  font-weight: 700;
+}
+
+/* El último escalón de la ruta de bloques. */
+.ruta-item.is-final {
+  border-color: var(--green);
+  background: var(--green-bg);
+}
+
+.ruta-item.is-final .ruta-num {
+  background: var(--green);
+  color: var(--navy);
+  font-size: 20px;
+}
+
+.cierre-hero {
+  background: var(--navy);
+  color: var(--white);
+  padding: 56px 0 60px;
+  text-align: center;
+}
+
+.cierre-hero h1 {
+  font-size: clamp(30px, 5vw, 46px);
+  font-weight: 800;
+}
+
+.cierre-gif {
+  display: block;
+  margin: 26px auto 0;
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  border-radius: var(--radius-card);
+}
+
+.cierre-gracias {
+  margin-top: 30px;
+  font-size: clamp(18px, 2.6vw, 24px);
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: var(--green);
+}
+
+.cierre-texto {
+  margin: 16px auto 0;
+  max-width: 760px;
+  font-size: 16px;
+}
+
+.cierre-texto p {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.cierre-hero .fuente-aviso {
+  margin-top: 22px;
+}
+
+/* --- Las acciones para seguir en contacto --- */
+
+.cierre-acciones {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.accion {
+  background: var(--white);
+  border: 1px solid var(--light);
+  border-left: 4px solid var(--green);
+  border-radius: var(--radius-card);
+  padding: 26px 28px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.accion-cabeza {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.accion-emoji {
+  font-size: 26px;
+  line-height: 1;
+}
+
+.accion h3 {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* El botón va abajo de todo aunque las tarjetas tengan textos de distinto
+   largo: si no, en una fila quedan a alturas distintas. */
+.accion .btn {
+  margin-top: auto;
+}
+
+/* --- El certificado --- */
+
+.certificado {
+  max-width: 820px;
+}
+
+/* .prosa le saca el margen a su primer hijo, y acá eso dejaba el texto pegado
+   a la línea verde del título. */
+.certificado > .prosa {
+  margin-top: 20px;
+  font-size: 16px;
+}
+
+.certificado-botones {
+  margin-top: 22px;
+}
+
+.certificado-linkedin {
+  margin-top: 32px;
+  padding-top: 28px;
+  border-top: 1px solid var(--light);
+}
+
+.certificado-linkedin h3 {
+  font-size: 17px;
+  font-weight: 600;
+  max-width: 60ch;
+}
+
+.certificado-nota {
+  margin-top: 12px;
+  font-size: 14px;
+  color: var(--gray);
+}
+
+/*
+ * Los datos que pide el formulario de LinkedIn. Dos columnas en escritorio y
+ * una en el teléfono; el <dt> es la etiqueta y el <dd> lo que hay que poner.
+ */
+.certificado-campos {
+  margin: 16px 0 24px;
+  display: grid;
+  grid-template-columns: minmax(140px, auto) 1fr;
+  gap: 8px 20px;
+  font-size: 15px;
+  background: var(--white);
+  border: 1px solid var(--light);
+  border-radius: var(--radius-card);
+  padding: 20px 24px;
+}
+
+.certificado-campos dt {
+  font-weight: 600;
+  color: var(--navy);
+}
+
+.certificado-campos dd {
+  margin: 0;
+  color: var(--gray);
+}
+
+/* --- Hasta la próxima --- */
+
+.despedida {
+  text-align: center;
+}
+
+.despedida-texto {
+  font-size: clamp(17px, 2.4vw, 22px);
+  font-weight: 800;
+  color: var(--navy);
+  letter-spacing: 0.5px;
+  text-wrap: balance;
+}
+
+@media (max-width: 620px) {
+  .certificado-campos {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+
+  .certificado-campos dd {
+    margin-bottom: 10px;
+  }
 }

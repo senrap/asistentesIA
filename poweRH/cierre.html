@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>¡Felicitaciones! · PoweRH</title>
+    <!--
+      La despedida del workshop.
+
+        /powerh-acme/cierre        ← la ruta linda
+        cierre.html?c=powerh-acme  ← la misma, sin reescritura
+
+      El texto sale de curriculo.cierre; de la planilla solo necesita el id de
+      la cursada, para poder volver a su página. La reescritura la define
+      netlify.toml, y tiene que ir ANTES de la de los bloques.
+    -->
+    <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#00344D" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2300344D'/%3E%3Ctext x='16' y='23' font-family='Poppins,sans-serif' font-size='19' font-weight='800' fill='%2300FF90' text-anchor='middle'%3EH%3C/text%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="/assets/estilo.css" />
+  </head>
+
+  <body>
+    <a class="skip" href="#contenido">Ir al contenido</a>
+
+    <header class="site-header">
+      <div class="wrap">
+        <a class="brand" href="/" data-volver-marca>
+          <span class="brand-mark" aria-hidden="true">H</span>
+          <span class="brand-text"
+            ><span data-curso-cliente>Workshop</span>
+            <strong data-c="nombre">PoweRH</strong></span
+          >
+        </a>
+        <nav class="header-links" aria-label="Secciones">
+          <a href="#" data-volver>Volver al workshop</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="contenido">
+      <!-- ============ FELICITACIONES ============ -->
+      <section class="cierre-hero on-dark">
+        <div class="wrap">
+          <h1 data-c="cierre.titulo">¡Felicitaciones! 🎓🥳</h1>
+          <!-- El GIF vive en Tenor. Si no carga —una red que lo bloquee— se
+               esconde solo y la página sigue teniendo sentido. -->
+          <img class="cierre-gif" alt="" data-cierre-gif hidden />
+          <p class="cierre-gracias" data-c="cierre.gracias">¡MUCHAS GRACIAS!</p>
+          <div class="prosa cierre-texto" data-c-md="cierre.texto"></div>
+          <p class="fuente-aviso" data-fuente hidden></p>
+        </div>
+      </section>
+
+      <!-- ============ SEGUIR EN CONTACTO ============ -->
+      <section class="section">
+        <div class="wrap">
+          <div class="cierre-acciones" data-acciones></div>
+        </div>
+      </section>
+
+      <!-- ============ CERTIFICADO ============ -->
+      <section class="section section-alt" data-seccion-certificado hidden>
+        <div class="wrap">
+          <div class="certificado">
+            <p class="section-label"><span data-certificado-emoji>🎓</span> Tu certificado</p>
+            <h2 data-certificado-titulo></h2>
+            <span class="accent-line" aria-hidden="true"></span>
+            <div class="prosa" data-certificado-texto></div>
+            <p class="certificado-botones">
+              <a class="btn btn-cta" href="#" target="_blank" rel="noopener" data-certificado-boton
+                >Descargar el certificado</a
+              >
+            </p>
+
+            <div class="certificado-linkedin" data-linkedin hidden>
+              <h3 data-linkedin-texto></h3>
+              <p class="certificado-nota">
+                Estos son los datos que te va a pedir el formulario:
+              </p>
+              <dl class="certificado-campos" data-campos></dl>
+              <a
+                class="btn btn-outline"
+                href="#"
+                target="_blank"
+                rel="noopener"
+                data-linkedin-boton
+              ></a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ COMUNIDAD ============ -->
+      <section class="redes on-dark" data-seccion-redes hidden>
+        <div class="wrap">
+          <p class="section-label">Comunidad</p>
+          <h2>Ya nos conocimos… ¡ahora que no se corte! 😄</h2>
+          <p class="redes-lead">Te dejamos algunas propuestas para seguir en contacto.</p>
+          <div class="redes-grid" data-redes></div>
+        </div>
+      </section>
+
+      <!-- ============ HASTA LA PRÓXIMA ============ -->
+      <section class="section despedida">
+        <div class="wrap">
+          <p class="despedida-texto" data-c="cierre.despedida"></p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <div class="footer-bottom">
+          <span>HACHE Consultora · Formación en People Analytics</span>
+          <span data-c="nombre"></span>
+        </div>
+      </div>
+    </footer>
+
+    <div class="toast" data-toast role="status" aria-live="polite"></div>
+
+    <script src="/assets/config.js"></script>
+    <script src="/assets/sheet.js"></script>
+    <script src="/assets/curriculo.js"></script>
+    <script src="/assets/cursos.js"></script>
+    <script src="/assets/comun.js"></script>
+    <script src="/assets/cierre.js"></script>
+  </body>
+</html>

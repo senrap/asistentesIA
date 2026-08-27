@@ -1,22 +1,24 @@
 #!/usr/bin/env node
 /**
- * Prepara los tres archivos que consume el sitio:
+ * Prepara los cuatro archivos que consume el sitio:
  *
  *   assets/sheet.js      El parseo del Sheet, empaquetado para el navegador.
  *                        Se genera desde lib/sheet.mjs para que no haya dos
  *                        copias del mismo código.
  *
+ *   assets/curriculo.js  El contenido del programa, desde lib/curriculo.mjs.
+ *                        Es lo fijo: los bloques, el material, los textos.
+ *
  *   assets/config.js     La config que necesita el navegador, desde config.json.
  *
- *   assets/contenido.js  Copia de respaldo del Sheet, con el bloqueo por fecha
- *                        ya aplicado. El sitio la usa solo si no consigue leer
- *                        la planilla en vivo (Google caído, permisos mal, una
- *                        red corporativa que bloquea docs.google.com).
+ *   assets/cursos.js     Copia de respaldo de la planilla, ya cruzada con el
+ *                        currículo. El sitio la usa solo si no consigue leer el
+ *                        Sheet en vivo (Google caído, permisos mal, una red
+ *                        corporativa que bloquea docs.google.com).
  *
  * Uso:
  *   node scripts/build.mjs                    lee el Sheet por red
  *   node scripts/build.mjs --local            lee fixtures/*.csv
- *   node scripts/build.mjs --ahora 2026-11-05T12:00
  */
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
@@ -26,27 +28,15 @@ import {
   pareceCsv,
   parseCsv,
   aObjetos,
-  mapearProgramas,
-  mapearBloques,
-  mapearTarjetas,
+  mapearCursos,
   mapearGrabaciones,
-  mapearFacilitadores,
-  mapearAjustes,
-  armar,
-  instanteAR
+  armar
 } from '../lib/sheet.mjs';
+import CURRICULO from '../lib/curriculo.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const cfg = JSON.parse(readFileSync(join(root, 'config.json'), 'utf8'));
-
-const args = process.argv.slice(2);
-const local = args.includes('--local');
-const iAhora = args.indexOf('--ahora');
-let AHORA = new Date();
-if (iAhora > -1 && args[iAhora + 1]) {
-  const v = args[iAhora + 1];
-  AHORA = instanteAR(v.slice(0, 10));
-}
+const local = process.argv.slice(2).includes('--local');
 
 /* ------------------------------------------------------------------
    1. assets/sheet.js — mismo código de parseo, para el navegador
@@ -71,7 +61,23 @@ ${fuenteLib.replace(/^export /gm, '')}
 );
 
 /* ------------------------------------------------------------------
-   2. assets/config.js — la config que necesita el navegador
+   2. assets/curriculo.js — el contenido del programa
+   ------------------------------------------------------------------ */
+if (!Array.isArray(CURRICULO.bloques) || !CURRICULO.bloques.length) {
+  console.error('Build falló: lib/curriculo.mjs no define ningún bloque.');
+  process.exit(1);
+}
+
+writeFileSync(
+  join(root, 'assets', 'curriculo.js'),
+  `/* Generado por scripts/build.mjs desde lib/curriculo.mjs — no editar a mano.
+   El contenido del programa se edita en lib/curriculo.mjs. */
+window.CURRICULO = ${JSON.stringify(CURRICULO, null, 2)};
+`
+);
+
+/* ------------------------------------------------------------------
+   3. assets/config.js — la config que necesita el navegador
    ------------------------------------------------------------------ */
 writeFileSync(
   join(root, 'assets', 'config.js'),
@@ -81,29 +87,27 @@ window.RHCONFIG = ${JSON.stringify({ sheet: cfg.sheet, sitio: cfg.sitio }, null,
 );
 
 /* ------------------------------------------------------------------
-   3. assets/contenido.js — copia de respaldo
+   4. assets/cursos.js — copia de respaldo de la planilla
    ------------------------------------------------------------------ */
 const ANIO = cfg.sitio.anioReferencia;
+const rutaRespaldo = join(root, 'assets', 'cursos.js');
 
 const HOJAS = [
-  ['programas', 'workshops.csv', (o) => mapearProgramas(o, ANIO)],
-  ['bloques', 'bloques.csv', (o) => mapearBloques(o, ANIO)],
-  ['tarjetas', 'tarjetas.csv', (o) => mapearTarjetas(o, ANIO)],
-  ['grabaciones', 'grabaciones.csv', (o) => mapearGrabaciones(o, ANIO)],
-  ['facilitadores', 'facilitadores.csv', mapearFacilitadores],
-  ['ajustes', 'ajustes.csv', mapearAjustes]
+  ['cursos', 'cursos.csv', (o) => mapearCursos(o, ANIO)],
+  ['grabaciones', 'grabaciones.csv', mapearGrabaciones]
 ];
 
+const sinConfigurar = !cfg.sheet.id || /^PEGAR/.test(cfg.sheet.id);
+
 async function leerHoja(hoja, fixture) {
-  // Sin id, el fetch igual sale y vuelve con un 403 que no explica nada.
-  if (!local && (!cfg.sheet.id || /^PEGAR/.test(cfg.sheet.id))) {
-    throw new Error('falta el id de la planilla en config.json');
-  }
   if (local) {
     const ruta = join(root, 'fixtures', fixture);
     if (!existsSync(ruta)) throw new Error(`falta fixtures/${fixture}`);
     return readFileSync(ruta, 'utf8');
   }
+  // Sin id, el fetch igual sale y vuelve con un 403 que no explica nada.
+  if (sinConfigurar) throw new Error('falta el id de la planilla en config.json');
+
   let ultimo = 'sin endpoints';
   for (const url of urlsHoja(cfg.sheet, hoja)) {
     try {
@@ -126,11 +130,6 @@ async function leerHoja(hoja, fixture) {
   throw new Error(`${hoja}: ${ultimo}`);
 }
 
-function respaldoPrevio() {
-  const ruta = join(root, 'assets', 'contenido.js');
-  return existsSync(ruta) ? readFileSync(ruta, 'utf8') : null;
-}
-
 try {
   const crudo = {};
   // Una hoja por vez y no en paralelo: pedirle varias cosas a la vez a Google
@@ -138,56 +137,64 @@ try {
   for (const [clave, fixture, mapear] of HOJAS) {
     const nombreHoja = (cfg.sheet.hojas || {})[clave];
     if (!nombreHoja) throw new Error(`config.json no dice qué hoja es "${clave}"`);
-    const csv = await leerHoja(nombreHoja, fixture);
-    crudo[clave] = mapear(aObjetos(parseCsv(csv)));
+    crudo[clave] = mapear(aObjetos(parseCsv(await leerHoja(nombreHoja, fixture))));
   }
 
-  if (!crudo.programas.length) {
-    throw new Error('la hoja de programas no tiene ninguna fila con ID');
+  if (!crudo.cursos.length) {
+    throw new Error('la hoja de Cursos no tiene ninguna fila con ID curso');
   }
 
-  const datos = armar(crudo, AHORA);
+  const datos = armar(CURRICULO, crudo);
+  const generado = new Date().toISOString();
 
   writeFileSync(
-    join(root, 'assets', 'contenido.js'),
+    rutaRespaldo,
     `/* Copia de respaldo del Google Sheet — no editar a mano.
    El sitio la usa solo si no consigue leer la planilla en vivo.
-   Generada el ${AHORA.toISOString()}${local ? ' desde fixtures/ (--local)' : ''}.
-   El contenido posterior a ese momento no está acá. */
-window.PROGRAMA = ${JSON.stringify(
-      { generado: AHORA.toISOString(), ...datos },
-      null,
-      2
-    )};
+   Generada el ${generado}${local ? ' desde fixtures/ (--local)' : ''}.
+   Las grabaciones cargadas después de ese momento no están acá. */
+window.CURSOS = ${JSON.stringify({ generado, ...datos }, null, 2)};
 `
   );
 
-  const conBloques = datos.programas.filter((p) => p.bloques.length);
-  const bloques = conBloques.reduce((n, p) => n + p.bloques.length, 0);
-  const abiertos = conBloques.reduce((n, p) => n + p.bloques.filter((b) => b.abierto).length, 0);
-  const tarjetas = conBloques.reduce(
-    (n, p) => n + p.bloques.reduce((m, b) => m + b.tarjetas.length, 0), 0);
-  const grabadas = datos.programas.reduce(
-    (n, p) => n + p.grabaciones.filter((g) => g.link).length, 0);
+  const abiertos = datos.cursos.reduce(
+    (n, c) => n + c.bloques.filter((b) => b.abierto).length, 0);
+  const grabadas = datos.cursos.reduce(
+    (n, c) => n + c.grabaciones.filter((g) => g.link).length, 0);
 
   console.log(
-    `OK — ${datos.programas.length} programas (${conBloques.length} con contenido), ` +
-      `${bloques} bloques (${abiertos} liberados), ${tarjetas} tarjetas, ` +
-      `${grabadas} grabaciones cargadas, ${datos.facilitadores.length} facilitadores` +
+    `OK — ${datos.cursos.length} cursadas, ${CURRICULO.bloques.length} bloques por cursada ` +
+      `(${abiertos} abiertos en total), ${grabadas} grabaciones cargadas` +
       `${local ? ' [fixtures]' : ' [Sheet en vivo]'}`
   );
-  conBloques.forEach((p) => {
-    console.log(`   /${p.id} — ` + p.bloques.map((b) => `/${p.id}/${b.slug}`).join('  '));
+  datos.cursos.forEach((c) => {
+    const rutas = c.bloques.filter((b) => b.abierto).map((b) => `/${c.id}/${b.slug}`);
+    if (c.completo) rutas.push(`/${c.id}/cierre`);
+    console.log(`   /${c.id} — ${rutas.length ? rutas.join('  ') : 'sin bloques abiertos todavía'}`);
   });
 } catch (e) {
-  // No romper el deploy por un problema de red o de permisos: el sitio lee el
-  // Sheet en vivo igual, y el respaldo viejo sigue sirviendo como red de contención.
-  const previo = respaldoPrevio();
+  // Un id sin configurar es un error de config, no un problema de red: el sitio
+  // tampoco va a poder leer la planilla desde el navegador, así que mejor que el
+  // deploy se caiga acá y no que salga publicado sin ninguna cursada.
+  if (sinConfigurar && !local) {
+    console.error(`Build falló: ${e.message}`);
+    console.error('       Poné el id de la planilla en config.json y volvé a deployar.');
+    process.exit(1);
+  }
+
+  // Un problema de red o de permisos no rompe el deploy: el sitio lee el Sheet
+  // en vivo igual, y el respaldo viejo sigue sirviendo como red de contención.
   console.warn(`AVISO — no se pudo leer el Sheet: ${e.message}`);
-  if (previo) {
+  if (existsSync(rutaRespaldo)) {
     console.warn('       Se conserva la copia de respaldo anterior.');
   } else {
-    console.error('Build falló: no hay Sheet ni copia de respaldo previa.');
-    process.exit(1);
+    // Sin respaldo previo dejamos uno vacío: es preferible a que el navegador
+    // se coma un 404 en /assets/cursos.js.
+    writeFileSync(
+      rutaRespaldo,
+      '/* Respaldo vacío: el build no pudo leer la planilla. */\n' +
+        'window.CURSOS = { cursos: [] };\n'
+    );
+    console.warn('       Se dejó un respaldo vacío.');
   }
 }

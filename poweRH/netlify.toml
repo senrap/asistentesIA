@@ -1,6 +1,6 @@
-# Config del sitio de los workshops, para cuando Netlify lo despliega con
+# Config del sitio de PoweRH, para cuando Netlify lo despliega con
 # "Base directory: poweRH". Con esa base, Netlify lee este archivo y publica
-# esta carpeta como raíz del sitio: los workshops quedan en /, no en /poweRH/.
+# esta carpeta como raíz del sitio: las cursadas quedan en /, no en /poweRH/.
 #
 # El resto del repositorio —la Biblioteca de Asistentes en la raíz, Power People
 # en power-people/— no se toca: cada uno se despliega en su propio proyecto,
@@ -13,23 +13,31 @@
 [build.environment]
   NODE_VERSION = "20"
 
-# Las páginas de cada programa y de cada bloque.
+# Las páginas de cada cursada, de cada bloque y la de cierre.
 #
-# No hay un archivo por programa ni por bloque: el id sale de la columna ID de
-# la hoja Workshops y el slug del nombre del bloque, así que /lo-que-sea sirve
-# siempre programa.html o bloque.html y es el JS el que decide qué mostrar.
-# Un workshop nuevo en la planilla estrena su página sin tocar el repo.
+# No hay un archivo por cursada: el id sale de la columna "ID curso" de la hoja
+# Cursos y el slug del nombre del bloque sale del currículo, así que /lo-que-sea
+# sirve siempre una de estas tres páginas y es el JS el que decide qué mostrar.
+# Una cursada nueva en la planilla estrena su página sin tocar el repo.
+#
+# El orden importa: /cierre tiene que ganarle a la regla de los bloques, que
+# matchea cualquier segundo tramo.
 #
 # Netlify sirve primero los archivos que existen de verdad, así que
 # /assets/…, /diagnostico.html y la portada ganan sobre estas reglas.
 [[redirects]]
-  from = "/:programa/:bloque"
+  from = "/:curso/cierre"
+  to = "/cierre.html"
+  status = 200
+
+[[redirects]]
+  from = "/:curso/:bloque"
   to = "/bloque.html"
   status = 200
 
 [[redirects]]
-  from = "/:programa"
-  to = "/programa.html"
+  from = "/:curso"
+  to = "/curso.html"
   status = 200
 
 [[headers]]
@@ -38,7 +46,7 @@
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
 
-# Los assets los regenera cada build y el contenido sale del Sheet en vivo,
+# Los assets los regenera cada build y las grabaciones salen del Sheet en vivo,
 # así que no conviene cachearlos mucho.
 [[headers]]
   for = "/assets/*"
