@@ -253,7 +253,7 @@
   /* ------------------------------------------------------------------
      Cuando la URL pide un bloque que no está
      ------------------------------------------------------------------ */
-  function sinBloque(slug, bloques) {
+  function sinBloque(slug, bloques, curso) {
     var caja = $("[data-sin-bloque]");
     if (!caja) return;
     caja.hidden = false;
@@ -276,10 +276,12 @@
 
     if (cerrado) {
       if (titulo) titulo.textContent = "🔒 Este bloque todavía no se abrió";
-      // Lo destraba que estén las grabaciones del bloque anterior.
-      texto.textContent =
-        "«" + cerrado.nombre + "» se abre en cuanto publiquemos las grabaciones " +
-        (anterior ? "de «" + anterior.nombre + "»." : "del bloque anterior.");
+      // Lo destraba que estén las grabaciones del bloque anterior, salvo en las
+      // cursadas que se abren a mano: ahí las grabaciones no son la señal.
+      texto.textContent = curso && curso.aMano
+        ? "«" + cerrado.nombre + "» se abre a medida que avancemos con el workshop."
+        : "«" + cerrado.nombre + "» se abre en cuanto publiquemos las grabaciones " +
+          (anterior ? "de «" + anterior.nombre + "»." : "del bloque anterior.");
     } else if (!slug) {
       texto.textContent = "Este link no dice a qué bloque entrar.";
     } else {
@@ -335,7 +337,7 @@
     }
 
     if (i === -1) {
-      sinBloque(pide.bloque, bloques);
+      sinBloque(pide.bloque, bloques, curso);
       return;
     }
 

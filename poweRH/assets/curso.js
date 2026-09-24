@@ -159,8 +159,12 @@
   /**
    * Qué le falta a un bloque para abrirse: que estén las grabaciones del bloque
    * anterior. Lo nombramos, que es más útil que decir "el anterior".
+   *
+   * Salvo que la cursada se abra a mano —el cliente maneja sus grabaciones y no
+   * pasan por acá—: ahí prometer grabaciones sería mentira.
    */
-  function loQueFalta(anterior) {
+  function loQueFalta(curso, anterior) {
+    if (curso.aMano) return "Se abre a medida que avancemos con el workshop";
     return anterior
       ? "Se abre cuando publiquemos las grabaciones de «" + anterior.nombre + "»"
       : "Se abre cuando publiquemos las grabaciones del bloque anterior";
@@ -196,7 +200,7 @@
         var cuenta = cuentaDe(b);
         if (cuenta) main.appendChild(cuenta);
       } else {
-        main.appendChild(el("p", "ruta-meta", loQueFalta(c.bloques[i - 1])));
+        main.appendChild(el("p", "ruta-meta", loQueFalta(c, c.bloques[i - 1])));
       }
       fila.appendChild(main);
 
@@ -273,14 +277,21 @@
 
     var filas = RH.S ? RH.S.sesionesDe(c) : [];
     if (!filas.length) return;
+
+    var hayAlguna = filas.some(function (g) {
+      return g.link;
+    });
+
+    // Una cursada que se abre a mano y no tiene ni una grabación cargada es,
+    // casi siempre, una donde el cliente las maneja por su cuenta y no van a
+    // llegar nunca. Mejor no prometer nada: la sección entera no se muestra.
+    if (!hayAlguna && c.aMano) return;
+
     mostrar("[data-seccion-grabaciones]");
     caja.innerHTML = "";
 
     // Sin ninguna grabación cargada, listar los encuentros uno por uno es una
     // pared de "todavía no está". Alcanza con decirlo una vez.
-    var hayAlguna = filas.some(function (g) {
-      return g.link;
-    });
     if (!hayAlguna) {
       var aviso = el("div", "grabacion-espera");
       aviso.appendChild(

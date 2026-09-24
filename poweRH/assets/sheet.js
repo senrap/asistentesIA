@@ -241,6 +241,33 @@ function aUrl(valor) {
    -------------------------------------------------------------------------- */
 
 /**
+ * El abre-manual de una cursada, para cuando las grabaciones no sirven de
+ * señal: hay clientes que las manejan internamente y nunca llegan a esta
+ * planilla. Sin esto, esa cursada se queda para siempre en el bloque 1.
+ *
+ *   (vacío)        automático: mandan las grabaciones
+ *   1, 2, 3, 4…    ese es el MÍNIMO de bloques abiertos
+ *   todos          todos los bloques abiertos
+ *   cierre         todos los bloques más la página de despedida
+ *
+ * Es un piso, no un techo: nunca cierra algo que las grabaciones ya abrieron,
+ * así que en una cursada normal se puede dejar vacío y olvidarse.
+ */
+function leerAvance(valor) {
+  var v = normalizarClave(valor);
+  if (!v) return { bloques: 0, cierre: false };
+
+  // 99 y no Infinity: esto termina en un JSON.stringify y volvería como null.
+  if (/^(cierre|fin|final|terminad[oa]|finalizad[oa])$/.test(v)) {
+    return { bloques: 99, cierre: true };
+  }
+  if (/^(todos|todas|todo)$/.test(v)) return { bloques: 99, cierre: false };
+
+  var n = parseInt(v, 10);
+  return { bloques: isNaN(n) || n < 0 ? 0 : n, cierre: false };
+}
+
+/**
  * Hoja Cursos -> una cursada por fila.
  *
  *   ID curso         obligatoria. Es la dirección de la página: /powerh-acme
@@ -250,6 +277,7 @@ function aUrl(valor) {
  *   Link calendario  opcional; sin él no aparece el botón
  *   Link Zoom        opcional; sin él no aparece el botón
  *   Facilitador      opcional; sin él va el del currículo
+ *   Avance           opcional; abre bloques a mano. Ver leerAvance().
  */
 function mapearCursos(objetos, anioRef) {
   var cursos = [];
@@ -267,11 +295,14 @@ function mapearCursos(objetos, anioRef) {
     }
 
     var sesiones = parseInt(campo(o, ['sesiones', 'encuentros', 'cantidad de sesiones']), 10);
+    var avance = leerAvance(campo(o, ['avance', 'bloques abiertos', 'bloque actual']));
 
     cursos.push({
       id: id,
       cliente: campo(o, ['cliente', 'nombre del cliente', 'empresa']),
       sesiones: isNaN(sesiones) ? 0 : sesiones,
+      avanceBloques: avance.bloques,
+      avanceCierre: avance.cierre,
       inicio: inicio,
       fin: fin,
       calendario: aUrl(campo(o, ['link calendario', 'link al calendario', 'calendario',
@@ -400,7 +431,10 @@ function armar(curriculo, datos) {
       var tieneLoSuyo = suyas.some(function (g) {
         return !!g.link;
       });
-      var abierto = i === 0 || anteriorCompleto || tieneLoSuyo;
+      // La columna Avance es un piso: suma bloques, nunca saca los que las
+      // grabaciones ya abrieron.
+      var abierto =
+        i === 0 || anteriorCompleto || tieneLoSuyo || numero <= c.avanceBloques;
 
       // Lo que va a mirar el bloque siguiente. "Completo" = todas las sesiones
       // que a este bloque le tocan dentro de la cursada tienen link. Las que
@@ -433,15 +467,22 @@ function armar(curriculo, datos) {
 
     // La despedida no se ofrece porque estén todos los bloques abiertos —el
     // primero lo está desde el día cero— sino cuando la cursada terminó de
-    // verdad: todos sus encuentros tienen grabación.
+    // verdad: todos sus encuentros tienen grabación, o alguien puso "cierre"
+    // en la columna Avance, que es la única señal que queda cuando las
+    // grabaciones las maneja el cliente y nunca llegan acá.
     var conLink = {};
     c.grabaciones.forEach(function (g) {
       if (g.link && g.numero) conLink[g.numero] = true;
     });
-    c.completo = c.sesiones > 0;
+    var todasGrabadas = c.sesiones > 0;
     for (var n = 1; n <= c.sesiones; n++) {
-      if (!conLink[n]) c.completo = false;
+      if (!conLink[n]) todasGrabadas = false;
     }
+    c.completo = todasGrabadas || c.avanceCierre;
+
+    // Para el cartel de los bloques cerrados: si la cursada se maneja a mano,
+    // prometer "cuando publiquemos las grabaciones" es mentira.
+    c.aMano = c.avanceBloques > 0 || c.avanceCierre;
 
     c.facilitador = c.facilitador || (curriculo.facilitador || {}).nombre || '';
   });

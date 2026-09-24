@@ -43,6 +43,31 @@ encuentros, las sesiones 7 y 8 no existen y no pueden trabar nada.
 La página de cierre aparece cuando **todos** los encuentros de la cursada
 tienen grabación, que es cuando terminó de verdad.
 
+### Cuando las grabaciones no son la señal
+
+Hay clientes que manejan las grabaciones por su cuenta y nunca llegan a esta
+planilla. Ahí el automático no sirve: la cursada se quedaría para siempre en el
+bloque 1 y no llegaría nunca al cierre.
+
+Para eso está la columna **`Avance`** de la pestaña `Cursos`:
+
+| Valor | Qué hace |
+| --- | --- |
+| *(vacío)* | Automático. Mandan las grabaciones. Es el caso normal. |
+| `1`, `2`, `3`… | Ese es el **mínimo** de bloques abiertos. Lo subís a mano a medida que avanza la cursada. |
+| `todos` | Todos los bloques abiertos, desde el arranque. |
+| `cierre` | Todos los bloques **más** la página de despedida. |
+
+Es un **piso, no un techo**: nunca cierra algo que las grabaciones ya abrieron,
+así que las dos cosas conviven sin pelearse.
+
+En una cursada con `Avance` cargado y ninguna grabación, el sitio además:
+
+- no promete grabaciones en el cartel de los bloques cerrados (dice "se abre a
+  medida que avancemos con el workshop");
+- esconde la sección *Las grabaciones* entera, en vez de mostrar ocho renglones
+  de "todavía no está" que no van a cambiar nunca.
+
 ---
 
 ## La foto del facilitador
@@ -75,6 +100,7 @@ Es esta: **PoweRH · Cursadas**
 | **Link calendario** | opcional | Sin valor, el botón no aparece. |
 | **Link Zoom** | opcional | Sin valor, el botón no aparece. |
 | **Facilitador** | opcional | Sin valor va el del currículo. |
+| **Avance** | opcional | Abre bloques a mano cuando las grabaciones no son la señal. Ver más arriba. |
 
 ### Pestaña `Grabaciones` — una fila por encuentro
 
@@ -178,8 +204,10 @@ Levanta tres cursadas de mentira que cubren los tres estados:
 | | |
 | --- | --- |
 | `/powerh-demo` | a mitad de camino: dos bloques abiertos, dos con candado |
-| `/powerh-acme` | recién arranca: sin ninguna grabación, todo cerrado |
-| `/powerh-nubeq` | terminada: todo abierto, con la página de cierre |
+| `/powerh-acme` | recién arranca: sin ninguna grabación, solo el bloque 1 |
+| `/powerh-nubeq` | terminada por grabaciones: todo abierto, con la página de cierre |
+| `/powerh-interna` | el cliente maneja las grabaciones: `Avance = 3` |
+| `/powerh-cerrada` | terminada sin grabaciones: `Avance = cierre` |
 
 Otros comandos:
 
