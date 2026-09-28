@@ -1,0 +1,14 @@
+{
+  "name": "powerbi-rrhh",
+  "version": "1.0.0",
+  "description": "Power BI para recursos humanos. Una sola página estática, sin planilla.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "dev": "node scripts/build.mjs && python3 -m http.server 4174"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

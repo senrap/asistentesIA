@@ -1,0 +1,27 @@
+# Config del sitio "Power BI para recursos humanos", para cuando Netlify lo
+# despliega con "Base directory: powerbi-rrhh". Con esa base, Netlify lee este
+# archivo y publica esta carpeta como raíz del sitio.
+#
+# Es independiente del sitio de PoweRH (poweRH/) y de la Biblioteca de
+# Asistentes (la raíz del repo): cada uno se despliega en su propio proyecto,
+# con su propia base directory.
+
+[build]
+  command = "node scripts/build.mjs"
+  publish = "."
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Una sola página y nada más: no hay reescrituras que definir.
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
