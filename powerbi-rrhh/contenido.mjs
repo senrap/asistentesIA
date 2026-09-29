@@ -40,7 +40,16 @@ export default {
     {
       "etiqueta": "🧑🏼‍🏫 Punto de partida",
       "titulo": "¿Son necesarios conocimientos previos?",
-      "texto": "¡No! Este workshop está pensado para que aprendas a analizar datos con Power BI desde cero. Vas a recorrer el proceso completo pasando por cada una de sus etapas: **importación, transformación, análisis y visualización** de datos."
+      "texto": "¡No! Estas clases están pensadas para que aprendas a analizar datos con Power BI desde cero. Vas a recorrer el proceso completo pasando por cada una de sus etapas: **importación, transformación, análisis y visualización** de datos."
+    },
+    {
+      "etiqueta": "🎬 Para practicar",
+      "titulo": "¿Querés probar Power BI antes de la clase?",
+      "texto": "Te dejamos un video de **5 minutos** que te guía en una primera exploración de la herramienta. Con eso llegás con el terreno reconocido.",
+      "link": {
+        "texto": "Ver el video",
+        "url": "https://www.youtube.com/watch?v=TNWk6Yl4d-g&list=PLCn-kwV6QQWnsLzv6IKrHWBb7bdHj7Vlb&index=42&t=3s"
+      }
     }
   ],
   "partes": [
@@ -103,21 +112,11 @@ export default {
           "tipo": "tarea",
           "titulo": "Tarea",
           "texto": "Vamos a practicar un poco con lo que fuimos viendo.\n\n## Diversidad de género\n\nCreá un gráfico que muestre la distribución del headcount por género.\n\n## Diversidad de género por nivel\n\nPara analizar más en profundidad qué tan diversos somos, abrí esta información por los niveles que creamos en la primera página.\n\n## Distribución de la nómina por generación\n\nEs importante que la visualización respete el orden jerárquico de las generaciones para que el impacto visual sea más claro. Puede que encuentres un desafío especial en estos dos últimos gráficos para ordenar las variables del Eje Y, ya que son categóricas (de texto).\n\nPodés [ayudarte con este tutorial](https://www.youtube.com/watch?v=vUB88vjypGk) de nuestro canal. Suscribite para recibir info de los videos nuevos que vayamos subiendo.\n\nPor otro lado, vas a ver que las etiquetas muestran una frecuencia relativa (% del total). La pista para que encuentres cómo hacerlo es que busques en el menú de opciones del Eje X, donde llevaste la cantidad de personas.\n\n## Mediana de compensación por género\n\nPara terminar, calculá la mediana de compensación y abrila por dos variables: nivel y género. Es muy parecido a lo que hicimos en la primera página; si no sabés cómo llegar, podés empezar desde ahí.\n\nTratá de generarlo lo más parecido posible a la imagen y en el check in de la próxima sesión lo vemos.",
-          "archivos": [
-            {
-              "nombre": "Plantilla de la tarea",
-              "url": "https://drive.google.com/file/d/1mneUWdH3st95BS2zihqNf-aFWwCAL96L/view"
-            }
-          ]
+          "archivos": []
         }
       ]
     }
   ],
-  "ayuda": {
-    "titulo": "¿Necesitás una mano?",
-    "texto": "Si algo no se entiende o algo no funciona, escribinos y lo resolvemos.",
-    "mail": "info@hache.com.ar"
-  },
   "redes": [
     {
       "emoji": "📷",
@@ -132,17 +131,26 @@ export default {
       "url": "https://www.linkedin.com/company/consultorahache/"
     },
     {
-      "emoji": "💙",
-      "titulo": "Grupo de amigos de HACHE",
-      "bajada": "La comunidad, en LinkedIn",
-      "url": "https://www.linkedin.com/groups/12134403/"
-    },
-    {
-      "emoji": "▶️",
-      "titulo": "YouTube",
-      "bajada": "Tutoriales para seguir aprendiendo Power BI",
-      "url": "https://www.youtube.com/@ConsultoraHACHE"
+      "emoji": "🌐",
+      "titulo": "La web de HACHE",
+      "bajada": "www.hacheconsultora.com",
+      "url": "https://www.hacheconsultora.com"
     }
   ],
-  "web": "https://www.hacheconsultora.com"
+  "web": "https://www.hacheconsultora.com",
+  "contacto": "info@hache.com.ar",
+  "seguir": {
+    "titulo": "¿Querés seguir aprendiendo?",
+    "texto": "En el canal de HACHE vas a encontrar tutoriales para seguir explorando por tu cuenta. Y si me seguís en redes, te enterás cada vez que compartimos algo nuevo.",
+    "botones": [
+      {
+        "texto": "Ver los tutoriales de HACHE",
+        "url": "https://www.youtube.com/@ConsultoraHACHE"
+      },
+      {
+        "texto": "Conectar con Pablo en LinkedIn",
+        "url": "https://www.linkedin.com/in/pablosenra/"
+      }
+    ]
+  }
 };

@@ -2199,3 +2199,21 @@ a:hover {
   font-size: 0.9em;
   margin-right: 4px;
 }
+
+/* La grilla de "antes de empezar" pasó de dos tarjetas a tres: con columnas
+   fijas, la tercera caía sola en una segunda fila ocupando todo el ancho. */
+.prep {
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+/* Los dos botones de "¿Querés seguir aprendiendo?". */
+.seguir-acciones {
+  margin-top: 26px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.seguir-acciones + .redes-grid {
+  margin-top: 36px;
+}

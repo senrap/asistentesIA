@@ -216,7 +216,16 @@ function facilitador(f) {
 /* --------------------------------------------------------------------------
    La página
    -------------------------------------------------------------------------- */
-const mailAyuda = C.ayuda && C.ayuda.mail ? C.ayuda.mail : '';
+const contacto = C.contacto || '';
+
+/** Los botones de "seguir aprendiendo": nunca dos del mismo color juntos. */
+function botonSeguir(b, i) {
+  const href = url(b.url);
+  if (!href) return '';
+  const clase = i === 0 ? 'btn btn-cta' : 'btn btn-outline-light';
+  return `
+            <a class="${clase}" href="${esc(href)}" target="_blank" rel="noopener">${esc(b.texto)}</a>`;
+}
 
 const html = `<!doctype html>
 <html lang="es">
@@ -295,23 +304,14 @@ ${facilitador(C.facilitador)}
       </section>
 ${C.partes.map(parte).join('\n')}
 
-      <section class="section section-alt" id="ayuda">
+      <section class="redes on-dark" id="seguir">
         <div class="wrap">
-          <div class="ayuda">
-            <p class="section-label">Soporte</p>
-            <h2>${esc(C.ayuda.titulo)}</h2>
-            <span class="accent-line" aria-hidden="true"></span>
-            <p class="ayuda-texto">${esc(C.ayuda.texto)}</p>
-            ${mailAyuda ? `<a class="btn btn-cta" href="mailto:${esc(mailAyuda)}">${esc(mailAyuda)}</a>` : ''}
+          <p class="section-label">Para seguir</p>
+          <h2>${esc(C.seguir.titulo)}</h2>
+          <p class="redes-lead">${esc(C.seguir.texto)}</p>
+          <div class="seguir-acciones">${C.seguir.botones.map(botonSeguir).join('')}
           </div>
-        </div>
-      </section>
 
-      <section class="redes on-dark" id="comunidad">
-        <div class="wrap">
-          <p class="section-label">Comunidad</p>
-          <h2>Ya nos conocimos… ¡ahora que no se corte! 😄</h2>
-          <p class="redes-lead">Te dejamos algunas propuestas para seguir en contacto.</p>
           <div class="redes-grid">${C.redes.map(red).join('')}
           </div>
         </div>
@@ -322,7 +322,9 @@ ${C.partes.map(parte).join('\n')}
       <div class="wrap">
         <div class="footer-bottom">
           <span>HACHE Consultora · Formación en People Analytics</span>
-          <span><a href="${esc(url(C.web))}" target="_blank" rel="noopener">www.hacheconsultora.com</a></span>
+          <span>
+            ${contacto ? `<a href="mailto:${esc(contacto)}">${esc(contacto)}</a> · ` : ''}<a href="${esc(url(C.web))}" target="_blank" rel="noopener">www.hacheconsultora.com</a>
+          </span>
         </div>
       </div>
     </footer>
