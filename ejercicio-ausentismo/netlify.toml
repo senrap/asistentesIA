@@ -10,8 +10,3 @@
   [headers.values]
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
-
-[[headers]]
-  for = "/datos/*"
-  [headers.values]
-    Content-Disposition = "attachment"
