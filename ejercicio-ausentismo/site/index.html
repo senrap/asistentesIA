@@ -160,12 +160,48 @@ kbd { font-family: inherit; font-size: 11px; font-weight: 600; border: 1px solid
   display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px; border-radius: 100px; flex-shrink: 0;
   border: 1px solid rgba(0,255,144,0.45); background: rgba(0,255,144,0.1); color: var(--green); font-size: 12px; font-weight: 700;
 }
-.path-chip:hover { background: rgba(0,255,144,0.2); }
 .path-chip[hidden] { display: none; }
 .seg { display: inline-flex; background: var(--navy-2); border-radius: 10px; padding: 4px; gap: 4px; flex-wrap: wrap; }
 .seg button { border: 0; background: transparent; color: rgba(255,255,255,0.75); font-size: 13px; font-weight: 600; padding: 8px 14px; border-radius: 7px; }
 .seg button[aria-pressed="true"] { background: var(--green); color: var(--navy); }
 [data-only][hidden] { display: none !important; }
+
+/* ---------- base: pestañas + pregunta ---------- */
+.base-grid { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+.base-grid > * { min-width: 0; }
+.measures.m3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.measures.m3 .code { font-size: 12px; }
+.tabs { display: inline-flex; background: var(--white); border: 1px solid var(--light); border-radius: 10px; padding: 4px; gap: 4px; margin-bottom: 12px; flex-wrap: wrap; }
+.tab { border: 0; background: transparent; padding: 8px 16px; border-radius: 7px; font-size: 13px; font-weight: 600; color: var(--gray); }
+.tab small { font-weight: 400; opacity: .75; margin-left: 4px; }
+.tab[aria-selected="true"] { background: var(--navy); color: var(--white); }
+.narrow .qhead { padding: 14px 16px; align-items: flex-start; }
+.narrow .qhead h3 { font-size: 15px; }
+.narrow .qbody { padding: 12px 16px 16px; }
+.narrow .qline { font-size: 14px; line-height: 2.3; }
+.narrow .qfoot { flex-direction: column; align-items: stretch; }
+.narrow .qfoot .btn { align-self: flex-start; }
+.narrow .feedback { min-width: 0; }
+.feedback { overflow-wrap: anywhere; line-height: 1.5; }
+.connect { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-top: 10px; }
+
+/* ---------- fórmula ---------- */
+.builder { margin-top: 16px; }
+.formula { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 14px; font-size: 16px; font-weight: 700; }
+.formula .paren { font-size: 30px; font-weight: 300; color: var(--gray); line-height: 1; }
+.formula select {
+  font-family: inherit; font-size: 14px; font-weight: 600; color: var(--navy); background: var(--off);
+  border: 2px dashed #C9D3DC; border-radius: 8px; padding: 8px 10px; cursor: pointer;
+}
+.formula select.sign { width: 64px; text-align: center; font-size: 18px; padding: 6px; }
+.formula select.filled { border-style: solid; border-color: var(--green-2); background: var(--green-soft); }
+.formula select.bad { border-color: #E53E3E; background: #FFF0F0; }
+.locked { border: 2px dashed #C9D3DC; border-radius: 12px; padding: 22px; display: grid; place-items: center; text-align: center; color: var(--gray); font-size: 14px; min-height: 120px; }
+
+/* ---------- recomendaciones ---------- */
+.reco { display: grid; grid-template-columns: 1.3fr 1fr; gap: 24px; align-items: start; }
+.reco .field textarea { font-size: 15px; font-weight: 500; min-height: 150px; resize: vertical; line-height: 1.5; }
+.gsteps { display: grid; gap: 14px; }
 
 /* ---------- perfil ---------- */
 .person { display: grid; grid-template-columns: 240px 1fr; gap: 40px; align-items: center; }
@@ -340,7 +376,7 @@ tr:last-child td { border-bottom: 0; color: var(--gray); }
 /* ---------- gamma ---------- */
 .gamma { display: grid; grid-template-columns: 1fr 1.25fr; gap: 24px; align-items: start; }
 .gamma .field textarea { font-size: 14px; font-weight: 500; min-height: 110px; resize: vertical; line-height: 1.5; }
-.gamma .code { white-space: pre-wrap; font-size: 12px; max-height: 52vh; overflow-y: auto; padding-top: 44px; }
+.gamma .code { white-space: pre-wrap; font-size: 12px; max-height: 56vh; overflow-y: auto; padding-top: 44px; border: 1px solid rgba(255,255,255,0.1); }
 .status-list { display: grid; gap: 6px; }
 .status-list div { display: flex; gap: 8px; align-items: center; font-size: 13px; color: var(--gray); }
 .status-list i { width: 10px; height: 10px; border-radius: 50%; background: var(--light); border: 1px solid #C9D3DC; flex-shrink: 0; }
@@ -355,7 +391,6 @@ tr:last-child td { border-bottom: 0; color: var(--gray); }
 .link-card b { font-size: 17px; }
 .link-card span { font-size: 13px; color: rgba(255,255,255,0.72); line-height: 1.5; }
 .link-card .go { margin-top: auto; padding-top: 10px; font-size: 12px; font-weight: 600; color: var(--green); }
-.end-logo { height: 34px; width: auto; display: block; margin-bottom: 28px; }
 
 /* ---------- navegación inferior + footer ---------- */
 .bottom { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: rgba(0, 52, 77, 0.97); backdrop-filter: blur(8px); border-top: 1px solid rgba(255,255,255,0.08); }
@@ -392,7 +427,7 @@ tr:last-child td { border-bottom: 0; color: var(--gray); }
 @media (max-width: 960px) {
   .g4, .toc { grid-template-columns: repeat(2, minmax(0,1fr)); }
   .g3, .links { grid-template-columns: repeat(2, minmax(0,1fr)); }
-  .cover-grid, .calc, .story, .g2, .gamma, .agenda, .controls, .measures, .qgrid, .routes { grid-template-columns: 1fr; }
+  .cover-grid, .calc, .story, .g2, .gamma, .agenda, .controls, .measures, .measures.m3, .qgrid, .routes, .base-grid, .connect, .reco { grid-template-columns: minmax(0, 1fr); }
   .cover-art { display: none; }
   .person { grid-template-columns: 180px 1fr; gap: 28px; }
   .avatar { width: 180px; height: 180px; }
@@ -434,7 +469,7 @@ window.CONFIG = {
       credenciales: "Licenciado en Relaciones del Trabajo, con diferentes posgrados vinculados a Data. Cuento con 20 años de experiencia en el área, trabajando en LATAM y como consultor especializado en People Analytics y stack tecnológico para RRHH.",
       foto: "assets/pablo-senra.jpg",
       chips: ["People Analytics", "Power BI", "IA para RRHH", "Storytelling con datos"],
-      linkedin: ""
+      linkedin: "https://www.linkedin.com/in/pablosenra"
     }
   ],
   entrega: "Compartí el link de tu presentación de Gamma en el canal del curso.",
@@ -455,7 +490,7 @@ window.CONFIG = {
   </a>
   <span class="spacer"></span>
   <span class="slide-title-mini" id="miniTitle"></span>
-  <button class="path-chip" id="pathChip" type="button" hidden title="Cambiar de recorrido"></button>
+  <span class="path-chip" id="pathChip" hidden></span>
   <button class="icon-btn" id="openToc" aria-haspopup="dialog" title="Índice (tecla I)">
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="1" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="9" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="1" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="9" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.6"/></svg>
     <span class="txt">Índice</span>
@@ -476,14 +511,14 @@ window.CONFIG = {
           <p class="lead">Una base de ausentismo de dos años y una Dirección que pide respuestas. Elegí tu recorrido para pasar de los datos a una recomendación.</p>
           <div class="routes" role="group" aria-label="Elegí tu recorrido">
             <button class="route" type="button" data-choose="simple" aria-pressed="false">
-              <span class="rt"><b>Exprés</b><span class="time">1 clase · 60 min</span></span>
+              <span class="rt"><b>Caso Express</b><span class="time">60 minutos</span></span>
               <span class="desc">La base viene lista. Calculás la tasa, respondés 3 preguntas y armás tu presentación en Gamma.</span>
-              <span class="go">Elegir Exprés →</span>
+              <span class="go">Elegir Caso Express →</span>
             </button>
             <button class="route" type="button" data-choose="completo" aria-pressed="false">
-              <span class="rt"><b>Completo</b><span class="time">2 clases · 120 min</span></span>
+              <span class="rt"><b>Caso completo</b><span class="time">120 minutos</span></span>
               <span class="desc">Limpiás la base en Power Query, creás el Calendario y el modelo. Después analizás, presentás y tenés casos extra.</span>
-              <span class="go">Elegir Completo →</span>
+              <span class="go">Elegir Caso completo →</span>
             </button>
           </div>
           <p class="kbd-hint">Navegá con <kbd>←</kbd> <kbd>→</kbd> o deslizando · <kbd>I</kbd> abre el índice</p>
@@ -541,24 +576,19 @@ window.CONFIG = {
 
   <section class="slide light" data-id="mision-expres" data-path="simple" data-title="Tu misión" data-group="Intro">
     <div class="slide-inner">
-      <p class="label">Tu misión · Recorrido exprés</p>
-      <h2>Una clase de una hora. <em>Una recomendación.</em></h2>
-      <p class="lead muted">La base ya viene limpia y con la columna Año: no necesitás Power Query ni tabla Calendario. Vas directo al análisis.</p>
-      <div class="agenda mt-32" style="grid-template-columns: 1.2fr 1fr">
+      <p class="label">Tu misión · Caso Express</p>
+      <h2>El tiempo corre. <em>Comencemos.</em></h2>
+      <div class="agenda mt-32" style="grid-template-columns: minmax(0, 640px)">
         <div class="card">
-          <div class="head"><h3>Analizar y contar</h3><span class="badge badge-green">1 clase · 60 min</span></div>
+          <div class="head"><h3>Analizar y contar</h3><span class="badge badge-green">60 minutos</span></div>
           <ol>
             <li><b>1</b>Descargar la base y relacionar las tablas</li>
             <li><b>2</b>Crear las medidas y calcular la tasa</li>
             <li><b>3</b>Responder las 3 preguntas del negocio</li>
             <li><b>4</b>Armar la historia</li>
-            <li><b>5</b>Generar la presentación con Gamma</li>
+            <li><b>5</b>Preparar tus recomendaciones</li>
+            <li><b>6</b>Generar la presentación</li>
           </ol>
-        </div>
-        <div class="card week">
-          <div class="head"><h3>¿Querés más?</h3></div>
-          <p class="small" style="color:rgba(255,255,255,0.8)">El recorrido completo suma limpieza de datos, tabla Calendario y 4 casos extra. Podés cambiarte cuando quieras desde el índice.</p>
-          <div><button class="btn btn-cta btn-sm" type="button" data-switch="completo">Pasarme al completo</button></div>
         </div>
       </div>
     </div>
@@ -585,7 +615,8 @@ window.CONFIG = {
             <li><b>5</b>Crear las medidas</li>
             <li><b>6</b>Responder las preguntas del negocio</li>
             <li><b>7</b>Armar la historia</li>
-            <li><b>8</b>Generar la presentación con Gamma</li>
+            <li><b>8</b>Preparar tus recomendaciones</li>
+            <li><b>9</b>Generar la presentación</li>
           </ol>
         </div>
         <div class="card week">
@@ -602,7 +633,7 @@ window.CONFIG = {
   <section class="slide dark" data-id="conceptos" data-title="Qué medimos" data-group="Intro">
     <div class="slide-inner">
       <p class="label">Conceptos clave</p>
-      <h2>Una sola tasa no alcanza. <em>Mirá cuatro.</em></h2>
+      <h2>Un solo KPI no alcanza. <em>Distintas miradas.</em></h2>
       <p class="lead">Dos áreas pueden tener la misma tasa y problemas opuestos: pocas licencias largas o muchas ausencias cortas. Cada una pide una acción distinta.</p>
       <div class="grid g4 mt-32">
         <div class="card-dark"><p class="label">Cuánto</p><h3>Tasa de ausentismo</h3><p class="small muted mt-8">Días perdidos ÷ días que se debían trabajar. La foto general.</p></div>
@@ -614,6 +645,7 @@ window.CONFIG = {
         <div class="card-dark"><p class="small"><b style="color:var(--green)">Bradford en un ejemplo.</b> Ana faltó 1 vez durante 10 días: 1² × 10 = <b>10</b>. Bruno faltó 5 veces, 2 días cada vez: 5² × 10 = <b>250</b>. Mismos días perdidos, situaciones muy distintas.</p></div>
         <div class="card-dark"><p class="small"><b style="color:var(--green)">Ojo con el uso.</b> Un índice alto es una señal para conversar, nunca una sanción automática.</p></div>
       </div>
+      <div class="callout mt-24" data-only="simple" hidden><b class="hl">En el Caso Express</b> nos concentramos en la tasa de ausentismo. Si después querés trabajar las otras miradas, podés practicar con el caso completo.</div>
     </div>
   </section>
 
@@ -639,40 +671,45 @@ window.CONFIG = {
     </div>
   </section>
 
-  <!-- ============================ RECORRIDO EXPRÉS ============================ -->
+  <!-- ============================ CASO EXPRESS ============================ -->
 
-  <section class="slide light" data-id="base-expres" data-path="simple" data-title="La base" data-group="Recorrido exprés">
+  <section class="slide light" data-id="base-expres" data-path="simple" data-title="La base" data-group="Caso Express">
     <div class="slide-inner top">
-      <p class="label">Exprés · Paso 1</p>
+      <p class="label">Express · Paso 1</p>
       <h2>Descargá la base y <em>relacioná las tablas</em>.</h2>
       <div class="dl-row mt-24">
         <a class="dl" href="datos/base_lista.xlsx" download><span class="ext">XLSX</span><span><b>Descargar Excel</b><span class="sub">Base lista · 2 hojas</span></span></a>
         <a class="dl" href="datos/base_lista_csv.zip" download><span class="ext">CSV</span><span><b>Descargar CSV</b><span class="sub">Las 2 tablas juntas, en un .zip</span></span></a>
       </div>
-      <div class="grid g2 mt-24">
-        <div><div class="tbl-title"><b>Empleados</b><span>410 filas · una por persona</span></div><div class="tbl-wrap" id="pvEmpL"></div></div>
-        <div><div class="tbl-title"><b>Ausencias</b><span>una fila por ausencia</span></div><div class="tbl-wrap" id="pvAusL"></div></div>
-      </div>
-      <div class="grid g2 mt-24" style="align-items:start">
-        <div class="qlist" id="qBaseL"></div>
-        <div class="card">
-          <p class="label">Después, conectalas</p>
-          <div class="steps mt-8">
-            <div class="step"><span class="step-n">1</span><p>Cargá las dos hojas con <b>Inicio › Obtener datos</b> y andá a la <b>Vista de modelo</b> (tercer ícono de la barra izquierda).</p></div>
-            <div class="step"><span class="step-n">2</span><p>Arrastrá <code>Legajo</code> de Empleados y soltalo sobre <code>Legajo</code> de Ausencias.</p></div>
-            <div class="step"><span class="step-n">3</span><p>Revisá que quede <b>Uno a varios (1:*)</b>: una persona, muchas ausencias.</p></div>
+      <div class="base-grid mt-24">
+        <div class="base-main">
+          <div class="tabs" role="tablist" aria-label="Tablas de la base">
+            <button class="tab" role="tab" aria-selected="true" data-tbl="emp">Empleados<small>410 filas</small></button>
+            <button class="tab" role="tab" aria-selected="false" data-tbl="aus">Ausencias<small>una fila por ausencia</small></button>
           </div>
+          <div class="tbl-wrap" data-pane="emp" id="pvEmpL"></div>
+          <div class="tbl-wrap" data-pane="aus" id="pvAusL" hidden></div>
+        </div>
+        <div class="qlist narrow" id="qBaseL"></div>
+      </div>
+      <div class="card mt-16">
+        <p class="label">Después, conectalas</p>
+        <div class="connect">
+          <div class="step"><span class="step-n">1</span><p>Cargá las dos hojas con <b>Inicio › Obtener datos</b> y andá a la <b>Vista de modelo</b> (tercer ícono de la barra izquierda).</p></div>
+          <div class="step"><span class="step-n">2</span><p>Arrastrá <code>Legajo</code> de Empleados y soltalo sobre <code>Legajo</code> de Ausencias.</p></div>
+          <div class="step"><span class="step-n">3</span><p>Revisá que quede <b>Uno a varios (1:*)</b>: una persona, muchas ausencias.</p></div>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="slide light" data-id="medidas-expres" data-path="simple" data-title="Medidas" data-group="Recorrido exprés">
+  <section class="slide light" data-id="medidas-expres" data-path="simple" data-title="Medidas" data-group="Caso Express">
     <div class="slide-inner top">
-      <p class="label">Exprés · Paso 2</p>
-      <h2>Cuatro medidas y ya tenés <em>la tasa de ausentismo</em>.</h2>
-      <p class="lead muted">Creá cada una con <span class="path">Inicio › Nueva medida</span>, pegá el código y presioná Enter. Para filtrar por año usá la columna <code>Año</code> de Ausencias.</p>
-      <div class="measures mt-24" id="measuresL"></div>
+      <p class="label">Express · Paso 2</p>
+      <h2>Te damos las medidas DAX <em>ya hechas</em>.</h2>
+      <p class="lead muted">Hoy cualquier IA te las genera en segundos: no vale la pena escribirlas a mano. Creá cada una con <span class="path">Inicio › Nueva medida</span>, pegá el código y presioná Enter.</p>
+      <div class="measures m3 mt-24" id="measuresL"></div>
+      <div id="builderL"></div>
       <div class="callout mt-16" id="checkpointL"></div>
     </div>
   </section>
@@ -687,11 +724,17 @@ window.CONFIG = {
         <a class="dl" href="datos/base_ausentismo.xlsx" download><span class="ext">XLSX</span><span><b>Descargar Excel</b><span class="sub">Un libro con las 2 hojas</span></span></a>
         <a class="dl" href="datos/base_ausentismo_csv.zip" download><span class="ext">CSV</span><span><b>Descargar CSV</b><span class="sub">Las 2 tablas juntas, en un .zip</span></span></a>
       </div>
-      <div class="grid g2 mt-24">
-        <div><div class="tbl-title"><b>Empleados</b><span>410 filas · una por persona</span></div><div class="tbl-wrap" id="pvEmp"></div></div>
-        <div><div class="tbl-title"><b>Ausencias</b><span>una fila por ausencia</span></div><div class="tbl-wrap" id="pvAus"></div></div>
+      <div class="base-grid mt-24">
+        <div class="base-main">
+          <div class="tabs" role="tablist" aria-label="Tablas de la base">
+            <button class="tab" role="tab" aria-selected="true" data-tbl="emp">Empleados<small>410 filas</small></button>
+            <button class="tab" role="tab" aria-selected="false" data-tbl="aus">Ausencias<small>una fila por ausencia</small></button>
+          </div>
+          <div class="tbl-wrap" data-pane="emp" id="pvEmp"></div>
+          <div class="tbl-wrap" data-pane="aus" id="pvAus" hidden></div>
+        </div>
+        <div class="qlist narrow" id="qBase"></div>
       </div>
-      <div class="qlist mt-24" id="qBase"></div>
     </div>
   </section>
 
@@ -768,25 +811,26 @@ window.CONFIG = {
   <section class="slide light" data-id="medidas" data-path="completo" data-title="Medidas" data-group="Clase 2 · Analizar y contar">
     <div class="slide-inner top">
       <p class="label">Clase 2 · Paso 5</p>
-      <h2>Cuatro medidas y ya podés <em>responderle al Comité</em>.</h2>
-      <p class="lead muted">Creá cada una con <span class="path">Inicio › Nueva medida</span>, pegá el código y presioná Enter.</p>
-      <div class="measures mt-24" id="measures"></div>
+      <h2>Te damos las medidas DAX <em>ya hechas</em>.</h2>
+      <p class="lead muted">Hoy cualquier IA te las genera en segundos: no vale la pena escribirlas a mano. Creá cada una con <span class="path">Inicio › Nueva medida</span>, pegá el código y presioná Enter.</p>
+      <div class="measures m3 mt-24" id="measures"></div>
+      <div id="builder"></div>
       <div class="callout mt-16" id="checkpoint"></div>
     </div>
   </section>
 
-  <section class="slide dark" data-id="preguntas" data-title="Preguntas del negocio" data-group="Clase 2 · Analizar y contar" data-group-simple="Recorrido exprés">
+  <section class="slide dark" data-id="preguntas" data-title="Preguntas del negocio" data-group="Clase 2 · Analizar y contar" data-group-simple="Caso Express">
     <div class="slide-inner top">
-      <p class="label" data-label-simple="Exprés · Paso 3">Clase 2 · Paso 6</p>
+      <p class="label" data-label-simple="Express · Paso 3">Clase 2 · Paso 6</p>
       <h2>Las preguntas <em>del negocio</em>.</h2>
       <p class="lead">Armá los gráficos que necesites y completá cada conclusión con los valores de tu reporte, con un decimal. Tus respuestas arman la presentación del último paso.</p>
       <div class="qlist mt-24" id="qMain"></div>
     </div>
   </section>
 
-  <section class="slide dark" data-id="historia" data-title="Contá la historia" data-group="Clase 2 · Analizar y contar" data-group-simple="Recorrido exprés">
+  <section class="slide dark" data-id="historia" data-title="Contá la historia" data-group="Clase 2 · Analizar y contar" data-group-simple="Caso Express">
     <div class="slide-inner">
-      <p class="label" data-label-simple="Exprés · Paso 4">Clase 2 · Paso 7</p>
+      <p class="label" data-label-simple="Express · Paso 4">Clase 2 · Paso 7</p>
       <h2>Un gráfico muestra. <em>Un título con conclusión</em> convence.</h2>
       <div class="story mt-24">
         <div>
@@ -810,29 +854,52 @@ window.CONFIG = {
     </div>
   </section>
 
-  <section class="slide light" data-id="gamma" data-title="Presentación con Gamma" data-group="Clase 2 · Analizar y contar" data-group-simple="Recorrido exprés">
+  <section class="slide light" data-id="recomendaciones" data-title="Recomendaciones" data-group="Clase 2 · Analizar y contar" data-group-simple="Caso Express">
     <div class="slide-inner top">
-      <p class="label" data-label-simple="Exprés · Paso 5">Clase 2 · Paso 8</p>
-      <h2>Tu presentación, <em>en 5 minutos</em> con Gamma.</h2>
-      <p class="lead muted">El prompt se arma solo con tus respuestas. Sumá tu recomendación, copialo y pegalo en Gamma.</p>
-      <div class="gamma mt-24">
+      <p class="label" data-label-simple="Express · Paso 5">Clase 2 · Paso 8</p>
+      <h2>Vamos a preparar la presentación para el Comité. <em>¿Cuáles son tus recomendaciones para bajar la tasa de ausentismo?</em></h2>
+      <div class="reco mt-32">
         <div>
           <div class="field">
-            <label for="gReco">Tu recomendación</label>
+            <label for="gReco">Tus recomendaciones</label>
             <textarea id="gReco" placeholder="Ej.: 1) Revisar con Operaciones las condiciones del turno noche. 2) Acompañar a los líderes de Rosario. Indicador: tasa mensual por sede, meta 5% a diciembre."></textarea>
             <span class="hint">2 o 3 acciones concretas, con responsable e indicador.</span>
           </div>
           <div class="field">
             <label for="gNombre">Tu nombre</label>
-            <input id="gNombre" type="text" placeholder="Para la portada" style="font-size:15px" />
+            <input id="gNombre" type="text" placeholder="Para la portada de la presentación" style="font-size:15px" />
           </div>
-          <div class="status-list" id="gStatus"></div>
-          <div class="actions" style="margin-top:20px">
-            <button class="btn btn-primary" id="gCopy" type="button">Copiar prompt</button>
-            <a class="btn btn-cta" href="https://gamma.app/create" target="_blank" rel="noopener">Abrir Gamma →</a>
+        </div>
+        <div style="display:grid; gap:16px">
+          <div class="card">
+            <p class="label">Una buena recomendación</p>
+            <div class="steps mt-8">
+              <div class="step"><span class="step-n">1</span><p><b>Responde a un hallazgo.</b> Si Rosario es la sede más alta, la acción es sobre Rosario.</p></div>
+              <div class="step"><span class="step-n">2</span><p><b>Tiene responsable.</b> Quién la lleva adelante: RRHH, Operaciones, los líderes.</p></div>
+              <div class="step"><span class="step-n">3</span><p><b>Se puede medir.</b> Qué indicador vas a seguir y qué meta proponés.</p></div>
+            </div>
           </div>
-          <p class="small muted mt-16" id="gEntrega"></p>
-          <div class="callout mt-16" data-only="simple" hidden><b class="hl">Terminaste el recorrido exprés.</b> ¿Querés ir más a fondo? <button class="btn btn-primary btn-sm" type="button" data-switch="completo" style="margin-left:6px">Probar el recorrido completo</button></div>
+          <div class="card">
+            <p class="label">Lo que ya tenés</p>
+            <div class="status-list" id="gStatus"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide dark" data-id="gamma" data-title="Presentación en Gamma" data-group="Clase 2 · Analizar y contar" data-group-simple="Caso Express">
+    <div class="slide-inner top">
+      <p class="label" data-label-simple="Express · Paso 6">Clase 2 · Paso 9</p>
+      <h2>Tu prompt está listo. <em>Llevalo a Gamma.</em></h2>
+      <p class="lead">Gamma es una IA que genera presentaciones a partir de un texto. El prompt ya tiene tus hallazgos y tus recomendaciones.</p>
+      <div class="gamma mt-24">
+        <div class="gsteps">
+          <div class="step"><span class="step-n">1</span><div><b class="t">Copiá el prompt</b><p>Con el botón de acá abajo o el de la caja de código.</p><div class="actions" style="margin-top:10px"><button class="btn btn-cta btn-sm" id="gCopy" type="button">Copiar prompt</button></div></div></div>
+          <div class="step"><span class="step-n">2</span><div><b class="t">Entrá a Gamma</b><p>Abrí <a href="https://gamma.app" target="_blank" rel="noopener" style="color:var(--green); font-weight:600">gamma.app</a> y creá tu cuenta gratis (con Google es un clic).</p></div></div>
+          <div class="step"><span class="step-n">3</span><div><b class="t">Generá con IA</b><p>Tocá <b>Crear nuevo</b> y elegí <b>Generar</b>. Pegá el prompt y presioná <b>Generar esquema</b>. Si la ves en inglés: <i>Create new › Generate</i>.</p></div></div>
+          <div class="step"><span class="step-n">4</span><div><b class="t">Revisá y elegí un tema</b><p>Corregí el esquema si hace falta, elegí un tema de colores y tocá <b>Generar</b>.</p></div></div>
+          <div class="step"><span class="step-n">5</span><div><b class="t">Ajustá y compartí</b><p id="gEntrega"></p></div></div>
         </div>
         <div class="code" id="gPrompt"></div>
       </div>
@@ -852,7 +919,6 @@ window.CONFIG = {
 
   <section class="slide dark" data-id="explorar" data-title="Seguí explorando" data-group="Cierre">
     <div class="slide-inner">
-      <img class="end-logo" src="assets/logo-hache-blanco.png" alt="HACHE Consultora" width="173" height="34" />
       <p class="label">Seguí explorando</p>
       <h2>Ahora te toca a vos. <em>Que los datos hablen.</em></h2>
       <div class="links mt-32" id="links"></div>
@@ -882,10 +948,7 @@ window.CONFIG = {
       <div><p class="label">Índice</p><h2>Saltá a cualquier parte</h2></div>
       <button class="icon-btn" id="closeToc">Cerrar ✕</button>
     </div>
-    <div class="seg mt-16" role="group" aria-label="Recorrido">
-      <button type="button" data-switch="simple" aria-pressed="false">Exprés · 1 clase</button>
-      <button type="button" data-switch="completo" aria-pressed="false">Completo · 2 clases</button>
-    </div>
+
     <div id="tocGroups"></div>
   </div>
 </div>
@@ -937,7 +1000,7 @@ window.CONFIG = {
         <p class="lead">${esc(p.bio)}</p>
         <p class="cred">${esc(p.credenciales)}</p>
         <div class="chips">${p.chips.map(c => `<span class="chip-static">${esc(c)}</span>`).join("")}</div>
-        ${p.linkedin ? `<div class="actions" style="margin-top:20px"><a class="btn btn-cta btn-sm" href="${esc(p.linkedin)}" target="_blank" rel="noopener">LinkedIn</a></div>` : ""}
+        ${p.linkedin ? `<div class="actions" style="margin-top:20px"><a class="btn btn-cta btn-sm" href="${esc(p.linkedin)}" target="_blank" rel="noopener">Conectar en LinkedIn</a></div>` : ""}
       </div></div>`;
   }).join("");
   $("#links").innerHTML = C.links.map(l => `
@@ -980,6 +1043,10 @@ window.CONFIG = {
   $("#pvAus").innerHTML = previewTable(EJ.preview.ausencias);
   $("#pvEmpL").innerHTML = previewTable(EJ.preview.empleados_lista);
   $("#pvAusL").innerHTML = previewTable(EJ.preview.ausencias_lista);
+  $$(".base-main").forEach(box => $$("[data-tbl]", box).forEach(tab => tab.addEventListener("click", () => {
+    $$("[data-tbl]", box).forEach(t => t.setAttribute("aria-selected", t === tab));
+    $$("[data-pane]", box).forEach(pn => pn.hidden = pn.dataset.pane !== tab.dataset.tbl);
+  })));
 
   /* =====================================================================
      PREGUNTAS DE COMPLETAR
@@ -1246,8 +1313,57 @@ Dame la fórmula de cada una y explicame paso a paso dónde pegarla, cómo poner
         <div class="code"><button class="copy-btn" type="button" data-${key}="${i}">Copiar</button>${hl(m.code)}</div></div>`).join("");
     $$(`[data-${key}]`).forEach(b => b.addEventListener("click", () => copy(list[+b.dataset[key]].code, b)));
   }
-  renderMedidas(MEDIDAS, "#measures", "m");
-  renderMedidas(MEDIDAS_L, "#measuresL", "ml");
+  // Las 3 primeras se muestran siempre; la tasa aparece cuando arman bien la fórmula
+  renderMedidas(MEDIDAS.slice(0, 3), "#measures", "m");
+  renderMedidas(MEDIDAS_L.slice(0, 3), "#measuresL", "ml");
+  let formulaOk = !!store.get("formula", false);
+  const BLOQUES = ["Días perdidos", "Dotación", "Días hábiles"];
+  const SIGNOS = ["+", "−", "×", "÷"];
+  const sel = (k, opts, cls) => `<select class="${cls}" data-f="${k}" aria-label="${cls === "sign" ? "Signo" : "Medida"}"><option value="">${cls === "sign" ? "?" : "Elegí una medida"}</option>${opts.map(o => `<option>${o}</option>`).join("")}</select>`;
+  function renderBuilder(boxSel, tasa) {
+    const box = $(boxSel);
+    box.innerHTML = `<div class="card builder">
+        <p class="label">Antes de ver la última</p>
+        <h3>Armá la tasa de ausentismo con las 3 medidas</h3>
+        <p class="small muted">Elegí cada bloque y cada signo matemático.</p>
+        <div class="formula"><span>Tasa de ausentismo =</span>${sel("b1", BLOQUES, "blk")}${sel("s1", SIGNOS, "sign")}<span class="paren">(</span>${sel("b2", BLOQUES, "blk")}${sel("s2", SIGNOS, "sign")}${sel("b3", BLOQUES, "blk")}<span class="paren">)</span></div>
+        <div class="qfoot"><button type="button" class="btn btn-cta btn-sm" data-fcheck>Confirmar →</button><span class="feedback" aria-live="polite"></span></div>
+      </div>
+      <div class="measures mt-16" data-tasa></div>`;
+    const showTasa = () => {
+      $("[data-tasa]", box).innerHTML = `<div class="measure"><h3>4. ${esc(tasa.n)}</h3><p>${esc(tasa.d)}</p>
+        <div class="code"><button class="copy-btn" type="button">Copiar</button>${hl(tasa.code)}</div></div>`;
+      $("[data-tasa] .copy-btn", box).addEventListener("click", e => copy(tasa.code, e.currentTarget));
+    };
+    const lockTasa = () => { $("[data-tasa]", box).innerHTML = `<div class="locked">4. Tasa de ausentismo · se desbloquea cuando armes bien la fórmula</div>`; };
+    $$("select", box).forEach(sl => sl.addEventListener("change", () => { sl.classList.toggle("filled", !!sl.value); sl.classList.remove("bad"); }));
+    $("[data-fcheck]", box).addEventListener("click", () => {
+      const v = Object.fromEntries($$("select", box).map(sl => [sl.dataset.f, sl.value]));
+      const bad = new Set();
+      if (v.b1 !== "Días perdidos") bad.add("b1");
+      if (v.s1 !== "÷") bad.add("s1");
+      if (v.s2 !== "×") bad.add("s2");
+      const den = [v.b2, v.b3].sort().join("|");
+      if (den !== ["Dotación", "Días hábiles"].sort().join("|")) { bad.add("b2"); bad.add("b3"); }
+      $$("select", box).forEach(sl => sl.classList.toggle("bad", bad.has(sl.dataset.f)));
+      const fb = $(".feedback", box);
+      if (!bad.size) {
+        fb.className = "feedback ok";
+        fb.textContent = "¡Exacto! Los días que se perdieron sobre los días que se debían trabajar: dotación por días hábiles.";
+        formulaOk = true; store.set("formula", true); showTasa(); toast("¡Correcto! Ya tenés la tasa");
+      } else {
+        fb.className = "feedback bad";
+        fb.textContent = "Todavía no. Pista: la tasa compara los días que se perdieron con los días que se debían trabajar. ¿Cómo calculás los días que se debían trabajar entre todas las personas?";
+      }
+    });
+    if (formulaOk) {
+      const ok = { b1: "Días perdidos", s1: "÷", b2: "Dotación", s2: "×", b3: "Días hábiles" };
+      $$("select", box).forEach(sl => { sl.value = ok[sl.dataset.f]; sl.classList.add("filled"); });
+      showTasa();
+    } else lockTasa();
+  }
+  renderBuilder("#builder", MEDIDAS[3]);
+  renderBuilder("#builderL", MEDIDAS_L[3]);
   const totalDias = Number(R.dias_perdidos_total || 0).toLocaleString("es-AR");
   $("#checkpoint").innerHTML = `<b class="hl">Checkpoint:</b> en una tarjeta sin filtros, <b>Días perdidos</b> tiene que dar <b>${totalDias}</b>. Si te da más, te faltó quitar los duplicados.`;
   $("#checkpointL").innerHTML = `<b class="hl">Checkpoint:</b> en una tarjeta sin filtros, <b>Días perdidos</b> tiene que dar <b>${totalDias}</b>. Después armá una tabla con <b>Año</b> y <b>Tasa de ausentismo</b>: ya tenés la respuesta a la primera pregunta.`;
@@ -1258,7 +1374,9 @@ Dame la fórmula de cada una y explicame paso a paso dónde pegarla, cómo poner
     antes: { t: "Rotación voluntaria por antigüedad", s: "Rotación voluntaria (%) · Últimos 12 meses", hi: -1, base: "#00344D", grid: true },
     despues: { t: "1 de cada 3 personas que ingresan se va antes de cumplir el año", s: "Propuesta: rediseñar el onboarding de los primeros 90 días", hi: 0, base: "#C9D3DC", grid: false }
   };
+  let vioDespues = false;
   function drawStory(v) {
+    if (v === "despues") vioDespues = true;
     const cfg = VERS[v]; let h = "";
     if (cfg.grid) for (let y = 0; y <= 40; y += 10) {
       const py = 190 - y * 4.2;
@@ -1336,7 +1454,7 @@ Estilo visual: fondo azul marino (#00344D), acentos en verde (#00FF90), tipograf
 
   /* ---------- navegación por recorrido ---------- */
   const ALL = $$(".slide");
-  const PATH_NAME = { simple: "Exprés", completo: "Completo" };
+  const PATH_NAME = { simple: "Caso Express", completo: "Caso completo" };
   let slides = [];
   let cur = 0;
   const groupOf = s => (path === "simple" && s.dataset.groupSimple) || s.dataset.group;
@@ -1351,10 +1469,9 @@ Estilo visual: fondo azul marino (#00344D), acentos en verde (#00FF90), tipograf
     });
     $$("[data-only]").forEach(el => el.hidden = el.dataset.only !== path);
     $$("[data-choose]").forEach(b => b.setAttribute("aria-pressed", b.dataset.choose === path));
-    $$(".seg [data-switch]").forEach(b => b.setAttribute("aria-pressed", b.dataset.switch === path));
     const chip = $("#pathChip");
     chip.hidden = !path;
-    chip.textContent = path ? PATH_NAME[path] + " ⇄" : "";
+    chip.textContent = path ? PATH_NAME[path] : "";
 
     $("#dots").innerHTML = slides.map((s, i) => {
       const gap = i > 0 && groupOf(s) !== groupOf(slides[i - 1]) ? " gap" : "";
@@ -1406,7 +1523,8 @@ Estilo visual: fondo azul marino (#00344D), acentos en verde (#00FF90), tipograf
     if (push && location.hash !== "#" + id) history.replaceState(null, "", "#" + id);
   }
   function next() {
-    if (cur === 0 && !path) { toast("Elegí tu recorrido para empezar"); $(".route").focus(); return; }
+    if (cur === 0 && !path) { toast("Elegí tu caso para empezar"); $(".route").focus(); return; }
+    if (slides[cur].dataset.id === "historia" && !vioDespues) { drawStory("despues"); toast("Mirá el después antes de seguir"); return; }
     go(cur + 1);
   }
   const fromHash = () => {
@@ -1418,7 +1536,6 @@ Estilo visual: fondo azul marino (#00344D), acentos en verde (#00FF90), tipograf
   };
 
   $$("[data-choose]").forEach(b => b.addEventListener("click", () => setPath(b.dataset.choose, "perfil")));
-  $$("[data-switch]").forEach(b => b.addEventListener("click", () => { setPath(b.dataset.switch); closeToc(true); }));
   $("#prev").addEventListener("click", () => go(cur - 1));
   $("#next").addEventListener("click", next);
   window.addEventListener("hashchange", () => go(fromHash(), false));
@@ -1427,7 +1544,6 @@ Estilo visual: fondo azul marino (#00344D), acentos en verde (#00FF90), tipograf
   const openToc = () => { toc.classList.add("open"); const on = $("#tocGroups button.on"); if (on) on.focus(); };
   function closeToc(silent) { if (!toc.classList.contains("open")) return; toc.classList.remove("open"); if (silent !== true) $("#openToc").focus(); }
   $("#openToc").addEventListener("click", openToc);
-  $("#pathChip").addEventListener("click", openToc);
   $("#closeToc").addEventListener("click", closeToc);
 
   document.addEventListener("keydown", e => {
