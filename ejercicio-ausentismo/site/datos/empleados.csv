@@ -1,0 +1,411 @@
+﻿Legajo,Area,Puesto,Sede,Turno,Lider,Genero,Edad,Fecha_Ingreso,Fecha_Egreso,Modalidad
+1001,Depósito,Supervisor/a de depósito,Rosario,Noche,L. Paz,Masculino,34,2023-06-24,,Presencial
+1004,Depósito,Supervisor/a de depósito,Rosario,Noche,L. Paz,Masculino,26,2026-02-19,2026-05-26,Presencial
+1007,Depósito,Supervisor/a de depósito,Rosario,Mañana,L. Paz,Masculino,52,2025-06-01,,Presencial
+1008,Depósito,Supervisor/a de depósito,Rosario,Tarde,L. Paz,Masculino,56,2026-03-23,,Presencial
+1010,Depósito,Supervisor/a de depósito,Rosario,Tarde,L. Paz,Masculino,51,2014-01-12,,Presencial
+1013,Depósito,Supervisor/a de depósito,Rosario,Tarde,L. Paz,Masculino,50,2025-08-05,,Presencial
+1016,Depósito,Supervisor/a de depósito,CABA,Mañana,R. Gómez,Femenino,62,2013-02-04,,Presencial
+1018,Depósito,Supervisor/a de depósito,CABA,Tarde,R. Gómez,Masculino,50,2017-02-18,2026-04-13,Presencial
+1021,Depósito,Supervisor/a de depósito,Rosario,Noche,L. Paz,Masculino,50,2018-11-25,,Presencial
+1023,Depósito,Supervisor/a de depósito,CABA,Tarde,R. Gómez,Masculino,58,2024-11-01,,Presencial
+1025,Depósito,Autoelevadorista,CABA,Tarde,M. Ferreyra,Masculino,47,2022-06-19,,Presencial
+1027,Depósito,Operario/a de depósito,Rosario,Tarde,L. Paz,Femenino,52,2021-10-31,,Presencial
+1029,Depósito,Autoelevadorista,Rosario,Mañana,L. Paz,Femenino,46,2023-03-07,,Presencial
+1030,Depósito,Operario/a de depósito,CABA,Tarde,R. Gómez,Femenino,59,2025-09-07,,Presencial
+1033,Depósito,Operario/a de depósito,Rosario,Mañana,L. Paz,Masculino,51,2019-01-11,,Presencial
+1036,Depósito,Operario/a de depósito,CABA,Tarde,M. Ferreyra,Masculino,25,2025-05-31,,Presencial
+1037,Depósito,Autoelevadorista,Rosario,Noche,L. Paz,Masculino,32,2020-10-03,,Presencial
+1039,Depósito,Autoelevadorista,CABA,Mañana,R. Gómez,Masculino,21,2019-12-05,,Presencial
+1042,Depósito,Autoelevadorista,Rosario,Tarde,L. Paz,Masculino,59,2014-09-21,,Presencial
+1045,Depósito,Autoelevadorista,CABA,Tarde,M. Ferreyra,Masculino,24,2022-04-16,,Presencial
+1046,Depósito,Operario/a de depósito,CABA,Mañana,M. Ferreyra,Masculino,50,2022-02-18,,Presencial
+1047,Depósito,Operario/a de depósito,CABA,Noche,R. Gómez,Masculino,37,2015-08-06,,Presencial
+1048,Depósito,Operario/a de depósito,Rosario,Tarde,L. Paz,Femenino,46,2025-09-19,,Presencial
+1050,Depósito,Operario/a de depósito,Rosario,Tarde,L. Paz,Masculino,26,2023-10-29,,Presencial
+1051,Depósito,Autoelevadorista,CABA,Tarde,M. Ferreyra,Femenino,62,2021-02-24,,Presencial
+1053,Depósito,Operario/a de depósito,CABA,Tarde,R. Gómez,Masculino,56,2014-06-17,,Presencial
+1056,Depósito,Operario/a de depósito,Rosario,Noche,L. Paz,Femenino,30,2014-04-11,2026-03-23,Presencial
+1058,Depósito,Operario/a de depósito,CABA,Noche,R. Gómez,Femenino,24,2023-05-13,,Presencial
+1059,Depósito,Operario/a de depósito,Rosario,Tarde,L. Paz,Masculino,36,2012-04-23,,Presencial
+1060,Depósito,Operario/a de depósito,CABA,Mañana,R. Gómez,Masculino,42,2025-12-27,,Presencial
+1063,Depósito,Autoelevadorista,CABA,Tarde,R. Gómez,Masculino,27,2025-09-17,,Presencial
+1065,Depósito,Operario/a de depósito,Rosario,Tarde,L. Paz,Femenino,41,2021-10-17,,Presencial
+1067,Depósito,Operario/a de depósito,Rosario,Tarde,L. Paz,Masculino,23,2024-02-28,,Presencial
+1068,Depósito,Operario/a de depósito,CABA,Mañana,R. Gómez,Masculino,61,2014-10-26,,Presencial
+1071,Depósito,Autoelevadorista,CABA,Tarde,M. Ferreyra,Femenino,62,2020-08-12,,Presencial
+1072,Depósito,Autoelevadorista,CABA,Noche,R. Gómez,Femenino,21,2017-09-19,,Presencial
+1074,Depósito,Operario/a de depósito,Rosario,Tarde,L. Paz,Femenino,55,2026-01-21,,Presencial
+1076,Depósito,Operario/a de depósito,Rosario,Mañana,L. Paz,Masculino,34,2026-01-30,,Presencial
+1079,Depósito,Autoelevadorista,Rosario,Noche,L. Paz,Masculino,32,2017-03-19,,Presencial
+1082,Depósito,Autoelevadorista,Rosario,Noche,L. Paz,Femenino,46,2025-01-08,,Presencial
+1084,Depósito,Operario/a de depósito,Rosario,Mañana,L. Paz,Masculino,28,2025-12-12,,Presencial
+1085,Depósito,Autoelevadorista,CABA,Noche,M. Ferreyra,Masculino,53,2025-07-08,,Presencial
+1088,Depósito,Operario/a de depósito,CABA,Mañana,M. Ferreyra,Masculino,22,2020-09-23,,Presencial
+1089,Depósito,Autoelevadorista,Rosario,Tarde,L. Paz,Femenino,60,2025-07-03,,Presencial
+1091,Depósito,Operario/a de depósito,Rosario,Noche,L. Paz,Femenino,30,2025-04-19,,Presencial
+1094,Depósito,Operario/a de depósito,CABA,Tarde,M. Ferreyra,Masculino,58,2020-04-02,,Presencial
+1095,Depósito,Operario/a de depósito,Rosario,Tarde,L. Paz,Femenino,61,2013-08-22,,Presencial
+1097,Depósito,Operario/a de depósito,CABA,Noche,M. Ferreyra,Masculino,57,2020-01-17,,Presencial
+1098,Depósito,Autoelevadorista,Rosario,Tarde,L. Paz,Masculino,41,2025-08-17,,Presencial
+1100,Depósito,Operario/a de depósito,Rosario,Mañana,L. Paz,Masculino,42,2025-05-23,,Presencial
+1101,Depósito,Operario/a de depósito,CABA,Tarde,R. Gómez,Femenino,48,2024-09-29,,Presencial
+1102,Depósito,Operario/a de depósito,Rosario,Mañana,L. Paz,Femenino,45,2025-09-13,,Presencial
+1105,Depósito,Operario/a de depósito,Rosario,Tarde,L. Paz,Masculino,62,2023-02-04,,Presencial
+1107,Depósito,Autoelevadorista,Rosario,Noche,L. Paz,Femenino,20,2013-05-06,,Presencial
+1108,Depósito,Autoelevadorista,Rosario,Noche,L. Paz,Femenino,20,2022-09-03,,Presencial
+1111,Depósito,Autoelevadorista,CABA,Noche,R. Gómez,Femenino,52,2025-01-01,,Presencial
+1112,Depósito,Operario/a de depósito,CABA,Noche,M. Ferreyra,Masculino,33,2025-01-11,,Presencial
+1115,Depósito,Autoelevadorista,Rosario,Mañana,L. Paz,Femenino,26,2023-09-14,,Presencial
+1116,Depósito,Operario/a de depósito,CABA,Noche,R. Gómez,Masculino,42,2022-07-23,,Presencial
+1118,Depósito,Autoelevadorista,Rosario,Tarde,L. Paz,Masculino,50,2012-10-27,,Presencial
+1120,Depósito,Autoelevadorista,CABA,Tarde,R. Gómez,Masculino,33,2023-06-28,,Presencial
+1121,Depósito,Operario/a de depósito,Rosario,Tarde,L. Paz,Masculino,51,2023-06-06,,Presencial
+1123,Depósito,Operario/a de depósito,CABA,Mañana,R. Gómez,Masculino,53,2017-10-10,,Presencial
+1126,Depósito,Operario/a de depósito,CABA,Noche,M. Ferreyra,Masculino,52,2012-08-24,,Presencial
+1129,Depósito,Autoelevadorista,CABA,Tarde,R. Gómez,Masculino,40,2015-01-24,,Presencial
+1132,Depósito,Operario/a de depósito,CABA,Mañana,R. Gómez,Femenino,22,2026-01-08,2026-06-02,Presencial
+1133,Depósito,Autoelevadorista,CABA,Tarde,M. Ferreyra,Masculino,23,2014-11-14,,Presencial
+1135,Depósito,Operario/a de depósito,Rosario,Noche,L. Paz,Masculino,25,2025-06-08,,Presencial
+1136,Depósito,Operario/a de depósito,Rosario,Mañana,L. Paz,Masculino,36,2024-09-05,,Presencial
+1137,Depósito,Autoelevadorista,CABA,Mañana,M. Ferreyra,Masculino,62,2024-11-22,,Presencial
+1139,Depósito,Autoelevadorista,CABA,Noche,R. Gómez,Masculino,33,2021-06-28,,Presencial
+1142,Depósito,Operario/a de depósito,Rosario,Mañana,L. Paz,Masculino,59,2024-08-20,,Presencial
+1143,Depósito,Autoelevadorista,CABA,Noche,M. Ferreyra,Femenino,47,2016-03-30,,Presencial
+1146,Depósito,Autoelevadorista,Rosario,Tarde,L. Paz,Masculino,37,2025-11-16,,Presencial
+1147,Depósito,Operario/a de depósito,CABA,Mañana,R. Gómez,Femenino,57,2020-01-19,,Presencial
+1149,Depósito,Autoelevadorista,CABA,Tarde,R. Gómez,Masculino,53,2019-10-04,,Presencial
+1151,Depósito,Operario/a de depósito,CABA,Mañana,R. Gómez,Masculino,26,2013-07-29,,Presencial
+1154,Depósito,Operario/a de depósito,Rosario,Noche,L. Paz,Masculino,26,2015-06-08,,Presencial
+1157,Depósito,Operario/a de depósito,Rosario,Mañana,L. Paz,Masculino,41,2013-08-05,,Presencial
+1159,Depósito,Autoelevadorista,CABA,Tarde,R. Gómez,Masculino,40,2017-06-09,,Presencial
+1160,Depósito,Operario/a de depósito,CABA,Tarde,R. Gómez,Masculino,50,2014-07-20,,Presencial
+1161,Depósito,Operario/a de depósito,Rosario,Noche,L. Paz,Masculino,35,2023-11-16,,Presencial
+1163,Depósito,Operario/a de depósito,Rosario,Noche,L. Paz,Femenino,53,2019-12-05,,Presencial
+1164,Depósito,Operario/a de depósito,CABA,Noche,M. Ferreyra,Masculino,46,2022-04-04,2025-04-19,Presencial
+1165,Depósito,Autoelevadorista,CABA,Mañana,M. Ferreyra,Femenino,25,2015-10-16,,Presencial
+1166,Depósito,Operario/a de depósito,CABA,Tarde,M. Ferreyra,Masculino,49,2019-12-23,,Presencial
+1167,Depósito,Autoelevadorista,Rosario,Mañana,L. Paz,Femenino,20,2024-08-07,,Presencial
+1169,Depósito,Operario/a de depósito,Rosario,Mañana,L. Paz,Masculino,35,2024-04-11,,Presencial
+1172,Depósito,Autoelevadorista,Rosario,Mañana,L. Paz,Femenino,55,2024-07-03,2026-01-31,Presencial
+1173,Depósito,Operario/a de depósito,CABA,Mañana,R. Gómez,Masculino,61,2023-04-28,,Presencial
+1174,Depósito,Operario/a de depósito,CABA,Tarde,R. Gómez,Masculino,53,2014-12-03,,Presencial
+1177,Depósito,Autoelevadorista,CABA,Noche,R. Gómez,Femenino,44,2015-12-10,2025-01-02,Presencial
+1180,Depósito,Autoelevadorista,Rosario,Noche,L. Paz,Femenino,61,2023-06-28,2025-01-22,Presencial
+1182,Depósito,Operario/a de depósito,CABA,Tarde,M. Ferreyra,Masculino,41,2018-11-18,2025-01-30,Presencial
+1185,Depósito,Operario/a de depósito,Rosario,Noche,L. Paz,Masculino,30,2017-06-10,,Presencial
+1186,Depósito,Operario/a de depósito,CABA,Mañana,R. Gómez,Femenino,36,2025-09-30,,Presencial
+1187,Depósito,Operario/a de depósito,Rosario,Noche,L. Paz,Masculino,48,2021-12-16,2025-11-29,Presencial
+1189,Depósito,Autoelevadorista,Rosario,Tarde,L. Paz,Femenino,50,2017-08-17,,Presencial
+1190,Depósito,Operario/a de depósito,CABA,Noche,R. Gómez,Femenino,45,2025-03-29,,Presencial
+1191,Depósito,Autoelevadorista,CABA,Mañana,R. Gómez,Femenino,45,2014-11-18,,Presencial
+1194,Depósito,Autoelevadorista,Rosario,Noche,L. Paz,Masculino,31,2019-10-18,,Presencial
+1197,Depósito,Operario/a de depósito,CABA,Tarde,M. Ferreyra,Masculino,60,2021-08-27,2026-01-20,Presencial
+1200,Depósito,Operario/a de depósito,Rosario,Noche,L. Paz,Femenino,46,2025-05-19,,Presencial
+1203,Depósito,Autoelevadorista,Rosario,Tarde,L. Paz,Masculino,44,2025-08-06,,Presencial
+1204,Depósito,Operario/a de depósito,Rosario,Tarde,L. Paz,Masculino,45,2024-11-27,,Presencial
+1206,Depósito,Operario/a de depósito,CABA,Tarde,R. Gómez,Masculino,27,2024-09-12,2026-02-12,Presencial
+1209,Depósito,Operario/a de depósito,CABA,Tarde,R. Gómez,Masculino,41,2019-03-16,2025-03-09,Presencial
+1212,Depósito,Operario/a de depósito,Rosario,Mañana,L. Paz,Masculino,51,2016-04-11,,Presencial
+1213,Depósito,Operario/a de depósito,CABA,Tarde,R. Gómez,Masculino,26,2015-05-08,,Presencial
+1214,Depósito,Autoelevadorista,CABA,Mañana,R. Gómez,Masculino,23,2021-06-27,2026-05-25,Presencial
+1217,Depósito,Autoelevadorista,CABA,Mañana,R. Gómez,Masculino,35,2016-01-26,2026-06-21,Presencial
+1218,Depósito,Autoelevadorista,CABA,Mañana,R. Gómez,Masculino,26,2017-10-15,,Presencial
+1219,Depósito,Operario/a de depósito,Rosario,Noche,L. Paz,Masculino,47,2024-12-16,,Presencial
+1220,Depósito,Autoelevadorista,CABA,Noche,R. Gómez,Femenino,49,2026-02-15,,Presencial
+1221,Depósito,Autoelevadorista,Rosario,Mañana,L. Paz,Masculino,27,2023-08-07,,Presencial
+1222,Depósito,Autoelevadorista,CABA,Noche,R. Gómez,Masculino,27,2019-02-19,,Presencial
+1225,Depósito,Autoelevadorista,Rosario,Noche,L. Paz,Masculino,47,2025-08-26,2026-01-28,Presencial
+1228,Depósito,Autoelevadorista,Rosario,Noche,L. Paz,Masculino,42,2025-05-31,,Presencial
+1229,Depósito,Autoelevadorista,Rosario,Tarde,L. Paz,Masculino,38,2012-12-26,,Presencial
+1230,Depósito,Autoelevadorista,Rosario,Tarde,L. Paz,Femenino,36,2020-08-11,,Presencial
+1231,Depósito,Operario/a de depósito,CABA,Mañana,M. Ferreyra,Masculino,59,2013-02-11,,Presencial
+1234,Depósito,Operario/a de depósito,CABA,Tarde,M. Ferreyra,Masculino,24,2014-06-04,,Presencial
+1237,Depósito,Operario/a de depósito,Rosario,Mañana,L. Paz,Masculino,21,2021-11-20,,Presencial
+1239,Depósito,Autoelevadorista,Rosario,Noche,L. Paz,Femenino,29,2016-04-06,,Presencial
+1242,Depósito,Operario/a de depósito,Rosario,Noche,L. Paz,Masculino,50,2013-07-15,,Presencial
+1243,Depósito,Operario/a de depósito,Rosario,Mañana,L. Paz,Femenino,29,2025-09-17,,Presencial
+1246,Depósito,Operario/a de depósito,Rosario,Mañana,L. Paz,Masculino,24,2016-05-02,2026-02-05,Presencial
+1248,Depósito,Operario/a de depósito,CABA,Tarde,M. Ferreyra,Femenino,54,2016-05-11,2025-04-24,Presencial
+1250,Depósito,Operario/a de depósito,Rosario,Mañana,L. Paz,Femenino,44,2025-02-14,,Presencial
+1252,Depósito,Operario/a de depósito,CABA,Mañana,R. Gómez,Femenino,58,2020-01-25,,Presencial
+1255,Depósito,Autoelevadorista,CABA,Noche,M. Ferreyra,Masculino,22,2017-01-28,,Presencial
+1257,Depósito,Operario/a de depósito,Rosario,Tarde,L. Paz,Femenino,46,2016-08-29,,Presencial
+1259,Depósito,Operario/a de depósito,Rosario,Mañana,L. Paz,Femenino,61,2025-08-20,2025-12-09,Presencial
+1260,Depósito,Operario/a de depósito,Rosario,Mañana,L. Paz,Masculino,53,2026-01-16,2026-05-19,Presencial
+1263,Depósito,Autoelevadorista,CABA,Mañana,M. Ferreyra,Masculino,51,2024-11-30,,Presencial
+1266,Depósito,Operario/a de depósito,Rosario,Tarde,L. Paz,Masculino,53,2024-02-24,,Presencial
+1269,Depósito,Operario/a de depósito,CABA,Noche,R. Gómez,Masculino,61,2021-09-20,,Presencial
+1270,Depósito,Operario/a de depósito,Rosario,Tarde,L. Paz,Masculino,35,2019-12-25,,Presencial
+1272,Depósito,Operario/a de depósito,CABA,Tarde,M. Ferreyra,Masculino,31,2025-11-23,,Presencial
+1273,Depósito,Autoelevadorista,Rosario,Mañana,L. Paz,Femenino,32,2025-08-21,,Presencial
+1275,Depósito,Autoelevadorista,CABA,Noche,R. Gómez,Masculino,35,2017-11-14,,Presencial
+1278,Depósito,Autoelevadorista,CABA,Mañana,R. Gómez,Masculino,34,2024-11-28,,Presencial
+1280,Depósito,Autoelevadorista,Rosario,Mañana,L. Paz,Masculino,37,2018-07-05,,Presencial
+1282,Depósito,Autoelevadorista,CABA,Tarde,M. Ferreyra,Masculino,27,2019-01-19,2025-10-14,Presencial
+1283,Depósito,Autoelevadorista,Rosario,Noche,L. Paz,Masculino,30,2025-03-04,2025-09-25,Presencial
+1285,Depósito,Operario/a de depósito,Rosario,Tarde,L. Paz,Masculino,31,2025-02-28,,Presencial
+1288,Depósito,Operario/a de depósito,Rosario,Tarde,L. Paz,Masculino,22,2024-07-27,,Presencial
+1289,Depósito,Operario/a de depósito,CABA,Tarde,M. Ferreyra,Masculino,32,2012-05-24,2025-02-22,Presencial
+1291,Depósito,Operario/a de depósito,CABA,Mañana,R. Gómez,Masculino,39,2020-05-16,,Presencial
+1293,Depósito,Autoelevadorista,CABA,Tarde,M. Ferreyra,Masculino,35,2013-09-27,,Presencial
+1294,Distribución,Coordinador/a de rutas,CABA,Mañana,J. Quiroga,Masculino,23,2017-07-02,,Presencial
+1297,Distribución,Coordinador/a de rutas,CABA,Mañana,J. Quiroga,Masculino,48,2012-02-27,,Presencial
+1299,Distribución,Coordinador/a de rutas,CABA,Tarde,J. Quiroga,Femenino,22,2026-01-27,,Presencial
+1301,Distribución,Coordinador/a de rutas,Rosario,Mañana,S. Medina,Masculino,58,2023-06-19,,Presencial
+1303,Distribución,Coordinador/a de rutas,CABA,Tarde,J. Quiroga,Femenino,59,2023-03-10,,Presencial
+1306,Distribución,Ayudante de reparto,CABA,Mañana,J. Quiroga,Masculino,26,2013-05-18,,Presencial
+1308,Distribución,Chofer,Córdoba,Mañana,A. Ríos,Masculino,26,2025-02-04,,Presencial
+1309,Distribución,Ayudante de reparto,Córdoba,Tarde,A. Ríos,Femenino,40,2019-08-23,,Presencial
+1310,Distribución,Ayudante de reparto,Rosario,Mañana,S. Medina,No binario,29,2023-03-06,,Presencial
+1313,Distribución,Ayudante de reparto,Rosario,Mañana,S. Medina,Masculino,27,2024-04-22,,Presencial
+1315,Distribución,Ayudante de reparto,Rosario,Mañana,S. Medina,Masculino,30,2020-11-14,,Presencial
+1316,Distribución,Ayudante de reparto,Córdoba,Mañana,A. Ríos,Masculino,28,2015-06-18,2025-10-29,Presencial
+1318,Distribución,Ayudante de reparto,Córdoba,Mañana,A. Ríos,Femenino,61,2012-12-27,,Presencial
+1319,Distribución,Ayudante de reparto,Rosario,Mañana,S. Medina,Femenino,26,2014-09-13,,Presencial
+1321,Distribución,Ayudante de reparto,CABA,Tarde,J. Quiroga,Masculino,61,2021-10-20,,Presencial
+1323,Distribución,Chofer,Rosario,Mañana,S. Medina,Femenino,60,2014-02-21,,Presencial
+1324,Distribución,Ayudante de reparto,Córdoba,Tarde,A. Ríos,Masculino,33,2013-05-13,2025-05-12,Presencial
+1327,Distribución,Ayudante de reparto,Rosario,Mañana,S. Medina,Masculino,40,2025-03-30,,Presencial
+1328,Distribución,Chofer,CABA,Tarde,J. Quiroga,Masculino,23,2013-03-04,,Presencial
+1329,Distribución,Chofer,Córdoba,Tarde,A. Ríos,Masculino,60,2025-03-04,,Presencial
+1331,Distribución,Chofer,Córdoba,Tarde,A. Ríos,Femenino,54,2025-05-02,,Presencial
+1333,Distribución,Chofer,Rosario,Mañana,S. Medina,Femenino,21,2024-12-17,,Presencial
+1334,Distribución,Ayudante de reparto,CABA,Mañana,J. Quiroga,Masculino,28,2024-09-29,2026-06-29,Presencial
+1335,Distribución,Ayudante de reparto,Córdoba,Mañana,A. Ríos,Masculino,28,2014-08-08,,Presencial
+1338,Distribución,Chofer,Córdoba,Mañana,A. Ríos,Femenino,28,2020-05-29,,Presencial
+1341,Distribución,Chofer,Córdoba,Tarde,A. Ríos,Masculino,54,2022-12-19,,Presencial
+1342,Distribución,Ayudante de reparto,Rosario,Mañana,S. Medina,Masculino,44,2018-11-02,,Presencial
+1344,Distribución,Ayudante de reparto,Córdoba,Mañana,A. Ríos,Masculino,24,2015-02-23,,Presencial
+1347,Distribución,Ayudante de reparto,Córdoba,Tarde,A. Ríos,Femenino,45,2017-09-20,,Presencial
+1348,Distribución,Ayudante de reparto,CABA,Mañana,J. Quiroga,Masculino,38,2013-02-25,,Presencial
+1350,Distribución,Chofer,CABA,Tarde,J. Quiroga,Femenino,34,2019-07-29,,Presencial
+1353,Distribución,Ayudante de reparto,Córdoba,Mañana,A. Ríos,Masculino,20,2024-03-12,,Presencial
+1355,Distribución,Ayudante de reparto,Rosario,Tarde,S. Medina,Masculino,35,2025-05-29,,Presencial
+1357,Distribución,Chofer,Rosario,Mañana,S. Medina,Masculino,20,2021-06-09,,Presencial
+1360,Distribución,Ayudante de reparto,Córdoba,Tarde,A. Ríos,Masculino,23,2013-10-15,,Presencial
+1361,Distribución,Ayudante de reparto,Córdoba,Mañana,A. Ríos,Masculino,48,2015-11-01,2026-06-30,Presencial
+1362,Distribución,Chofer,Córdoba,Tarde,A. Ríos,Masculino,51,2026-01-04,,Presencial
+1363,Distribución,Chofer,CABA,Mañana,J. Quiroga,Masculino,60,2012-04-12,2025-03-31,Presencial
+1366,Distribución,Ayudante de reparto,CABA,Tarde,J. Quiroga,Masculino,23,2016-03-06,,Presencial
+1368,Distribución,Chofer,Rosario,Mañana,S. Medina,Femenino,44,2022-06-22,,Presencial
+1371,Distribución,Ayudante de reparto,CABA,Mañana,J. Quiroga,Femenino,30,2022-08-23,,Presencial
+1374,Distribución,Ayudante de reparto,Rosario,Mañana,S. Medina,Masculino,62,2018-09-19,,Presencial
+1377,Distribución,Chofer,Rosario,Mañana,S. Medina,Femenino,33,2023-12-05,,Presencial
+1378,Distribución,Ayudante de reparto,Córdoba,Tarde,A. Ríos,Masculino,30,2023-06-10,,Presencial
+1379,Distribución,Chofer,Córdoba,Mañana,A. Ríos,Femenino,51,2015-11-09,,Presencial
+1382,Distribución,Chofer,CABA,Tarde,J. Quiroga,Masculino,41,2025-10-16,,Presencial
+1384,Distribución,Ayudante de reparto,Córdoba,Mañana,A. Ríos,Masculino,38,2014-03-09,,Presencial
+1385,Distribución,Ayudante de reparto,Córdoba,Tarde,A. Ríos,Masculino,59,2024-08-12,2026-01-19,Presencial
+1387,Distribución,Ayudante de reparto,CABA,Tarde,J. Quiroga,Femenino,22,2026-03-21,,Presencial
+1390,Distribución,Chofer,Córdoba,Tarde,A. Ríos,Femenino,27,2018-05-17,,Presencial
+1391,Distribución,Chofer,Rosario,Tarde,S. Medina,Masculino,49,2017-10-13,2025-07-22,Presencial
+1394,Distribución,Chofer,Rosario,Tarde,S. Medina,Masculino,41,2024-09-26,,Presencial
+1396,Distribución,Chofer,Rosario,Tarde,S. Medina,Masculino,42,2025-05-30,,Presencial
+1399,Distribución,Chofer,Córdoba,Mañana,A. Ríos,Masculino,56,2013-02-10,,Presencial
+1402,Distribución,Chofer,Córdoba,Mañana,A. Ríos,Femenino,23,2024-05-03,,Presencial
+1403,Distribución,Chofer,CABA,Tarde,J. Quiroga,Masculino,61,2016-12-15,,Presencial
+1406,Distribución,Ayudante de reparto,Rosario,Mañana,S. Medina,Femenino,8,2023-10-07,,Presencial
+1408,Distribución,Ayudante de reparto,Córdoba,Mañana,A. Ríos,Masculino,44,2026-02-11,,Presencial
+1410,Distribución,Ayudante de reparto,Córdoba,Mañana,A. Ríos,Femenino,47,2016-01-24,,Presencial
+1413,Distribución,Chofer,CABA,Tarde,J. Quiroga,Masculino,51,2019-09-20,,Presencial
+1415,Distribución,Chofer,Córdoba,Tarde,A. Ríos,Masculino,54,2021-04-17,,Presencial
+1418,Distribución,Chofer,CABA,Mañana,J. Quiroga,Femenino,37,2022-06-16,,Presencial
+1420,Distribución,Ayudante de reparto,Rosario,Tarde,S. Medina,Masculino,55,2021-12-12,,Presencial
+1423,Distribución,Chofer,Córdoba,Mañana,A. Ríos,Femenino,37,2018-11-30,,Presencial
+1424,Distribución,Chofer,CABA,Tarde,J. Quiroga,Femenino,34,2021-07-22,,Presencial
+1425,Distribución,Ayudante de reparto,Córdoba,Tarde,A. Ríos,Masculino,48,2021-01-15,2025-03-03,Presencial
+1427,Distribución,Ayudante de reparto,Rosario,Mañana,S. Medina,Masculino,44,2015-04-06,,Presencial
+1428,Distribución,Chofer,CABA,Mañana,J. Quiroga,Masculino,28,2023-03-20,,Presencial
+1431,Distribución,Ayudante de reparto,CABA,Mañana,J. Quiroga,Masculino,48,2026-01-09,,Presencial
+1433,Distribución,Ayudante de reparto,Córdoba,Tarde,A. Ríos,Femenino,62,2024-10-26,,Presencial
+1436,Distribución,Ayudante de reparto,Córdoba,Tarde,A. Ríos,Masculino,43,2022-12-30,,Presencial
+1439,Distribución,Ayudante de reparto,Córdoba,Mañana,A. Ríos,Masculino,52,2025-12-12,,Presencial
+1441,Distribución,Ayudante de reparto,CABA,Tarde,J. Quiroga,Masculino,36,2023-08-19,,Presencial
+1443,Distribución,Chofer,Córdoba,Tarde,A. Ríos,Femenino,48,2024-08-13,,Presencial
+1446,Distribución,Ayudante de reparto,CABA,Mañana,J. Quiroga,Masculino,22,2022-03-27,,Presencial
+1448,Distribución,Ayudante de reparto,Córdoba,Tarde,A. Ríos,Masculino,44,2019-11-28,2025-04-24,Presencial
+1451,Distribución,Chofer,CABA,Mañana,J. Quiroga,Masculino,37,2025-10-07,,Presencial
+1454,Distribución,Ayudante de reparto,Rosario,Mañana,S. Medina,Masculino,60,2026-01-10,,Presencial
+1456,Distribución,Ayudante de reparto,Rosario,Tarde,S. Medina,Femenino,34,2025-09-22,,Presencial
+1458,Distribución,Ayudante de reparto,CABA,Tarde,J. Quiroga,Femenino,20,2025-09-02,,Presencial
+1461,Distribución,Chofer,Rosario,Tarde,S. Medina,Masculino,39,2024-12-28,,Presencial
+1463,Distribución,Chofer,Córdoba,Mañana,A. Ríos,Masculino,41,2025-03-24,,Presencial
+1465,Distribución,Ayudante de reparto,CABA,Tarde,J. Quiroga,Masculino,28,2026-03-29,,Presencial
+1466,Distribución,Chofer,Córdoba,Tarde,A. Ríos,Masculino,31,2020-11-13,2026-02-02,Presencial
+1469,Distribución,Chofer,CABA,Tarde,J. Quiroga,Masculino,29,2015-12-22,2026-01-05,Presencial
+1471,Atención al Cliente,Líder de equipo,Córdoba,Tarde,V. Luna,Masculino,25,2012-06-10,,Presencial
+1472,Atención al Cliente,Líder de equipo,CABA,Mañana,C. Benítez,Masculino,40,2022-02-28,2026-01-30,Presencial
+1474,Atención al Cliente,Líder de equipo,CABA,Mañana,C. Benítez,Femenino,53,2016-08-10,,Presencial
+1475,Atención al Cliente,Líder de equipo,CABA,Mañana,C. Benítez,Masculino,36,2020-12-20,,Presencial
+1478,Atención al Cliente,Representante de atención,CABA,Mañana,C. Benítez,Femenino,33,2023-04-10,,Presencial
+1481,Atención al Cliente,Representante de atención,CABA,Tarde,C. Benítez,Femenino,43,2025-11-03,2026-04-24,Presencial
+1483,Atención al Cliente,Representante de atención,CABA,Tarde,C. Benítez,Femenino,62,2023-03-05,,Presencial
+1486,Atención al Cliente,Representante de atención,Córdoba,Mañana,V. Luna,Femenino,54,2025-05-19,,Presencial
+1489,Atención al Cliente,Representante de atención,CABA,Tarde,C. Benítez,Femenino,55,2026-03-07,,Presencial
+1492,Atención al Cliente,Representante de atención,CABA,Tarde,C. Benítez,Femenino,46,2015-03-18,,Presencial
+1494,Atención al Cliente,Representante de atención,Córdoba,Mañana,V. Luna,Femenino,61,2014-07-19,,Presencial
+1496,Atención al Cliente,Representante de atención,CABA,Mañana,C. Benítez,Masculino,55,2017-05-07,,Presencial
+1498,Atención al Cliente,Representante de atención,Córdoba,Tarde,V. Luna,Femenino,32,2022-03-09,2026-04-28,Presencial
+1501,Atención al Cliente,Representante de atención,CABA,Tarde,C. Benítez,Femenino,28,2022-01-04,,Presencial
+1503,Atención al Cliente,Representante de atención,CABA,Tarde,C. Benítez,Masculino,55,2017-01-29,,Presencial
+1504,Atención al Cliente,Representante de atención,CABA,Mañana,C. Benítez,Femenino,45,2014-04-19,,Presencial
+1505,Atención al Cliente,Representante de atención,Córdoba,Mañana,V. Luna,No binario,45,2015-05-15,,Presencial
+1507,Atención al Cliente,Representante de atención,Córdoba,Tarde,V. Luna,Femenino,21,2015-06-16,,Presencial
+1510,Atención al Cliente,Representante de atención,Córdoba,Mañana,V. Luna,Masculino,21,2015-07-15,,Presencial
+1512,Atención al Cliente,Representante de atención,CABA,Mañana,C. Benítez,Femenino,51,2013-12-05,,Presencial
+1513,Atención al Cliente,Representante de atención,CABA,Tarde,C. Benítez,Masculino,39,2022-10-31,,Presencial
+1516,Atención al Cliente,Representante de atención,Córdoba,Mañana,V. Luna,Masculino,62,2021-09-01,,Presencial
+1518,Atención al Cliente,Representante de atención,Córdoba,Tarde,V. Luna,Femenino,28,2016-03-29,,Presencial
+1521,Atención al Cliente,Representante de atención,Córdoba,Tarde,V. Luna,Femenino,55,2016-01-19,,Presencial
+1523,Atención al Cliente,Representante de atención,Córdoba,Tarde,V. Luna,Femenino,38,2014-04-08,,Presencial
+1524,Atención al Cliente,Representante de atención,CABA,Tarde,C. Benítez,Femenino,62,2017-03-24,,Presencial
+1525,Atención al Cliente,Representante de atención,Córdoba,Tarde,V. Luna,Femenino,25,2014-02-15,,Presencial
+1526,Atención al Cliente,Representante de atención,CABA,Tarde,C. Benítez,Masculino,20,2013-03-04,,Presencial
+1529,Atención al Cliente,Representante de atención,CABA,Tarde,C. Benítez,Femenino,50,2016-01-18,2026-06-01,Presencial
+1531,Atención al Cliente,Representante de atención,CABA,Mañana,C. Benítez,Femenino,50,2017-03-06,,Presencial
+1533,Atención al Cliente,Representante de atención,CABA,Tarde,C. Benítez,Femenino,47,2026-02-08,,Presencial
+1535,Atención al Cliente,Representante de atención,Córdoba,Mañana,V. Luna,Femenino,28,2012-11-26,2025-03-29,Presencial
+1537,Atención al Cliente,Representante de atención,Córdoba,Mañana,V. Luna,Femenino,46,2025-05-22,,Presencial
+1539,Atención al Cliente,Representante de atención,Córdoba,Tarde,V. Luna,Masculino,50,2020-06-21,,Presencial
+1541,Atención al Cliente,Representante de atención,Córdoba,Mañana,V. Luna,Femenino,58,2012-09-12,,Presencial
+1544,Atención al Cliente,Representante de atención,Córdoba,Tarde,V. Luna,Masculino,42,2015-08-10,,Presencial
+1545,Atención al Cliente,Representante de atención,Córdoba,Tarde,V. Luna,Femenino,55,2024-05-12,,Presencial
+1547,Atención al Cliente,Representante de atención,Córdoba,Tarde,V. Luna,No binario,51,2018-10-23,,Presencial
+1549,Atención al Cliente,Representante de atención,CABA,Mañana,C. Benítez,Femenino,22,2015-09-30,2026-03-10,Presencial
+1552,Atención al Cliente,Representante de atención,Córdoba,Tarde,V. Luna,Femenino,38,2019-10-23,2025-02-17,Presencial
+1554,Atención al Cliente,Representante de atención,CABA,Mañana,C. Benítez,Femenino,57,2019-07-24,2026-05-15,Presencial
+1557,Atención al Cliente,Representante de atención,CABA,Tarde,C. Benítez,Masculino,27,2018-06-12,,Presencial
+1559,Atención al Cliente,Representante de atención,Córdoba,Tarde,V. Luna,Femenino,28,2017-11-29,,Presencial
+1562,Atención al Cliente,Representante de atención,Córdoba,Mañana,V. Luna,Masculino,41,2015-09-10,,Presencial
+1563,Atención al Cliente,Representante de atención,Córdoba,Mañana,V. Luna,Femenino,37,2021-06-24,,Presencial
+1566,Atención al Cliente,Representante de atención,CABA,Tarde,C. Benítez,Femenino,54,2013-11-17,,Presencial
+1568,Atención al Cliente,Representante de atención,CABA,Tarde,C. Benítez,Femenino,36,2013-09-27,,Presencial
+1569,Atención al Cliente,Representante de atención,Córdoba,Mañana,V. Luna,Femenino,43,2022-09-24,,Presencial
+1571,Atención al Cliente,Representante de atención,CABA,Mañana,C. Benítez,Masculino,49,2026-01-28,,Presencial
+1573,Atención al Cliente,Representante de atención,Córdoba,Tarde,V. Luna,Femenino,20,2012-10-23,,Presencial
+1574,Atención al Cliente,Representante de atención,CABA,Mañana,C. Benítez,Femenino,33,2025-09-20,,Presencial
+1576,Atención al Cliente,Representante de atención,Córdoba,Tarde,V. Luna,Masculino,51,2014-11-01,,Presencial
+1579,Atención al Cliente,Representante de atención,Córdoba,Mañana,V. Luna,Femenino,35,2017-12-30,,Presencial
+1581,Atención al Cliente,Representante de atención,CABA,Mañana,C. Benítez,Femenino,32,2019-01-01,,Presencial
+1582,Atención al Cliente,Representante de atención,CABA,Mañana,C. Benítez,Masculino,23,2016-02-08,,Presencial
+1584,Atención al Cliente,Representante de atención,CABA,Mañana,C. Benítez,Masculino,56,2019-04-24,,Presencial
+1587,Atención al Cliente,Representante de atención,CABA,Mañana,C. Benítez,Femenino,0,2012-06-23,,Presencial
+1589,Atención al Cliente,Representante de atención,Córdoba,Tarde,V. Luna,Femenino,47,2014-11-15,,Presencial
+1591,Atención al Cliente,Representante de atención,CABA,Mañana,C. Benítez,Masculino,44,2014-09-26,,Presencial
+1592,Atención al Cliente,Representante de atención,CABA,Mañana,C. Benítez,Masculino,35,2023-05-14,,Presencial
+1593,Administración,Asistente administrativo/a,CABA,Mañana,E. Sosa,Femenino,28,2016-07-26,,Híbrida
+1594,Administración,Asistente administrativo/a,CABA,Mañana,E. Sosa,Femenino,38,2025-09-03,,Presencial
+1595,Administración,Analista administrativo/a,CABA,Mañana,E. Sosa,Femenino,29,2022-08-07,,Presencial
+1597,Administración,Analista administrativo/a,CABA,Mañana,E. Sosa,Femenino,40,2025-09-18,,Híbrida
+1598,Administración,Analista administrativo/a,CABA,Mañana,E. Sosa,Femenino,28,2021-03-18,,Híbrida
+1599,Administración,Analista administrativo/a,CABA,Mañana,E. Sosa,Femenino,27,2016-02-11,2026-03-10,Híbrida
+1602,Administración,Analista administrativo/a,CABA,Mañana,E. Sosa,Masculino,55,2018-05-13,,Híbrida
+1605,Administración,Analista administrativo/a,CABA,Mañana,E. Sosa,Masculino,37,2023-09-10,,Presencial
+1608,Administración,Analista administrativo/a,CABA,Mañana,E. Sosa,Femenino,57,2025-12-24,2026-03-20,Híbrida
+1610,Administración,Analista administrativo/a,CABA,Mañana,E. Sosa,Masculino,38,2012-10-05,,Presencial
+1613,Administración,Analista administrativo/a,CABA,Mañana,E. Sosa,Femenino,22,2017-03-21,,Presencial
+1615,Administración,Analista administrativo/a,CABA,Mañana,E. Sosa,Femenino,38,2012-12-09,,Híbrida
+1616,Administración,Analista administrativo/a,CABA,Mañana,E. Sosa,Femenino,43,2020-07-25,,Presencial
+1617,Administración,Analista administrativo/a,CABA,Mañana,E. Sosa,Masculino,29,2020-08-05,,Híbrida
+1618,Administración,Analista administrativo/a,CABA,Mañana,E. Sosa,Masculino,20,2017-01-21,2025-01-13,Híbrida
+1619,Administración,Analista administrativo/a,CABA,Mañana,E. Sosa,Femenino,50,2014-02-27,,Híbrida
+1621,Administración,Analista administrativo/a,CABA,Mañana,E. Sosa,Masculino,56,2018-03-25,,Presencial
+1622,Administración,Analista administrativo/a,CABA,Mañana,E. Sosa,Femenino,37,2015-06-24,,Híbrida
+1625,Administración,Analista administrativo/a,CABA,Mañana,E. Sosa,Masculino,45,2012-10-25,,Híbrida
+1627,Administración,Analista administrativo/a,CABA,Mañana,E. Sosa,Masculino,43,2022-12-03,,Híbrida
+1629,Administración,Analista administrativo/a,CABA,Mañana,E. Sosa,Masculino,51,2014-06-27,,Presencial
+1631,Administración,Analista administrativo/a,CABA,Mañana,E. Sosa,Masculino,22,2013-01-11,,Híbrida
+1632,Administración,Analista administrativo/a,CABA,Mañana,E. Sosa,Masculino,29,2024-11-24,,Presencial
+1633,Administración,Analista administrativo/a,CABA,Mañana,E. Sosa,Femenino,37,2016-05-23,,Híbrida
+1635,Administración,Analista administrativo/a,CABA,Mañana,E. Sosa,Femenino,24,2024-12-17,,Presencial
+1636,Administración,Analista administrativo/a,CABA,Mañana,E. Sosa,Masculino,55,2015-09-18,,Presencial
+1638,Administración,Analista administrativo/a,CABA,Mañana,E. Sosa,Femenino,43,2017-04-30,,Híbrida
+1641,Administración,Analista administrativo/a,CABA,Mañana,E. Sosa,Femenino,43,2014-06-15,,Híbrida
+1643,Administración,Analista administrativo/a,CABA,Mañana,E. Sosa,Masculino,25,2015-03-30,,Híbrida
+1646,Administración,Analista administrativo/a,CABA,Mañana,E. Sosa,Femenino,39,2016-05-03,,Híbrida
+1648,Administración,Analista administrativo/a,CABA,Mañana,E. Sosa,Masculino,41,2014-12-27,,Híbrida
+1651,Administración,Analista administrativo/a,CABA,Mañana,E. Sosa,Femenino,30,2012-10-29,,Presencial
+1654,Administración,Analista administrativo/a,CABA,Mañana,E. Sosa,Masculino,40,2014-04-26,,Presencial
+1656,Administración,Analista administrativo/a,CABA,Mañana,E. Sosa,Femenino,51,2024-04-06,,Híbrida
+1659,Administración,Analista administrativo/a,CABA,Mañana,E. Sosa,Masculino,52,2025-07-25,,Presencial
+1660,Administración,Analista administrativo/a,CABA,Mañana,E. Sosa,Masculino,26,2014-04-28,2025-12-15,Híbrida
+1661,Administración,Analista administrativo/a,CABA,Mañana,E. Sosa,Femenino,29,2019-11-01,,Presencial
+1662,Administración,Analista administrativo/a,CABA,Mañana,E. Sosa,Masculino,33,2014-03-11,,Presencial
+1664,Administración,Analista administrativo/a,CABA,Mañana,E. Sosa,Femenino,22,2015-05-28,,Híbrida
+1666,Administración,Analista administrativo/a,CABA,Mañana,E. Sosa,Femenino,55,2014-12-22,,Híbrida
+1667,Comercial,Key account,Córdoba,Mañana,D. Castro,Masculino,57,2020-07-22,,Presencial
+1668,Comercial,Key account,CABA,Mañana,D. Castro,Femenino,39,2017-05-27,,Híbrida
+1671,Comercial,Ejecutivo/a comercial,Córdoba,Mañana,D. Castro,Masculino,54,2022-03-21,,Híbrida
+1672,Comercial,Ejecutivo/a comercial,Córdoba,Mañana,D. Castro,Femenino,52,2024-09-11,,Presencial
+1675,Comercial,Ejecutivo/a comercial,CABA,Mañana,D. Castro,Femenino,62,2012-09-07,,Híbrida
+1676,Comercial,Ejecutivo/a comercial,CABA,Mañana,D. Castro,Femenino,37,2015-04-28,,Híbrida
+1677,Comercial,Ejecutivo/a comercial,Córdoba,Mañana,D. Castro,Masculino,31,2012-08-21,,Híbrida
+1678,Comercial,Ejecutivo/a comercial,Córdoba,Mañana,D. Castro,Femenino,38,2022-12-18,,Híbrida
+1679,Comercial,Ejecutivo/a comercial,Rosario,Mañana,D. Castro,Masculino,52,2020-12-01,,Híbrida
+1681,Comercial,Ejecutivo/a comercial,Córdoba,Mañana,D. Castro,Femenino,20,2018-01-30,,Híbrida
+1684,Comercial,Ejecutivo/a comercial,CABA,Mañana,D. Castro,Femenino,38,2022-07-14,,Híbrida
+1687,Comercial,Ejecutivo/a comercial,Rosario,Mañana,D. Castro,Femenino,22,2018-04-27,,Presencial
+1690,Comercial,Ejecutivo/a comercial,CABA,Mañana,D. Castro,Femenino,41,2014-12-24,,Híbrida
+1693,Comercial,Ejecutivo/a comercial,Rosario,Mañana,D. Castro,Femenino,50,2017-10-28,2026-02-14,Presencial
+1695,Comercial,Ejecutivo/a comercial,CABA,Mañana,D. Castro,Femenino,21,2025-08-05,,Híbrida
+1698,Comercial,Ejecutivo/a comercial,Rosario,Mañana,D. Castro,Femenino,22,2025-02-20,,Híbrida
+1700,Comercial,Ejecutivo/a comercial,Rosario,Mañana,D. Castro,Femenino,45,2024-03-30,,Híbrida
+1702,Comercial,Ejecutivo/a comercial,Rosario,Mañana,D. Castro,Femenino,40,2015-03-05,,Presencial
+1705,Comercial,Ejecutivo/a comercial,Córdoba,Mañana,D. Castro,Femenino,59,2022-03-25,,Híbrida
+1708,Comercial,Ejecutivo/a comercial,Rosario,Mañana,D. Castro,No binario,25,2023-06-24,,Híbrida
+1709,Comercial,Ejecutivo/a comercial,Córdoba,Mañana,D. Castro,Femenino,57,2017-06-17,,Presencial
+1711,Comercial,Ejecutivo/a comercial,CABA,Mañana,D. Castro,Femenino,59,2017-12-16,,Híbrida
+1712,Comercial,Ejecutivo/a comercial,Rosario,Mañana,D. Castro,Masculino,36,2015-09-05,,Presencial
+1715,Comercial,Ejecutivo/a comercial,Rosario,Mañana,D. Castro,Femenino,36,2022-07-07,2026-02-01,Híbrida
+1717,Comercial,Ejecutivo/a comercial,Córdoba,Mañana,D. Castro,Masculino,59,2012-06-10,,Presencial
+1719,Comercial,Ejecutivo/a comercial,CABA,Mañana,D. Castro,Femenino,27,2017-03-04,,Híbrida
+1720,Comercial,Ejecutivo/a comercial,Rosario,Mañana,D. Castro,Masculino,36,2022-11-13,,Presencial
+1723,Comercial,Ejecutivo/a comercial,Córdoba,Mañana,D. Castro,Masculino,60,2014-08-28,,Híbrida
+1724,Comercial,Ejecutivo/a comercial,Córdoba,Mañana,D. Castro,Femenino,40,2012-07-28,,Híbrida
+1725,Comercial,Ejecutivo/a comercial,Córdoba,Mañana,D. Castro,Femenino,30,2021-06-14,,Híbrida
+1727,Comercial,Ejecutivo/a comercial,Rosario,Mañana,D. Castro,Femenino,25,2015-12-06,,Híbrida
+1729,Comercial,Ejecutivo/a comercial,Córdoba,Mañana,D. Castro,Masculino,31,2014-04-12,,Presencial
+1732,Comercial,Ejecutivo/a comercial,CABA,Mañana,D. Castro,Femenino,31,2017-01-19,,Presencial
+1734,Comercial,Ejecutivo/a comercial,Córdoba,Mañana,D. Castro,Masculino,21,2012-07-30,,Presencial
+1737,Comercial,Ejecutivo/a comercial,Rosario,Mañana,D. Castro,Femenino,37,2016-03-14,,Híbrida
+1738,Tecnología,Soporte IT,CABA,Mañana,N. Ortiz,Femenino,39,2016-12-10,,Híbrida
+1739,Tecnología,Analista de sistemas,CABA,Mañana,N. Ortiz,Femenino,37,2014-06-12,,Presencial
+1741,Tecnología,Analista de sistemas,CABA,Mañana,N. Ortiz,Masculino,32,2016-04-30,,Híbrida
+1744,Tecnología,Analista de sistemas,CABA,Mañana,N. Ortiz,Femenino,52,2022-09-03,,Híbrida
+1747,Tecnología,Desarrollador/a,CABA,Mañana,N. Ortiz,Femenino,55,2023-05-03,,Híbrida
+1749,Tecnología,Desarrollador/a,CABA,Mañana,N. Ortiz,Femenino,41,2025-01-11,2025-06-17,Híbrida
+1751,Tecnología,Analista de sistemas,CABA,Mañana,N. Ortiz,Femenino,33,2019-12-31,,Híbrida
+1752,Tecnología,Analista de sistemas,CABA,Mañana,N. Ortiz,Femenino,39,2019-01-03,,Presencial
+1753,Tecnología,Analista de sistemas,CABA,Mañana,N. Ortiz,Femenino,45,2017-07-24,,Presencial
+1754,Tecnología,Desarrollador/a,CABA,Mañana,N. Ortiz,No binario,59,2017-12-17,,Híbrida
+1756,Tecnología,Desarrollador/a,CABA,Mañana,N. Ortiz,Femenino,51,2021-05-08,,Híbrida
+1758,Tecnología,Analista de sistemas,CABA,Mañana,N. Ortiz,Masculino,23,2024-12-04,2026-01-13,Híbrida
+1759,Tecnología,Desarrollador/a,CABA,Mañana,N. Ortiz,Femenino,117,2013-06-08,2025-09-25,Presencial
+1762,Tecnología,Desarrollador/a,CABA,Mañana,N. Ortiz,Femenino,33,2021-10-02,,Híbrida
+1764,Tecnología,Analista de sistemas,CABA,Mañana,N. Ortiz,Masculino,41,2017-10-13,,Híbrida
+1766,Tecnología,Analista de sistemas,CABA,Mañana,N. Ortiz,No binario,20,2015-06-11,,Híbrida
+1767,Tecnología,Desarrollador/a,CABA,Mañana,N. Ortiz,Masculino,42,2017-05-28,,Presencial
+1769,Tecnología,Analista de sistemas,CABA,Mañana,N. Ortiz,Femenino,45,2017-08-08,,Presencial
+1771,Tecnología,Analista de sistemas,CABA,Mañana,N. Ortiz,Femenino,24,2020-12-16,,Híbrida
+1773,Tecnología,Desarrollador/a,CABA,Mañana,N. Ortiz,Femenino,51,2020-06-13,,Presencial
+1775,Tecnología,Analista de sistemas,CABA,Mañana,N. Ortiz,Femenino,34,2021-11-02,,Híbrida
+1776,Tecnología,Desarrollador/a,CABA,Mañana,N. Ortiz,Masculino,42,2024-10-15,,Híbrida
+1779,Tecnología,Analista de sistemas,CABA,Mañana,N. Ortiz,Femenino,36,2018-10-23,,Híbrida
+1780,Tecnología,Desarrollador/a,CABA,Mañana,N. Ortiz,Masculino,27,2017-07-01,2025-11-10,Híbrida
+1782,Tecnología,Desarrollador/a,CABA,Mañana,N. Ortiz,Masculino,61,2022-08-05,2025-03-07,Presencial
+1783,RRHH,Generalista de RRHH,CABA,Mañana,P. Molina,Femenino,39,2016-07-04,,Presencial
+1786,RRHH,Analista de RRHH,CABA,Mañana,P. Molina,Masculino,32,2013-11-14,,Presencial
+1789,RRHH,Analista de RRHH,CABA,Mañana,P. Molina,Femenino,39,2025-03-21,,Híbrida
+1790,RRHH,Analista de RRHH,CABA,Mañana,P. Molina,Masculino,28,2022-08-27,,Híbrida
+1791,RRHH,Analista de RRHH,CABA,Mañana,P. Molina,Masculino,58,2015-07-28,,Presencial
+1794,RRHH,Analista de RRHH,CABA,Mañana,P. Molina,Femenino,55,2023-08-18,,Presencial
+1796,RRHH,Analista de RRHH,CABA,Mañana,P. Molina,Femenino,62,2024-11-29,2026-03-26,Presencial
+1797,RRHH,Analista de RRHH,CABA,Mañana,P. Molina,Masculino,55,2021-09-25,,Presencial
+1799,RRHH,Analista de RRHH,CABA,Mañana,P. Molina,Masculino,41,2018-04-11,,Presencial
+1800,RRHH,Analista de RRHH,CABA,Mañana,P. Molina,Femenino,51,2023-01-01,,Híbrida
+1803,RRHH,Analista de RRHH,CABA,Mañana,P. Molina,Femenino,58,2020-09-09,,Presencial
+1805,RRHH,Analista de RRHH,CABA,Mañana,P. Molina,Masculino,49,2012-02-17,,Híbrida
+1807,RRHH,Analista de RRHH,CABA,Mañana,P. Molina,Masculino,34,2015-01-24,,Híbrida
+1810,RRHH,Analista de RRHH,CABA,Mañana,P. Molina,Masculino,54,2016-11-03,,Híbrida
+1812,RRHH,Analista de RRHH,CABA,Mañana,P. Molina,Masculino,54,2016-02-12,,Híbrida

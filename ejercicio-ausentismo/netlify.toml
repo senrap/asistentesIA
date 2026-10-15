@@ -1,0 +1,17 @@
+# Deploy como sitio propio en Netlify:
+#   Site settings › Build & deploy › Base directory = ejercicio-ausentismo
+# Se publica solo la carpeta site/ (el script generador queda afuera).
+[build]
+  publish = "site"
+  command = ""
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[headers]]
+  for = "/datos/*"
+  [headers.values]
+    Content-Disposition = "attachment"

@@ -1,0 +1,1150 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ejercicio Final · Ausentismo | Power People</title>
+  <meta name="description" content="Ejercicio final de Power People: analizá una base de ausentismo en Power BI y contá la historia que esconden los datos." />
+  <meta name="theme-color" content="#00344D" />
+  <meta property="og:title" content="¿Por qué falta la gente? · Ejercicio final Power People" />
+  <meta property="og:description" content="Una base real(ista) de ausentismo, nueve preguntas de negocio y diez minutos para convencer a la Dirección." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2300344D'/%3E%3Ctext x='16' y='23' font-family='Poppins,sans-serif' font-size='19' font-weight='800' fill='%2300FF90' text-anchor='middle'%3EH%3C/text%3E%3C/svg%3E" />
+
+<style>
+:root {
+  --navy: #00344D;
+  --navy-2: #0A4560;
+  --navy-3: #13536F;
+  --green: #00FF90;
+  --green-2: #00CC72;
+  --green-soft: #E6FFF3;
+  --white: #FFFFFF;
+  --off: #F4F5F7;
+  --gray: #6B7280;
+  --light: #E8EDF2;
+  --bar-h: 64px;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body {
+  font-family: 'Poppins', sans-serif;
+  background: var(--navy);
+  color: var(--navy);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; }
+button { font-family: inherit; cursor: pointer; }
+:focus-visible { outline: 3px solid var(--green); outline-offset: 2px; }
+
+/* ---------- barra superior ---------- */
+.topbar {
+  position: fixed; inset: 0 0 auto 0; height: var(--bar-h); z-index: 20;
+  display: flex; align-items: center; gap: 16px; padding: 0 24px;
+  background: rgba(0, 52, 77, 0.92); backdrop-filter: blur(8px);
+  color: var(--white); border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 14px; text-decoration: none; }
+.brand-mark {
+  width: 32px; height: 32px; border-radius: 8px; background: var(--green); color: var(--navy);
+  display: grid; place-items: center; font-weight: 800; font-size: 18px;
+}
+.brand small { display: block; font-weight: 300; font-size: 11px; opacity: .75; }
+.topbar .spacer { flex: 1; }
+.slide-title-mini { font-size: 13px; font-weight: 500; opacity: .8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.icon-btn {
+  display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px;
+  border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: transparent;
+  color: var(--white); font-size: 13px; font-weight: 600;
+}
+.icon-btn:hover { border-color: var(--green); color: var(--green); }
+.progress { position: absolute; left: 0; bottom: -1px; height: 3px; background: var(--green); transition: width .4s ease; }
+
+/* ---------- escenario de slides ---------- */
+.deck { position: fixed; inset: var(--bar-h) 0 var(--bar-h) 0; }
+.slide {
+  position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden;
+  padding: 48px 24px 56px;
+  opacity: 0; visibility: hidden; transform: translateX(40px);
+  transition: opacity .45s ease, transform .45s ease, visibility .45s;
+}
+.slide.active { opacity: 1; visibility: visible; transform: none; }
+.slide.before { transform: translateX(-40px); }
+.slide.dark { background: var(--navy); color: var(--white); }
+.slide.light { background: var(--off); color: var(--navy); }
+.slide-inner { max-width: 1080px; margin: 0 auto; min-height: 100%; display: flex; flex-direction: column; justify-content: center; }
+.slide-inner.top { justify-content: flex-start; }
+
+/* ---------- tipografía ---------- */
+.label {
+  font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--green-2); margin: 0 0 10px;
+}
+.dark .label { color: var(--green); }
+h1, h2, h3 { margin: 0; line-height: 1.12; }
+h1 { font-size: clamp(36px, 6vw, 64px); font-weight: 800; letter-spacing: -1px; }
+h2 { font-size: clamp(26px, 3.6vw, 38px); font-weight: 700; letter-spacing: -.5px; }
+h3 { font-size: 18px; font-weight: 600; }
+h1 em, h2 em { font-style: normal; color: var(--green); }
+.light h2 em { color: var(--green-2); }
+p { line-height: 1.6; margin: 0; }
+.lead { font-size: clamp(16px, 1.6vw, 19px); font-weight: 400; max-width: 720px; margin-top: 18px; }
+.dark .lead, .dark .muted { color: rgba(255,255,255,0.78); }
+.muted { color: var(--gray); }
+.small { font-size: 13px; }
+.accent-line { width: 48px; height: 3px; border-radius: 2px; background: var(--green); margin: 20px 0; }
+.mt-8 { margin-top: 8px; } .mt-16 { margin-top: 16px; } .mt-24 { margin-top: 24px; } .mt-32 { margin-top: 32px; }
+
+/* ---------- componentes ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  font-weight: 600; font-size: 14px; padding: 12px 24px; border-radius: 8px;
+  border: 2px solid transparent; text-decoration: none; transition: transform .15s, background .15s;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn-cta { background: var(--green); color: var(--navy); font-weight: 700; }
+.btn-cta:hover { background: #33FFA6; }
+.btn-primary { background: var(--navy); color: var(--white); }
+.btn-outline { background: transparent; border-color: currentColor; }
+.dark .btn-outline { color: var(--white); }
+.btn-sm { padding: 7px 14px; font-size: 12px; }
+.actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+
+.grid { display: grid; gap: 20px; }
+.g2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.g3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.g4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+.card {
+  background: var(--white); border: 1px solid var(--light); border-radius: 12px;
+  padding: 24px 26px; box-shadow: 0 2px 12px rgba(0,52,77,0.06); color: var(--navy);
+}
+.card-dark { background: var(--navy-2); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 24px 26px; color: var(--white); }
+.card h3 { margin-bottom: 8px; }
+.card p { font-size: 14px; }
+.card .muted { font-size: 14px; }
+
+.badge {
+  display: inline-block; border-radius: 100px; padding: 4px 12px; font-size: 12px; font-weight: 600;
+  background: var(--off); border: 1px solid var(--light); color: var(--navy);
+}
+.badge-green { background: var(--green-soft); border-color: var(--green); color: #008C4F; }
+.badge-navy { background: var(--navy); color: var(--green); border-color: var(--navy); }
+
+.num { font-size: 40px; font-weight: 800; line-height: 1; color: var(--green); }
+.light .num { color: var(--navy); }
+.step-n {
+  width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--green); color: var(--navy); font-weight: 800; font-size: 15px; margin-bottom: 14px;
+}
+
+/* ---------- portada ---------- */
+.cover-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 48px; align-items: center; }
+.cover-art { position: relative; aspect-ratio: 1; max-width: 420px; justify-self: end; width: 100%; }
+.cover-art svg { width: 100%; height: 100%; }
+.kbd-hint { margin-top: 28px; font-size: 12px; color: rgba(255,255,255,0.55); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+kbd { font-family: inherit; font-size: 11px; font-weight: 600; border: 1px solid rgba(255,255,255,0.3); border-radius: 5px; padding: 2px 7px; }
+
+/* ---------- perfil ---------- */
+.people { display: grid; gap: 24px; }
+.person { display: grid; grid-template-columns: 180px 1fr; gap: 32px; align-items: center; }
+.avatar {
+  width: 180px; height: 180px; border-radius: 24px; background: var(--navy-2);
+  border: 2px solid var(--green); display: grid; place-items: center; overflow: hidden;
+  font-size: 56px; font-weight: 800; color: var(--green);
+}
+.avatar img { width: 100%; height: 100%; object-fit: cover; }
+.person h2 { margin-bottom: 4px; }
+.person .role { color: var(--green); font-weight: 600; font-size: 15px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.chip { font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 100px; border: 1px solid rgba(255,255,255,0.25); }
+
+/* ---------- caso ---------- */
+.memo {
+  background: var(--white); border-radius: 12px; padding: 28px 32px; border-left: 4px solid var(--green);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.18); color: var(--navy);
+}
+.memo-head { font-size: 12px; color: var(--gray); border-bottom: 1px solid var(--light); padding-bottom: 12px; margin-bottom: 16px; line-height: 1.7; }
+.memo-head b { color: var(--navy); font-weight: 600; }
+.memo p + p { margin-top: 12px; }
+.memo p { font-size: 15px; }
+
+/* ---------- calculadora ---------- */
+.calc { display: grid; grid-template-columns: 1fr 1.1fr; gap: 24px; align-items: stretch; }
+.field { display: grid; gap: 6px; margin-bottom: 16px; }
+.field label { font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--gray); }
+.field input {
+  font-family: inherit; font-size: 18px; font-weight: 600; color: var(--navy);
+  padding: 10px 14px; border: 1px solid var(--light); border-radius: 8px; background: var(--off); width: 100%;
+}
+.field input:focus { outline: none; border-color: var(--green-2); background: var(--white); }
+.field .hint { font-size: 12px; color: var(--gray); }
+.results { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.result { background: var(--navy-2); border-radius: 12px; padding: 20px; }
+.result .num { font-size: 34px; }
+.result .lbl { font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 6px; }
+.result.big { grid-column: 1 / -1; background: var(--navy-3); }
+.result.big .num { font-size: 54px; }
+.gauge { height: 8px; border-radius: 4px; background: rgba(255,255,255,0.15); margin-top: 14px; overflow: hidden; }
+.gauge span { display: block; height: 100%; background: var(--green); border-radius: 4px; transition: width .4s; }
+
+/* ---------- tablas ---------- */
+.tbl-wrap { overflow-x: auto; border-radius: 12px; border: 1px solid var(--light); background: var(--white); }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--light); white-space: nowrap; }
+th { background: var(--navy); color: var(--white); font-weight: 600; font-size: 12px; letter-spacing: .5px; }
+tr:last-child td { border-bottom: 0; }
+td code, .code-inline { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; background: var(--off); padding: 2px 6px; border-radius: 4px; }
+.dict td:last-child { white-space: normal; min-width: 260px; }
+
+.tabs { display: inline-flex; background: var(--white); border: 1px solid var(--light); border-radius: 10px; padding: 4px; gap: 4px; margin-bottom: 14px; }
+.tab { border: 0; background: transparent; padding: 8px 16px; border-radius: 7px; font-size: 13px; font-weight: 600; color: var(--gray); }
+.tab[aria-selected="true"] { background: var(--navy); color: var(--white); }
+.tabpanel[hidden] { display: none; }
+
+.downloads { display: flex; flex-wrap: wrap; gap: 12px; }
+.dl {
+  display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-radius: 12px;
+  background: var(--white); border: 1px solid var(--light); text-decoration: none; min-width: 220px;
+  transition: border-color .15s, transform .15s;
+}
+.dl:hover { border-color: var(--green-2); transform: translateY(-2px); }
+.dl .ext { width: 44px; height: 44px; border-radius: 10px; display: grid; place-items: center; font-size: 11px; font-weight: 800; background: var(--navy); color: var(--green); }
+.dl b { display: block; font-size: 14px; }
+.dl span { font-size: 12px; color: var(--gray); }
+
+/* ---------- detective ---------- */
+.clues { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 16px; }
+.clue {
+  position: relative; border-radius: 12px; padding: 20px; min-height: 150px; text-align: left;
+  background: var(--navy-2); border: 1px dashed rgba(255,255,255,0.25); color: var(--white);
+  display: flex; flex-direction: column; gap: 8px; transition: background .2s, border-color .2s;
+}
+.clue .q { font-size: 32px; font-weight: 800; color: rgba(255,255,255,0.18); }
+.clue .hint-txt { font-size: 14px; line-height: 1.5; color: rgba(255,255,255,0.85); }
+.clue .answer { display: none; font-size: 13px; line-height: 1.55; }
+.clue .answer b { color: var(--green); display: block; font-size: 15px; margin-bottom: 4px; }
+.clue.open { background: var(--navy-3); border-style: solid; border-color: var(--green); }
+.clue.open .answer { display: block; }
+.clue.open .hint-txt, .clue.open .q { display: none; }
+.clue .tap { margin-top: auto; font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--green); }
+.clue.open .tap { display: none; }
+
+/* ---------- DAX ---------- */
+.dax-list { display: grid; grid-template-columns: 240px 1fr; gap: 20px; }
+.dax-nav { display: flex; flex-direction: column; gap: 6px; }
+.dax-nav button {
+  text-align: left; padding: 12px 14px; border-radius: 8px; border: 1px solid var(--light); background: var(--white);
+  font-size: 13px; font-weight: 600; color: var(--navy);
+}
+.dax-nav button[aria-selected="true"] { background: var(--navy); color: var(--white); border-color: var(--navy); }
+.dax-nav button small { display: block; font-weight: 400; font-size: 11px; opacity: .7; }
+.code {
+  position: relative; background: #011F2E; color: #D7F5E7; border-radius: 12px; padding: 22px 22px 18px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; line-height: 1.65;
+  white-space: pre; overflow-x: auto;
+}
+.code .kw { color: var(--green); }
+.code .cm { color: #7FA6B8; }
+.copy-btn {
+  position: absolute; top: 12px; right: 12px; font-size: 11px; font-weight: 600; padding: 6px 10px;
+  border-radius: 6px; border: 1px solid rgba(255,255,255,0.25); background: rgba(255,255,255,0.06); color: var(--white);
+  font-family: 'Poppins', sans-serif;
+}
+.copy-btn.ok { background: var(--green); color: var(--navy); border-color: var(--green); }
+.dax-why { margin-top: 14px; font-size: 14px; }
+
+.model { display: flex; align-items: center; justify-content: center; gap: 0; flex-wrap: wrap; margin: 8px 0 4px; }
+.model .tblbox { background: var(--white); border: 1px solid var(--light); border-radius: 10px; overflow: hidden; min-width: 150px; font-size: 12px; }
+.model .tblbox b { display: block; background: var(--navy); color: var(--white); padding: 8px 12px; font-size: 12px; }
+.model .tblbox span { display: block; padding: 4px 12px; color: var(--gray); }
+.model .tblbox span.k { color: var(--navy); font-weight: 600; }
+.model .rel { font-size: 11px; font-weight: 700; color: var(--green-2); padding: 0 10px; text-align: center; }
+.model .rel::before { content: ""; display: block; width: 56px; height: 2px; background: var(--green-2); margin: 0 auto 4px; }
+
+/* ---------- preguntas ---------- */
+.levels { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 20px; }
+.level-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.level-head h3 { font-size: 16px; }
+.q-item { border-top: 1px solid var(--light); padding: 12px 0; }
+.q-item label { display: flex; gap: 10px; align-items: flex-start; cursor: pointer; font-size: 14px; line-height: 1.5; font-weight: 500; }
+.q-item input { margin-top: 4px; accent-color: var(--green-2); width: 16px; height: 16px; flex-shrink: 0; }
+.q-item input:checked + span { color: var(--gray); text-decoration: line-through; text-decoration-color: var(--green-2); }
+.q-item details { margin: 6px 0 0 26px; }
+.q-item summary { font-size: 12px; font-weight: 600; color: var(--green-2); cursor: pointer; list-style: none; }
+.q-item summary::-webkit-details-marker { display: none; }
+.q-item summary::before { content: "+ "; }
+.q-item details[open] summary::before { content: "– "; }
+.q-item details p { font-size: 13px; color: var(--gray); margin-top: 6px; }
+.meter { display: flex; align-items: center; gap: 14px; margin-top: 24px; }
+.meter-bar { flex: 1; height: 10px; border-radius: 5px; background: var(--light); overflow: hidden; }
+.meter-bar span { display: block; height: 100%; background: var(--green-2); transition: width .3s; }
+.meter b { font-size: 14px; min-width: 70px; text-align: right; }
+
+/* ---------- storytelling ---------- */
+.story { display: grid; grid-template-columns: 1.15fr 1fr; gap: 28px; align-items: center; }
+.chart-card { background: var(--white); color: var(--navy); border-radius: 12px; padding: 20px 24px; border: 1px solid var(--light); }
+.chart-card .ct { font-size: 18px; font-weight: 700; line-height: 1.25; min-height: 48px; }
+.chart-card .cs { font-size: 12px; color: var(--gray); margin: 4px 0 12px; }
+.chart-card svg { width: 100%; height: auto; max-height: 200px; display: block; }
+.chart-card svg rect { transition: fill .35s; }
+.switch { display: inline-flex; background: var(--navy-2); border-radius: 10px; padding: 4px; gap: 4px; margin-bottom: 16px; }
+.switch button { border: 0; background: transparent; color: rgba(255,255,255,0.75); font-size: 13px; font-weight: 600; padding: 8px 16px; border-radius: 7px; }
+.switch button[aria-pressed="true"] { background: var(--green); color: var(--navy); }
+.arc { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 12px; margin-top: 28px; }
+.arc .card-dark { padding: 18px; }
+.arc .card-dark b { display: block; color: var(--green); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+.arc .card-dark p { font-size: 13px; color: rgba(255,255,255,0.82); line-height: 1.5; }
+
+/* ---------- prompts ---------- */
+.prompt-card { display: flex; flex-direction: column; }
+.prompt-card .code { white-space: pre-wrap; font-size: 12.5px; flex: 1; padding-top: 44px; }
+
+/* ---------- rúbrica ---------- */
+.rubric { display: grid; gap: 10px; }
+.rub-row { display: grid; grid-template-columns: 1fr 64px; gap: 16px; align-items: center; background: var(--white); color: var(--navy); border: 1px solid var(--light); border-radius: 10px; padding: 10px 18px; }
+.rub-row b { font-size: 14px; display: block; }
+.rub-row span { font-size: 13px; color: var(--gray); }
+.rub-row .w { font-size: 22px; font-weight: 800; color: var(--green-2); text-align: right; }
+.checklist label { display: flex; gap: 10px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 14px; cursor: pointer; }
+.checklist input { margin-top: 4px; accent-color: var(--green); width: 16px; height: 16px; flex-shrink: 0; }
+
+/* ---------- links ---------- */
+.links { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 16px; }
+.link-card {
+  display: flex; flex-direction: column; gap: 6px; text-decoration: none; padding: 22px; border-radius: 12px;
+  background: var(--navy-2); border: 1px solid rgba(255,255,255,0.08); color: var(--white); transition: border-color .15s, transform .15s;
+}
+.link-card:hover { border-color: var(--green); transform: translateY(-2px); }
+.link-card .tag { font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--green); }
+.link-card b { font-size: 16px; }
+.link-card span { font-size: 13px; color: rgba(255,255,255,0.72); line-height: 1.5; }
+.link-card .go { margin-top: auto; padding-top: 10px; font-size: 12px; font-weight: 600; color: var(--green); }
+
+/* ---------- barra inferior ---------- */
+.bottombar {
+  position: fixed; inset: auto 0 0 0; height: var(--bar-h); z-index: 20;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 0 24px;
+  background: rgba(0, 52, 77, 0.92); backdrop-filter: blur(8px); border-top: 1px solid rgba(255,255,255,0.08);
+}
+.nav-btn {
+  display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 18px; border-radius: 8px;
+  font-size: 13px; font-weight: 600; border: 1px solid rgba(255,255,255,0.2); background: transparent; color: var(--white);
+}
+.nav-btn.next { background: var(--green); color: var(--navy); border-color: var(--green); }
+.nav-btn:disabled { opacity: .3; cursor: default; }
+.dots { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; justify-content: center; }
+.dot { width: 8px; height: 8px; border-radius: 50%; border: 0; padding: 0; background: rgba(255,255,255,0.25); transition: width .3s, background .3s; }
+.dot.on { width: 24px; border-radius: 4px; background: var(--green); }
+.counter { color: rgba(255,255,255,0.7); font-size: 12px; font-weight: 600; min-width: 48px; text-align: center; }
+
+/* ---------- índice ---------- */
+.overlay {
+  position: fixed; inset: 0; z-index: 40; background: rgba(0, 31, 46, 0.97); color: var(--white);
+  display: none; overflow-y: auto; padding: 32px 24px;
+}
+.overlay.open { display: block; }
+.overlay-inner { max-width: 1080px; margin: 0 auto; }
+.overlay-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
+.toc { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 14px; }
+.toc button {
+  text-align: left; padding: 18px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12);
+  background: var(--navy-2); color: var(--white); min-height: 104px; display: flex; flex-direction: column; gap: 6px;
+}
+.toc button:hover, .toc button.on { border-color: var(--green); }
+.toc .n { font-size: 11px; font-weight: 700; color: var(--green); letter-spacing: 2px; }
+.toc .t { font-size: 14px; font-weight: 600; line-height: 1.35; }
+.toc .s { font-size: 12px; color: rgba(255,255,255,0.6); }
+
+.toast {
+  position: fixed; left: 50%; bottom: calc(var(--bar-h) + 16px); transform: translateX(-50%) translateY(20px);
+  background: var(--green); color: var(--navy); font-weight: 600; font-size: 13px; padding: 10px 18px; border-radius: 8px;
+  opacity: 0; pointer-events: none; transition: opacity .25s, transform .25s; z-index: 50;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ---------- responsive ---------- */
+@media (max-width: 960px) {
+  .g4, .toc { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .g3, .levels, .clues, .links { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .arc { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .cover-grid, .calc, .story, .g2 { grid-template-columns: 1fr; }
+  .cover-art { display: none; }
+  .dax-list { grid-template-columns: 1fr; }
+  .dax-nav { flex-direction: row; overflow-x: auto; padding-bottom: 4px; }
+  .dax-nav button { white-space: nowrap; }
+}
+@media (max-width: 640px) {
+  :root { --bar-h: 56px; }
+  .slide { padding: 32px 16px 40px; }
+  .topbar, .bottombar { padding: 0 12px; gap: 8px; }
+  .slide-title-mini, .brand small, .dots, .nav-btn .txt, .icon-btn .txt { display: none; }
+  .g3, .g4, .levels, .clues, .links, .arc, .toc, .results { grid-template-columns: 1fr; }
+  .person { grid-template-columns: 1fr; gap: 20px; }
+  .avatar { width: 120px; height: 120px; font-size: 40px; }
+  .memo { padding: 22px 20px; }
+  .dl { min-width: 0; width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .slide, .dot, .progress, .btn { transition: none; }
+}
+@media print {
+  body { overflow: visible; background: #fff; }
+  .topbar, .bottombar, .overlay, .toast { display: none !important; }
+  .deck { position: static; }
+  .slide { position: relative; opacity: 1; visibility: visible; transform: none; page-break-after: always; min-height: 100vh; }
+}
+</style>
+</head>
+
+<body>
+<!-- =====================================================================
+     CONFIGURACIÓN EDITABLE
+     Todo lo que cambia de cohorte en cohorte está acá: quién acompaña,
+     links de HACHE y datos de la entrega. El resto del contenido está en
+     cada <section class="slide"> más abajo.
+     ===================================================================== -->
+<script>
+window.CONFIG = {
+  programa: "Power People",
+  acompanan: [
+    {
+      nombre: "Pablo Senra",
+      rol: "Fundador de HACHE Consultora",
+      bio: "Ayudo a equipos de Recursos Humanos a decidir con datos. En HACHE damos formaciones 100% prácticas en Power BI e IA, con un foco que nos obsesiona: que los datos se entiendan y cuenten una historia.",
+      foto: "",            // URL de una foto cuadrada. Vacío = iniciales.
+      chips: ["People Analytics", "Power BI", "IA para RRHH", "Storytelling con datos"],
+      linkedin: "",        // https://www.linkedin.com/in/...
+      email: ""            // opcional
+    }
+  ],
+  entrega: {
+    fecha: "La confirmamos en clase",
+    canal: "Por el canal del curso",
+    formato: "Archivo .pbix + presentación de hasta 7 slides (PDF) o video de hasta 5 minutos"
+  },
+  links: [
+    { tag: "Consultora", titulo: "HACHE", texto: "Quiénes somos, qué hacemos y cómo trabajamos con equipos de RRHH.", url: "https://hache.com.ar" },
+    { tag: "Contenido", titulo: "Blog de HACHE", texto: "Notas sobre People Analytics, Power BI e IA aplicada a RRHH.", url: "https://hache.com.ar/blog" },
+    { tag: "Herramienta", titulo: "Generador de Calendario", texto: "Armá la tabla Calendario para Power BI sin escribir DAX. La vas a necesitar acá.", url: "https://generador-calendario-powerbi-hache.netlify.app" },
+    { tag: "IA", titulo: "Biblioteca de Asistentes", texto: "Asistentes de IA para cada etapa de un proceso de selección. Probalos o descargá el prompt.", url: "https://biblioteca-asistentes-ia.netlify.app" },
+    { tag: "Programa", titulo: "Power People 2026", texto: "El programa completo: módulos, fechas y próximas ediciones.", url: "https://power-people-2026.netlify.app" },
+    { tag: "Comunidad", titulo: "Estación H", texto: "El espacio de HACHE para seguir aprendiendo con otros.", url: "https://estacionh.com" }
+  ]
+};
+</script>
+
+<header class="topbar">
+  <a class="brand" href="#1" aria-label="Ir a la portada">
+    <span class="brand-mark" aria-hidden="true">H</span>
+    <span>Power People<small>Ejercicio final · Ausentismo</small></span>
+  </a>
+  <span class="spacer"></span>
+  <span class="slide-title-mini" id="miniTitle"></span>
+  <button class="icon-btn" id="openToc" aria-haspopup="dialog" title="Índice (tecla I)">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="1" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="9" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="1" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="9" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.6"/></svg>
+    <span class="txt">Índice</span>
+  </button>
+  <div class="progress" id="progress"></div>
+</header>
+
+<main class="deck" id="deck">
+
+  <!-- 1 · PORTADA -->
+  <section class="slide dark" data-title="Portada" data-sub="¿Por qué falta la gente?">
+    <div class="slide-inner">
+      <div class="cover-grid">
+        <div>
+          <p class="label">Power People · Ejercicio final</p>
+          <h1>¿Por qué <em>falta</em> la gente?</h1>
+          <p class="lead">Una base de ausentismo de 18 meses, una Dirección que pide respuestas y diez minutos para convencerla. Tu trabajo: pasar de los datos a una decisión.</p>
+          <div class="actions">
+            <button class="btn btn-cta" data-go="next">Empezar el ejercicio →</button>
+            <a class="btn btn-outline" href="#7">Ir directo a la base</a>
+          </div>
+          <p class="kbd-hint">Navegá con <kbd>←</kbd> <kbd>→</kbd> o deslizando · <kbd>I</kbd> abre el índice</p>
+        </div>
+        <div class="cover-art" aria-hidden="true">
+          <svg viewBox="0 0 400 400">
+            <defs>
+              <pattern id="g" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="rgba(255,255,255,0.06)"/></pattern>
+            </defs>
+            <rect width="400" height="400" rx="24" fill="#0A4560"/>
+            <rect width="400" height="400" rx="24" fill="url(#g)"/>
+            <g font-family="Poppins" font-size="10" font-weight="600" fill="rgba(255,255,255,0.5)">
+              <text x="34" y="42" letter-spacing="2">LUN</text><text x="104" y="42" letter-spacing="2">MAR</text><text x="174" y="42" letter-spacing="2">MIÉ</text><text x="244" y="42" letter-spacing="2">JUE</text><text x="314" y="42" letter-spacing="2">VIE</text>
+            </g>
+            <g id="calCells"></g>
+            <text x="34" y="372" font-family="Poppins" font-size="12" font-weight="600" fill="#00FF90">Lunes y viernes: ¿casualidad?</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 · QUIÉN TE ACOMPAÑA -->
+  <section class="slide dark" data-title="Quién te acompaña" data-sub="Tu guía en este ejercicio">
+    <div class="slide-inner">
+      <p class="label">Quién te acompaña</p>
+      <div class="people" id="people"></div>
+      <div class="card-dark mt-32">
+        <p><b style="color:var(--green)">Cómo te acompañamos:</b> resolvemos dudas en clase y por el canal del curso, y cada entrega recibe una devolución con foco en lo que más cuesta: pasar del gráfico a la recomendación.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · EL CASO -->
+  <section class="slide dark" data-title="El caso" data-sub="Logística del Sur S.A.">
+    <div class="slide-inner">
+      <div class="grid g2" style="align-items:center; gap:40px">
+        <div>
+          <p class="label">El caso</p>
+          <h2>Te llegó este mail un lunes a las 8:47.</h2>
+          <p class="lead">Logística del Sur S.A. es una empresa ficticia, pero el problema es muy real: más de 400 personas en tres sedes, operación 24 horas y un ausentismo que nadie termina de explicar.</p>
+          <div class="grid g3 mt-32" style="gap:12px">
+            <div><div class="num">410</div><p class="small muted mt-8">colaboradores</p></div>
+            <div><div class="num">3</div><p class="small muted mt-8">sedes</p></div>
+            <div><div class="num">18</div><p class="small muted mt-8">meses de datos</p></div>
+          </div>
+        </div>
+        <article class="memo">
+          <div class="memo-head">
+            <b>De:</b> Laura Ibáñez · Gerenta de Personas<br />
+            <b>Para:</b> Vos · Analista de People Analytics<br />
+            <b>Asunto:</b> Ausentismo — necesito algo para el Comité
+          </div>
+          <p>Hola, ¿cómo estás?</p>
+          <p>En el Comité de Dirección dicen que <b>"la gente falta cada vez más"</b> y que en Depósito "no se puede trabajar". Operaciones quiere endurecer los controles médicos. Antes de aceptar eso, quiero entender qué está pasando de verdad.</p>
+          <p>Te paso la base de ausencias y la de empleados. Tenés <b>10 minutos</b> en el próximo Comité: contame dónde está el problema, por qué creés que pasa y qué harías.</p>
+          <p>Gracias,<br />Laura</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 · TU MISIÓN -->
+  <section class="slide light" data-title="Tu misión" data-sub="4 pasos, 1 entrega">
+    <div class="slide-inner">
+      <p class="label">Tu misión</p>
+      <h2>Cuatro pasos, una sola pregunta: <em>¿qué hacemos?</em></h2>
+      <p class="lead muted">El tablero es el medio. Lo que se evalúa es si tu análisis le sirve a Laura para decidir.</p>
+      <div class="grid g4 mt-32">
+        <div class="card"><div class="step-n">1</div><h3>Limpiar</h3><p class="muted">Encontrá y corregí los problemas de la base en Power Query. Ningún dato viene limpio.</p></div>
+        <div class="card"><div class="step-n">2</div><h3>Modelar</h3><p class="muted">Relacioná Empleados, Ausencias y una tabla Calendario. Creá las medidas clave.</p></div>
+        <div class="card"><div class="step-n">3</div><h3>Analizar</h3><p class="muted">Respondé las preguntas guía: dónde se concentra, cuándo y en quiénes.</p></div>
+        <div class="card"><div class="step-n">4</div><h3>Contar</h3><p class="muted">Armá una historia con hallazgo, causa probable y recomendación concreta.</p></div>
+      </div>
+      <div class="actions"><span class="badge badge-navy">Entregable</span> <span class="small" id="formatoEntrega"></span></div>
+    </div>
+  </section>
+
+  <!-- 5 · QUÉ MEDIMOS -->
+  <section class="slide dark" data-title="Qué medimos" data-sub="Las 4 métricas del ausentismo">
+    <div class="slide-inner">
+      <p class="label">Conceptos clave</p>
+      <h2>Una sola tasa no alcanza. <em>Mirá cuatro.</em></h2>
+      <p class="lead">Dos áreas pueden tener la misma tasa y problemas opuestos: pocas licencias largas o muchas ausencias cortas. Cada una pide una acción distinta.</p>
+      <div class="grid g4 mt-32">
+        <div class="card-dark"><p class="label">Cuánto</p><h3>Tasa de ausentismo</h3><p class="small muted mt-8">Días perdidos ÷ días que se debían trabajar. La foto general.</p></div>
+        <div class="card-dark"><p class="label">Cuántas veces</p><h3>Frecuencia</h3><p class="small muted mt-8">Ausencias por persona. Muchas ausencias cortas suelen hablar de clima o compromiso.</p></div>
+        <div class="card-dark"><p class="label">Cuánto dura</p><h3>Duración media</h3><p class="small muted mt-8">Días por ausencia. Las largas suelen ser temas de salud: piden acompañamiento, no control.</p></div>
+        <div class="card-dark"><p class="label">Qué patrón</p><h3>Índice de Bradford</h3><p class="small muted mt-8">S² × D: penaliza la repetición. Detecta patrones, no culpables.</p></div>
+      </div>
+      <div class="grid g2 mt-24">
+        <div class="card-dark">
+          <p class="small"><b style="color:var(--green)">Bradford en un ejemplo.</b> Ana faltó 1 vez durante 10 días: 1² × 10 = <b>10</b>. Bruno faltó 5 veces, 2 días cada vez: 5² × 10 = <b>250</b>. Mismos días perdidos, situaciones muy distintas.</p>
+        </div>
+        <div class="card-dark">
+          <p class="small"><b style="color:var(--green)">Ojo con el uso.</b> Un índice alto es una señal para conversar, nunca una sanción automática. Ese criterio también se evalúa.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 · CALCULADORA -->
+  <section class="slide dark" data-title="Calculadora" data-sub="Cuánto cuesta faltar">
+    <div class="slide-inner">
+      <p class="label">Probalo antes de abrir Power BI</p>
+      <h2>¿Cuánto le cuesta el ausentismo a una empresa?</h2>
+      <p class="lead">Cambiá los valores y mirá cómo se mueve. Usala después para traducir tu tasa a plata: es el idioma del Comité.</p>
+      <div class="calc mt-32">
+        <div class="card">
+          <div class="field"><label for="cDot">Dotación promedio</label><input id="cDot" type="number" min="1" value="410" inputmode="numeric" /></div>
+          <div class="field"><label for="cHab">Días hábiles del período</label><input id="cHab" type="number" min="1" value="250" inputmode="numeric" /><span class="hint">Un año tiene ~250 días hábiles.</span></div>
+          <div class="field"><label for="cPer">Días perdidos por ausencias</label><input id="cPer" type="number" min="0" value="3000" inputmode="numeric" /></div>
+          <div class="field" style="margin-bottom:0"><label for="cCos">Costo diario por persona ($)</label><input id="cCos" type="number" min="0" value="85000" inputmode="numeric" /><span class="hint">Sueldo bruto + cargas ÷ días hábiles del mes.</span></div>
+        </div>
+        <div class="results" aria-live="polite">
+          <div class="result big">
+            <div class="num" id="rTasa">—</div>
+            <div class="lbl">Tasa de ausentismo</div>
+            <div class="gauge"><span id="rGauge"></span></div>
+          </div>
+          <div class="result"><div class="num" id="rPP">—</div><div class="lbl">días perdidos por persona</div></div>
+          <div class="result"><div class="num" id="rFTE">—</div><div class="lbl">personas "invisibles" todo el período</div></div>
+          <div class="result" style="grid-column:1/-1"><div class="num" id="rCosto">—</div><div class="lbl">costo directo estimado (sin contar horas extra ni reemplazos)</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 · LA BASE -->
+  <section class="slide light" data-title="La base" data-sub="Diccionario y descarga">
+    <div class="slide-inner top">
+      <p class="label">La base</p>
+      <h2>Dos tablas, una relación: <em>Legajo</em>.</h2>
+      <p class="lead muted">Enero 2025 a junio 2026. Descargá el Excel (dos hojas) o los CSV por separado.</p>
+      <div class="downloads mt-24">
+        <a class="dl" href="datos/base_ausentismo.xlsx" download><span class="ext">XLSX</span><span><b>base_ausentismo.xlsx</b><span>Las dos tablas en un libro</span></span></a>
+        <a class="dl" href="datos/empleados.csv" download><span class="ext">CSV</span><span><b>empleados.csv</b><span>410 filas · 1 por persona</span></span></a>
+        <a class="dl" href="datos/ausencias.csv" download><span class="ext">CSV</span><span><b>ausencias.csv</b><span>~2.400 filas · 1 por ausencia</span></span></a>
+      </div>
+
+      <div class="mt-32">
+        <div class="tabs" role="tablist" aria-label="Tablas de la base">
+          <button class="tab" role="tab" aria-selected="true" aria-controls="tp-aus" id="t-aus">Ausencias</button>
+          <button class="tab" role="tab" aria-selected="false" aria-controls="tp-emp" id="t-emp">Empleados</button>
+        </div>
+        <div class="tabpanel" id="tp-aus" role="tabpanel" aria-labelledby="t-aus">
+          <div class="tbl-wrap">
+            <table class="dict">
+              <thead><tr><th>Columna</th><th>Tipo</th><th>Ejemplo</th><th>Qué es</th></tr></thead>
+              <tbody>
+                <tr><td><code>ID_Ausencia</code></td><td>Texto</td><td>A00041</td><td>Identificador de cada ausencia.</td></tr>
+                <tr><td><code>Legajo</code></td><td>Número</td><td>1301</td><td>Persona que faltó. Se relaciona con Empleados.</td></tr>
+                <tr><td><code>Fecha_Inicio</code></td><td>Fecha</td><td>2025-01-14</td><td>Primer día de la ausencia.</td></tr>
+                <tr><td><code>Fecha_Fin</code></td><td>Fecha</td><td>2025-03-10</td><td>Último día de la ausencia.</td></tr>
+                <tr><td><code>Dias_Habiles</code></td><td>Número</td><td>38</td><td>Días hábiles perdidos (sin fines de semana ni feriados).</td></tr>
+                <tr><td><code>Motivo</code></td><td>Texto</td><td>Enfermedad prolongada</td><td>Enfermedad, Enfermedad prolongada, Accidente laboral, Cuidado de familiar, Trámite personal, Licencia por estudio, Sin aviso, Otro.</td></tr>
+                <tr><td><code>Certificado</code></td><td>Sí / No</td><td>Sí</td><td>Si la ausencia se justificó con certificado.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="tabpanel" id="tp-emp" role="tabpanel" aria-labelledby="t-emp" hidden>
+          <div class="tbl-wrap">
+            <table class="dict">
+              <thead><tr><th>Columna</th><th>Tipo</th><th>Ejemplo</th><th>Qué es</th></tr></thead>
+              <tbody>
+                <tr><td><code>Legajo</code></td><td>Número</td><td>1007</td><td>Clave única de cada persona.</td></tr>
+                <tr><td><code>Area</code></td><td>Texto</td><td>Depósito</td><td>7 áreas: Depósito, Distribución, Atención al Cliente, Administración, Comercial, Tecnología, RRHH.</td></tr>
+                <tr><td><code>Puesto</code></td><td>Texto</td><td>Autoelevadorista</td><td>Puesto actual.</td></tr>
+                <tr><td><code>Sede</code></td><td>Texto</td><td>Rosario</td><td>CABA, Rosario o Córdoba.</td></tr>
+                <tr><td><code>Turno</code></td><td>Texto</td><td>Noche</td><td>Mañana, Tarde o Noche.</td></tr>
+                <tr><td><code>Lider</code></td><td>Texto</td><td>L. Paz</td><td>Líder directo.</td></tr>
+                <tr><td><code>Genero</code></td><td>Texto</td><td>Femenino</td><td>Género autopercibido.</td></tr>
+                <tr><td><code>Edad</code></td><td>Número</td><td>52</td><td>Edad en años.</td></tr>
+                <tr><td><code>Fecha_Ingreso</code></td><td>Fecha</td><td>2025-06-01</td><td>Ingreso a la empresa. Sirve para calcular antigüedad.</td></tr>
+                <tr><td><code>Fecha_Egreso</code></td><td>Fecha</td><td>(vacío)</td><td>Vacío si la persona sigue activa. Clave para calcular la dotación de cada mes.</td></tr>
+                <tr><td><code>Modalidad</code></td><td>Texto</td><td>Presencial</td><td>Presencial o Híbrida.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 · DETECTIVE DE DATOS -->
+  <section class="slide dark" data-title="Detective de datos" data-sub="6 problemas escondidos">
+    <div class="slide-inner">
+      <p class="label">Paso 1 · Limpiar</p>
+      <h2>La base tiene <em>6 problemas</em> escondidos. ¿Los encontrás?</h2>
+      <p class="lead">Buscalos en Power Query antes de hacer un solo gráfico. Tocá cada tarjeta solo cuando ya lo hayas encontrado (o te rindas).</p>
+      <div class="clues mt-32" id="clues">
+        <button class="clue" aria-expanded="false"><span class="q">01</span><span class="hint-txt">Contá filas. ¿Hay ausencias que aparecen dos veces?</span><span class="answer"><b>Filas duplicadas</b>Hay ausencias repetidas con distinto ID pero mismo legajo, fechas y motivo. Quitá duplicados ignorando la columna ID_Ausencia.</span><span class="tap">Ver solución</span></button>
+        <button class="clue" aria-expanded="false"><span class="q">02</span><span class="hint-txt">Filtrá la columna Motivo y mirá la lista completa de valores.</span><span class="answer"><b>Motivos mal escritos</b>"enfermedad", "ENFERMEDAD", "Enfermedad " (con espacio) y "Enfermdad". Recortar, poner en mayúscula cada palabra y reemplazar valores.</span><span class="tap">Ver solución</span></button>
+        <button class="clue" aria-expanded="false"><span class="q">03</span><span class="hint-txt">Compará Fecha_Inicio con Fecha_Fin, fila por fila.</span><span class="answer"><b>Fechas invertidas</b>Algunas ausencias terminan antes de empezar. Columna condicional: si Fin &lt; Inicio, intercambiarlas.</span><span class="tap">Ver solución</span></button>
+        <button class="clue" aria-expanded="false"><span class="q">04</span><span class="hint-txt">¿Todos los legajos de Ausencias existen en Empleados?</span><span class="answer"><b>Legajos huérfanos</b>Hay legajos 99001 a 99006 que no están en Empleados. Combiná consultas (anti join) para encontrarlos y decidí qué hacer: ¿excluir o consultar?</span><span class="tap">Ver solución</span></button>
+        <button class="clue" aria-expanded="false"><span class="q">05</span><span class="hint-txt">Revisá los vacíos de cada columna con "Calidad de columna".</span><span class="answer"><b>Certificado vacío</b>Hay ausencias sin dato en Certificado. No es "No": reemplazalo por "Sin dato" para no sesgar el análisis.</span><span class="tap">Ver solución</span></button>
+        <button class="clue" aria-expanded="false"><span class="q">06</span><span class="hint-txt">Mirá la distribución de la columna Edad. ¿Mínimo y máximo tienen sentido?</span><span class="answer"><b>Edades imposibles</b>Hay personas de 0, 8 y 117 años. Dejalas como nulas y anotalo: es un hallazgo para el área que carga los datos.</span><span class="tap">Ver solución</span></button>
+      </div>
+      <p class="small mt-24" style="color:rgba(255,255,255,0.65)">Tip: activá <b>Vista › Calidad de columna, Distribución de columnas y Perfil de columna</b> en Power Query. Documentá cada paso: en la presentación, contar qué limpiaste suma confianza.</p>
+    </div>
+  </section>
+
+  <!-- 9 · MODELO Y MEDIDAS -->
+  <section class="slide light" data-title="Modelo y medidas" data-sub="DAX listo para copiar">
+    <div class="slide-inner top">
+      <p class="label">Paso 2 · Modelar</p>
+      <h2>Un modelo estrella chiquito y <em>pocas medidas</em> que hacen todo el trabajo.</h2>
+      <div class="model mt-24" aria-label="Modelo de datos: Empleados y Calendario se relacionan con Ausencias">
+        <div class="tblbox"><b>Empleados</b><span class="k">Legajo 🔑</span><span>Area, Sede, Turno…</span></div>
+        <div class="rel">1 : *</div>
+        <div class="tblbox"><b>Ausencias</b><span class="k">Legajo</span><span class="k">Fecha_Inicio</span><span>Dias_Habiles…</span></div>
+        <div class="rel">* : 1</div>
+        <div class="tblbox"><b>Calendario</b><span class="k">Fecha 🔑</span><span>Mes, Año, EsHabil…</span></div>
+      </div>
+      <p class="small muted" style="text-align:center">¿No tenés tabla Calendario? Generala con el <a href="https://generador-calendario-powerbi-hache.netlify.app" target="_blank" rel="noopener" style="color:var(--green-2); font-weight:600">Generador de Calendario de HACHE</a>.</p>
+      <div class="dax-list mt-24">
+        <div class="dax-nav" role="tablist" aria-label="Medidas DAX" id="daxNav"></div>
+        <div>
+          <div class="code" id="daxCode"></div>
+          <p class="dax-why muted" id="daxWhy"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 · PREGUNTAS GUÍA -->
+  <section class="slide light" data-title="Preguntas guía" data-sub="9 preguntas en 3 niveles">
+    <div class="slide-inner top">
+      <p class="label">Paso 3 · Analizar</p>
+      <h2>Nueve preguntas para ir de la <em>foto</em> a la <em>causa</em>.</h2>
+      <p class="lead muted">Marcalas a medida que las respondés: tu progreso queda guardado en este navegador. Si te trabás, abrí la pista.</p>
+      <div class="levels mt-32" id="levels"></div>
+      <div class="meter"><span class="small muted">Tu avance</span><div class="meter-bar"><span id="qMeter"></span></div><b id="qCount">0 / 9</b></div>
+    </div>
+  </section>
+
+  <!-- 11 · STORYTELLING -->
+  <section class="slide dark" data-title="Storytelling" data-sub="Del gráfico al mensaje">
+    <div class="slide-inner">
+      <p class="label">Paso 4 · Contar</p>
+      <h2>Un gráfico muestra. <em>Un título con conclusión</em> convence.</h2>
+      <div class="story mt-24">
+        <div>
+          <div class="switch" role="group" aria-label="Versión del gráfico">
+            <button aria-pressed="true" data-v="antes">Antes</button>
+            <button aria-pressed="false" data-v="despues">Después</button>
+          </div>
+          <div class="chart-card">
+            <div class="ct" id="stTitle"></div>
+            <div class="cs" id="stSub"></div>
+            <svg id="stChart" viewBox="0 0 520 230" role="img" aria-label="Ejemplo: rotación voluntaria por antigüedad"></svg>
+          </div>
+          <p class="small mt-8" style="color:rgba(255,255,255,0.55)">Ejemplo con datos de rotación, para no spoilear tu análisis.</p>
+        </div>
+        <div>
+          <h3 style="color:var(--green)">Qué cambió</h3>
+          <ul class="lead" style="padding-left:20px; margin-top:12px; display:grid; gap:8px; font-size:16px">
+            <li>El título dice <b>qué tiene que entender</b> el Comité, no qué muestra el eje.</li>
+            <li>Un solo color resalta el dato que importa. El resto, en gris.</li>
+            <li>Sin leyenda, sin decimales de más, sin líneas de grilla.</li>
+            <li>El subtítulo propone el próximo paso.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="arc">
+        <div class="card-dark"><b>1 · Contexto</b><p>Qué preocupa y por qué importa ahora. Una tasa y su costo.</p></div>
+        <div class="card-dark"><b>2 · Hallazgo</b><p>Dónde se concentra. Un dato que sorprenda.</p></div>
+        <div class="card-dark"><b>3 · Causa</b><p>Por qué creés que pasa. Separá evidencia de hipótesis.</p></div>
+        <div class="card-dark"><b>4 · Propuesta</b><p>Dos o tres acciones concretas, con responsable.</p></div>
+        <div class="card-dark"><b>5 · Medición</b><p>Qué indicador vas a seguir y qué meta proponés.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 · IA COPILOTO -->
+  <section class="slide light" data-title="IA como copiloto" data-sub="3 prompts para tu análisis">
+    <div class="slide-inner top">
+      <p class="label">Bonus · IA</p>
+      <h2>Usá la IA para <em>pensar mejor</em>, no para pensar por vos.</h2>
+      <p class="lead muted">Tres prompts para Claude, ChatGPT o Gemini. Pasale resúmenes y resultados, nunca datos personales de una base real.</p>
+      <div class="grid g3 mt-32" id="prompts"></div>
+    </div>
+  </section>
+
+  <!-- 13 · ENTREGA -->
+  <section class="slide dark" data-title="Entrega y evaluación" data-sub="Rúbrica y autochequeo">
+    <div class="slide-inner">
+      <p class="label">Entrega</p>
+      <h2>Qué entregás y <em>cómo lo miramos</em>.</h2>
+      <div class="grid g3 mt-24" style="gap:12px">
+        <div class="card-dark"><p class="label">Formato</p><p class="small" data-cfg="entrega.formato"></p></div>
+        <div class="card-dark"><p class="label">Fecha</p><p class="small" data-cfg="entrega.fecha"></p></div>
+        <div class="card-dark"><p class="label">Dónde</p><p class="small" data-cfg="entrega.canal"></p></div>
+      </div>
+      <div class="grid g2 mt-24" style="align-items:start">
+        <div class="rubric">
+          <div class="rub-row"><div><b>Calidad de datos</b><span>Encontraste y resolviste los problemas, y lo contás.</span></div><div class="w">15%</div></div>
+          <div class="rub-row"><div><b>Modelo y medidas</b><span>Relaciones correctas, medidas que dan bien.</span></div><div class="w">20%</div></div>
+          <div class="rub-row"><div><b>Análisis</b><span>Fuiste más allá de la foto: dónde, cuándo y en quiénes.</span></div><div class="w">20%</div></div>
+          <div class="rub-row"><div><b>Diseño</b><span>Jerarquía clara, color con intención, nada de ruido.</span></div><div class="w">15%</div></div>
+          <div class="rub-row"><div><b>Storytelling y recomendación</b><span>Títulos con conclusión, acciones concretas y medibles.</span></div><div class="w">30%</div></div>
+        </div>
+        <div class="card-dark">
+          <h3>Antes de entregar, chequeá:</h3>
+          <div class="checklist mt-16" id="checklist"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 14 · SEGUÍ EXPLORANDO -->
+  <section class="slide dark" data-title="Seguí explorando" data-sub="Más de HACHE">
+    <div class="slide-inner">
+      <p class="label">Seguí explorando</p>
+      <h2>Ahora te toca a vos. <em>Que los datos hablen.</em></h2>
+      <p class="lead">Mientras trabajás, estas herramientas y espacios de HACHE te pueden dar una mano.</p>
+      <div class="links mt-32" id="links"></div>
+      <div class="actions">
+        <a class="btn btn-cta" href="datos/base_ausentismo.xlsx" download>Descargar la base</a>
+        <a class="btn btn-outline" href="#1">Volver al inicio</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<nav class="bottombar" aria-label="Navegación de slides">
+  <button class="nav-btn" id="prev" aria-label="Slide anterior">← <span class="txt">Anterior</span></button>
+  <div class="dots" id="dots"></div>
+  <span class="counter" id="counter"></span>
+  <button class="nav-btn next" id="next" aria-label="Slide siguiente"><span class="txt">Siguiente</span> →</button>
+</nav>
+
+<div class="overlay" id="toc" role="dialog" aria-modal="true" aria-label="Índice de slides">
+  <div class="overlay-inner">
+    <div class="overlay-head">
+      <div><p class="label">Índice</p><h2>Saltá a cualquier parte</h2></div>
+      <button class="icon-btn" id="closeToc">Cerrar ✕</button>
+    </div>
+    <div class="toc" id="tocGrid"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(function () {
+  const C = window.CONFIG;
+  const $ = (s, el = document) => el.querySelector(s);
+  const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const store = {
+    get(k, d) { try { const v = localStorage.getItem("pp-aus-" + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+    set(k, v) { try { localStorage.setItem("pp-aus-" + k, JSON.stringify(v)); } catch (e) {} }
+  };
+
+  /* ---------- toast + copiar ---------- */
+  let toastT;
+  function toast(msg) {
+    const t = $("#toast"); t.textContent = msg; t.classList.add("show");
+    clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("show"), 1800);
+  }
+  async function copy(text, btn) {
+    try { await navigator.clipboard.writeText(text); }
+    catch (e) {
+      const ta = document.createElement("textarea"); ta.value = text; document.body.appendChild(ta);
+      ta.select(); document.execCommand("copy"); ta.remove();
+    }
+    if (btn) { btn.classList.add("ok"); btn.textContent = "Copiado ✓"; setTimeout(() => { btn.classList.remove("ok"); btn.textContent = "Copiar"; }, 1600); }
+    toast("Copiado al portapapeles");
+  }
+
+  /* ---------- contenido desde CONFIG ---------- */
+  $("#people").innerHTML = C.acompanan.map(p => {
+    const ini = p.nombre.split(" ").map(w => w[0]).slice(0, 2).join("");
+    const links = [
+      p.linkedin && `<a class="btn btn-cta btn-sm" href="${esc(p.linkedin)}" target="_blank" rel="noopener">LinkedIn</a>`,
+      p.email && `<a class="btn btn-outline btn-sm" href="mailto:${esc(p.email)}">${esc(p.email)}</a>`
+    ].filter(Boolean).join("");
+    return `<div class="person">
+      <div class="avatar">${p.foto ? `<img src="${esc(p.foto)}" alt="${esc(p.nombre)}">` : esc(ini)}</div>
+      <div>
+        <h2>${esc(p.nombre)}</h2>
+        <p class="role">${esc(p.rol)}</p>
+        <p class="lead">${esc(p.bio)}</p>
+        <div class="chips">${p.chips.map(c => `<span class="chip">${esc(c)}</span>`).join("")}</div>
+        ${links ? `<div class="actions" style="margin-top:20px">${links}</div>` : ""}
+      </div></div>`;
+  }).join("");
+
+  $$("[data-cfg]").forEach(el => { el.textContent = el.dataset.cfg.split(".").reduce((o, k) => o[k], C); });
+  $("#formatoEntrega").textContent = C.entrega.formato;
+
+  $("#links").innerHTML = C.links.filter(l => l.url).map(l => `
+    <a class="link-card" href="${esc(l.url)}" target="_blank" rel="noopener">
+      <span class="tag">${esc(l.tag)}</span><b>${esc(l.titulo)}</b><span>${esc(l.texto)}</span><span class="go">Abrir →</span>
+    </a>`).join("");
+
+  /* ---------- portada: calendario de ausencias ---------- */
+  (function () {
+    const g = $("#calCells"); let html = "";
+    // 6 semanas × 5 días; lunes y viernes con más ausencias
+    const pattern = [
+      [1,0,0,0,1],[0,0,1,0,1],[1,0,0,0,0],[1,0,0,1,1],[0,1,0,0,1],[1,0,0,0,1]
+    ];
+    pattern.forEach((week, r) => week.forEach((on, c) => {
+      const x = 28 + c * 70, y = 60 + r * 48;
+      html += `<rect x="${x}" y="${y}" width="58" height="38" rx="8" fill="${on ? "#00FF90" : "rgba(255,255,255,0.07)"}" opacity="${on ? (c === 0 || c === 4 ? 1 : .55) : 1}"/>`;
+    }));
+    g.innerHTML = html;
+  })();
+
+  /* ---------- calculadora ---------- */
+  const fmt = (n, d = 0) => n.toLocaleString("es-AR", { minimumFractionDigits: d, maximumFractionDigits: d });
+  function calc() {
+    const dot = +$("#cDot").value || 0, hab = +$("#cHab").value || 0, per = +$("#cPer").value || 0, cos = +$("#cCos").value || 0;
+    const prog = dot * hab;
+    const tasa = prog ? per / prog * 100 : 0;
+    $("#rTasa").textContent = fmt(tasa, 1) + "%";
+    $("#rGauge").style.width = Math.min(tasa / 12 * 100, 100) + "%";
+    $("#rPP").textContent = dot ? fmt(per / dot, 1) : "—";
+    $("#rFTE").textContent = hab ? fmt(per / hab, 1) : "—";
+    const costo = per * cos;
+    $("#rCosto").textContent = "$ " + (costo >= 1e6 ? fmt(costo / 1e6, 1) + " M" : fmt(costo));
+  }
+  $$(".calc input").forEach(i => i.addEventListener("input", calc)); calc();
+
+  /* ---------- tabs de la base ---------- */
+  $$(".tab").forEach(tab => tab.addEventListener("click", () => {
+    $$(".tab").forEach(t => { t.setAttribute("aria-selected", t === tab); $("#" + t.getAttribute("aria-controls")).hidden = t !== tab; });
+  }));
+
+  /* ---------- detective ---------- */
+  $$(".clue").forEach(c => c.addEventListener("click", () => {
+    const open = c.classList.toggle("open"); c.setAttribute("aria-expanded", open);
+  }));
+
+  /* ---------- DAX ---------- */
+  const DAX = [
+    { n: "Días perdidos", s: "La base de todo", code:
+`Días perdidos =
+SUM ( Ausencias[Dias_Habiles] )
+
+Casos de ausencia =
+COUNTROWS ( Ausencias )`,
+      why: "Dos medidas simples que vas a reutilizar en todas las demás. Nunca arrastres la columna directo al gráfico: usá siempre medidas." },
+    { n: "Dotación activa", s: "El denominador", code:
+`Dotación activa =
+VAR FinPeriodo = MAX ( Calendario[Fecha] )
+RETURN
+    COUNTROWS (
+        FILTER (
+            Empleados,
+            Empleados[Fecha_Ingreso] <= FinPeriodo
+                && ( ISBLANK ( Empleados[Fecha_Egreso] )
+                    || Empleados[Fecha_Egreso] >= FinPeriodo )
+        )
+    )`,
+      why: "Cuenta quiénes estaban activos al cierre del período filtrado. Sin esto, la tasa de un mes con muchas bajas queda mal calculada." },
+    { n: "Tasa de ausentismo", s: "El KPI principal", code:
+`Días hábiles =
+CALCULATE ( COUNTROWS ( Calendario ), Calendario[EsHabil] = TRUE () )
+
+Tasa de ausentismo =
+DIVIDE ( [Días perdidos], [Dotación activa] * [Días hábiles] )`,
+      why: "Días perdidos sobre días que se debían trabajar. Formateala como porcentaje con un decimal. Es una aproximación (usa la dotación al cierre): mencionalo en la presentación. Si tu Calendario no tiene la columna EsHabil, creala: lunes a viernes y sin feriados." },
+    { n: "Frecuencia y duración", s: "Cuántas veces, cuánto dura", code:
+`Frecuencia =
+DIVIDE ( [Casos de ausencia], [Dotación activa] )
+
+Duración media =
+DIVIDE ( [Días perdidos], [Casos de ausencia] )
+
+% ausencias cortas =
+DIVIDE (
+    CALCULATE ( [Casos de ausencia], Ausencias[Dias_Habiles] <= 2 ),
+    [Casos de ausencia]
+)`,
+      why: "Separan dos problemas distintos: muchas ausencias cortas (frecuencia alta, duración baja) o pocas largas. Las cortas son las que más dice el clima." },
+    { n: "Índice de Bradford", s: "Desafío", code:
+`Bradford =
+SUMX (
+    VALUES ( Empleados[Legajo] ),
+    VAR S = CALCULATE ( [Casos de ausencia] )
+    VAR D = CALCULATE ( [Días perdidos] )
+    RETURN S * S * D
+)`,
+      why: "Calcula S² × D por persona y suma. Usalo en una tabla por legajo o por líder para detectar patrones. Recordá: señal para conversar, no para sancionar." }
+  ];
+  const hl = s => esc(s)
+    .replace(/\b(VAR|RETURN|SUM|SUMX|COUNTROWS|CALCULATE|FILTER|DIVIDE|MAX|VALUES|ISBLANK|TRUE)\b/g, '<span class="kw">$1</span>');
+  function showDax(i) {
+    $$("#daxNav button").forEach((b, j) => b.setAttribute("aria-selected", i === j));
+    $("#daxCode").innerHTML = `<button class="copy-btn" type="button">Copiar</button>` + hl(DAX[i].code);
+    $("#daxCode .copy-btn").addEventListener("click", e => copy(DAX[i].code, e.currentTarget));
+    $("#daxWhy").textContent = DAX[i].why;
+  }
+  $("#daxNav").innerHTML = DAX.map((d, i) => `<button role="tab" aria-selected="false">${esc(d.n)}<small>${esc(d.s)}</small></button>`).join("");
+  $$("#daxNav button").forEach((b, i) => b.addEventListener("click", () => showDax(i)));
+  showDax(0);
+
+  /* ---------- preguntas ---------- */
+  const LEVELS = [
+    { nivel: "Nivel 1", nombre: "La foto", badge: "badge", qs: [
+      ["¿Cuál es la tasa de ausentismo del período y cuántos días se perdieron?", "Arrancá con una tarjeta con la tasa y otra con los días perdidos. Pasala a plata con la calculadora."],
+      ["¿Qué motivos explican más días perdidos? ¿Y más casos?", "Hacé el mismo gráfico con las dos medidas. El ranking cambia: las licencias largas pesan en días, las cortas en casos."],
+      ["¿Cómo evoluciona mes a mes? ¿Hay estacionalidad?", "Gráfico de líneas por mes. Fijate qué pasa en invierno y compará el primer semestre de cada año."]
+    ]},
+    { nivel: "Nivel 2", nombre: "Dónde y cuándo", badge: "badge badge-green", qs: [
+      ["¿Qué áreas, sedes y turnos están por encima del promedio?", "Barras ordenadas con una línea de promedio. Cruzá área × turno en una matriz con formato condicional."],
+      ["¿Las ausencias cortas caen más algunos días de la semana?", "Agregá el día de la semana a Calendario y filtrá ausencias de 1 o 2 días. Mirá también los días pegados a feriados."],
+      ["¿Hay diferencias por antigüedad o franja de edad?", "Creá columnas de rangos (ej.: menos de 1 año, 1 a 3, 3 a 5, más de 5). La antigüedad suele decir más que la edad."]
+    ]},
+    { nivel: "Nivel 3", nombre: "Por qué y qué hacemos", badge: "badge badge-navy", qs: [
+      ["Dentro de una misma área y sede, ¿el líder hace la diferencia?", "Compará equipos que comparten área, sede y tarea. Si la diferencia persiste, es una hipótesis fuerte (no una prueba)."],
+      ["¿2026 viene mejor o peor que 2025? ¿Dónde está el cambio?", "Compará enero a junio de cada año, no el año completo contra medio año. Abrilo por sede."],
+      ["¿Qué harías con las personas de Bradford más alto? ¿Y qué NO harías?", "Pensá en la conversación, no en la sanción. ¿Qué tienen en común esas personas? ¿Comparten líder o turno?"]
+    ]}
+  ];
+  const done = store.get("preguntas", {});
+  $("#levels").innerHTML = LEVELS.map((l, li) => `
+    <div class="card">
+      <div class="level-head"><h3>${esc(l.nombre)}</h3><span class="${l.badge}">${esc(l.nivel)}</span></div>
+      ${l.qs.map((q, qi) => { const id = `q${li}${qi}`; return `
+        <div class="q-item">
+          <label><input type="checkbox" data-q="${id}" ${done[id] ? "checked" : ""}><span>${esc(q[0])}</span></label>
+          <details><summary>Pista</summary><p>${esc(q[1])}</p></details>
+        </div>`; }).join("")}
+    </div>`).join("");
+  function meter() {
+    const all = $$("[data-q]"), n = all.filter(i => i.checked).length;
+    $("#qMeter").style.width = n / all.length * 100 + "%";
+    $("#qCount").textContent = `${n} / ${all.length}`;
+  }
+  $$("[data-q]").forEach(i => i.addEventListener("change", () => {
+    done[i.dataset.q] = i.checked; store.set("preguntas", done); meter();
+    if ($$("[data-q]").every(x => x.checked)) toast("¡Las 9! Ahora, a contar la historia →");
+  }));
+  meter();
+
+  /* ---------- storytelling antes / después ---------- */
+  const ST = [["Menos de 1 año", 34], ["1 a 3 años", 21], ["3 a 5 años", 12], ["Más de 5 años", 7]];
+  const VERS = {
+    antes: { t: "Rotación voluntaria por antigüedad", s: "Rotación voluntaria (%) · Últimos 12 meses", hi: -1, base: "#00344D", labels: true },
+    despues: { t: "1 de cada 3 personas que ingresan se va antes de cumplir el año", s: "Propuesta: rediseñar el onboarding de los primeros 90 días", hi: 0, base: "#C9D3DC", labels: false }
+  };
+  function drawStory(v) {
+    const cfg = VERS[v], svg = $("#stChart"); let h = "";
+    if (cfg.labels) for (let y = 0; y <= 40; y += 10) {
+      const py = 190 - y * 4.2;
+      h += `<line x1="40" x2="510" y1="${py}" y2="${py}" stroke="#E8EDF2"/><text x="30" y="${py + 4}" font-size="11" text-anchor="end" fill="#6B7280" font-family="Poppins">${y}</text>`;
+    }
+    ST.forEach(([lbl, val], i) => {
+      const x = 60 + i * 115, hgt = val * 4.2, fill = i === cfg.hi ? "#00CC72" : cfg.base;
+      h += `<rect x="${x}" y="${190 - hgt}" width="80" height="${hgt}" rx="6" fill="${fill}"/>`;
+      h += `<text x="${x + 40}" y="${183 - hgt}" font-size="${cfg.labels ? 11 : 15}" font-weight="${i === cfg.hi ? 800 : 600}" text-anchor="middle" fill="${i === cfg.hi ? "#00344D" : "#6B7280"}" font-family="Poppins">${val}${cfg.labels ? ".0" : ""}%</text>`;
+      h += `<text x="${x + 40}" y="212" font-size="11" text-anchor="middle" fill="#6B7280" font-family="Poppins">${lbl}</text>`;
+    });
+    svg.innerHTML = h;
+    $("#stTitle").textContent = cfg.t; $("#stSub").textContent = cfg.s;
+    $$(".switch button").forEach(b => b.setAttribute("aria-pressed", b.dataset.v === v));
+  }
+  $$(".switch button").forEach(b => b.addEventListener("click", () => drawStory(b.dataset.v)));
+  drawStory("antes");
+
+  /* ---------- prompts ---------- */
+  const PROMPTS = [
+    { t: "Abrir hipótesis", d: "Antes de mirar los datos: qué podría estar pasando.", p:
+`Actuá como analista senior de People Analytics.
+Estoy analizando el ausentismo de una empresa de logística (410 personas, 3 sedes, operación 24 h). Áreas: Depósito, Distribución, Atención al Cliente, Administración, Comercial, Tecnología y RRHH.
+
+Proponé 8 hipótesis que podrían explicar un ausentismo alto. Para cada una:
+- qué la explicaría
+- qué cruce de datos haría para confirmarla o descartarla
+- qué acción tomaría si se confirma
+
+Ordenalas de la más a la menos probable.` },
+    { t: "Títulos con conclusión", d: "Para cada gráfico, un mensaje.", p:
+`Te paso los resultados de mi análisis de ausentismo (sin datos personales):
+
+[pegá acá tus números: tasa general, por área, por turno, por mes, etc.]
+
+Para cada resultado, escribí 3 títulos posibles para una slide de Comité de Dirección:
+- máximo 12 palabras
+- que digan la conclusión, no lo que muestra el gráfico
+- en español rioplatense, directo
+
+Después decime cuál elegirías y por qué.` },
+    { t: "Abogado del diablo", d: "Que alguien te desarme la historia antes que el Comité.", p:
+`Vas a ser un Director de Operaciones escéptico en un Comité.
+Te paso el guion de mi presentación sobre ausentismo:
+
+[pegá acá tu guion o los títulos de tus slides]
+
+Hacé las 5 preguntas más incómodas que harías.
+Después señalá:
+- dónde confundo correlación con causalidad
+- qué dato falta para que la recomendación sea creíble
+- qué recomendación es vaga y cómo hacerla concreta y medible` }
+  ];
+  $("#prompts").innerHTML = PROMPTS.map((p, i) => `
+    <div class="prompt-card">
+      <h3>${esc(p.t)}</h3><p class="small muted" style="margin:4px 0 12px; min-height:42px">${esc(p.d)}</p>
+      <div class="code"><button class="copy-btn" type="button" data-p="${i}">Copiar</button>${esc(p.p)}</div>
+    </div>`).join("");
+  $$("[data-p]").forEach(b => b.addEventListener("click", () => copy(PROMPTS[+b.dataset.p].p, b)));
+
+  /* ---------- checklist de entrega ---------- */
+  const CHECKS = [
+    "Documenté qué problemas de datos encontré y cómo los resolví",
+    "Cada slide tiene un título con conclusión, no una descripción",
+    "Traduje la tasa de ausentismo a costo en pesos",
+    "Distingo lo que muestran los datos de lo que es hipótesis",
+    "Mi recomendación tiene acción, responsable e indicador",
+    "Ningún gráfico necesita que yo lo explique para entenderse"
+  ];
+  const chk = store.get("checklist", {});
+  $("#checklist").innerHTML = CHECKS.map((c, i) => `<label><input type="checkbox" data-c="${i}" ${chk[i] ? "checked" : ""}><span>${esc(c)}</span></label>`).join("");
+  $$("[data-c]").forEach(i => i.addEventListener("change", () => { chk[i.dataset.c] = i.checked; store.set("checklist", chk); }));
+
+  /* ---------- navegación ---------- */
+  const slides = $$(".slide");
+  let cur = 0;
+  $("#dots").innerHTML = slides.map((s, i) => `<button class="dot" aria-label="Ir a ${esc(s.dataset.title)}" data-i="${i}"></button>`).join("");
+  $("#tocGrid").innerHTML = slides.map((s, i) => `
+    <button data-i="${i}"><span class="n">${String(i + 1).padStart(2, "0")}</span><span class="t">${esc(s.dataset.title)}</span><span class="s">${esc(s.dataset.sub || "")}</span></button>`).join("");
+
+  function go(i, push = true) {
+    i = Math.max(0, Math.min(slides.length - 1, i));
+    slides.forEach((s, j) => {
+      s.classList.toggle("active", j === i);
+      s.classList.toggle("before", j < i);
+      s.setAttribute("aria-hidden", j !== i);
+      s.inert = j !== i;
+    });
+    cur = i;
+    slides[i].scrollTop = 0;
+    $$(".dot").forEach((d, j) => d.classList.toggle("on", j === i));
+    $$("#tocGrid button").forEach((d, j) => d.classList.toggle("on", j === i));
+    $("#counter").textContent = `${i + 1} / ${slides.length}`;
+    $("#progress").style.width = ((i + 1) / slides.length * 100) + "%";
+    $("#miniTitle").textContent = slides[i].dataset.title;
+    $("#prev").disabled = i === 0;
+    $("#next").disabled = i === slides.length - 1;
+    if (push && location.hash !== "#" + (i + 1)) history.replaceState(null, "", "#" + (i + 1));
+  }
+  const fromHash = () => { const n = parseInt(location.hash.slice(1), 10); return isNaN(n) ? 0 : n - 1; };
+
+  $("#prev").addEventListener("click", () => go(cur - 1));
+  $("#next").addEventListener("click", () => go(cur + 1));
+  $$("[data-go=next]").forEach(b => b.addEventListener("click", () => go(cur + 1)));
+  $$(".dot").forEach(d => d.addEventListener("click", () => go(+d.dataset.i)));
+  window.addEventListener("hashchange", () => go(fromHash(), false));
+
+  const toc = $("#toc");
+  const openToc = () => { toc.classList.add("open"); $("#tocGrid button.on")?.focus(); };
+  const closeToc = () => { toc.classList.remove("open"); $("#openToc").focus(); };
+  $("#openToc").addEventListener("click", openToc);
+  $("#closeToc").addEventListener("click", closeToc);
+  $$("#tocGrid button").forEach(b => b.addEventListener("click", () => { go(+b.dataset.i); closeToc(); }));
+
+  document.addEventListener("keydown", e => {
+    if (e.target.closest("input, textarea, select")) return;
+    if (toc.classList.contains("open")) { if (e.key === "Escape" || e.key.toLowerCase() === "i") closeToc(); return; }
+    if (["ArrowRight", "PageDown"].includes(e.key) || (e.key === " " && !e.target.closest("button, a, summary"))) { e.preventDefault(); go(cur + 1); }
+    else if (["ArrowLeft", "PageUp"].includes(e.key)) { e.preventDefault(); go(cur - 1); }
+    else if (e.key === "Home") go(0);
+    else if (e.key === "End") go(slides.length - 1);
+    else if (e.key.toLowerCase() === "i" && !e.metaKey && !e.ctrlKey) openToc();
+  });
+
+  // Swipe horizontal en mobile (ignora gestos verticales y tablas con scroll)
+  let sx = 0, sy = 0, st = 0;
+  $("#deck").addEventListener("touchstart", e => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; st = Date.now(); }, { passive: true });
+  $("#deck").addEventListener("touchend", e => {
+    if (e.target.closest(".tbl-wrap, .code, .dax-nav")) return;
+    const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5 && Date.now() - st < 600) go(cur + (dx < 0 ? 1 : -1));
+  }, { passive: true });
+
+  go(fromHash(), false);
+})();
+</script>
+</body>
+</html>
