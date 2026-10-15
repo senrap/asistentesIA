@@ -165,6 +165,124 @@ window.EJERCICIO = {
           "No"
         ]
       ]
+    },
+    "empleados_lista": {
+      "columnas": [
+        "Legajo",
+        "Area",
+        "Puesto",
+        "Sede",
+        "Turno",
+        "Lider",
+        "Genero",
+        "Edad",
+        "Fecha_Ingreso",
+        "Modalidad"
+      ],
+      "filas": [
+        [
+          "1001",
+          "Depósito",
+          "Supervisor/a de depósito",
+          "Rosario",
+          "Noche",
+          "L. Paz",
+          "Masculino",
+          "58",
+          "24/06/2021",
+          "Presencial"
+        ],
+        [
+          "1004",
+          "Depósito",
+          "Supervisor/a de depósito",
+          "Rosario",
+          "Noche",
+          "L. Paz",
+          "Masculino",
+          "57",
+          "15/04/2022",
+          "Presencial"
+        ],
+        [
+          "1006",
+          "Depósito",
+          "Supervisor/a de depósito",
+          "CABA",
+          "Mañana",
+          "R. Gómez",
+          "Masculino",
+          "20",
+          "28/05/2023",
+          "Presencial"
+        ],
+        [
+          "1009",
+          "Depósito",
+          "Supervisor/a de depósito",
+          "Rosario",
+          "Noche",
+          "L. Paz",
+          "Masculino",
+          "44",
+          "09/05/2023",
+          "Presencial"
+        ]
+      ]
+    },
+    "ausencias_lista": {
+      "columnas": [
+        "ID_Ausencia",
+        "Legajo",
+        "Fecha_Inicio",
+        "Fecha_Fin",
+        "Dias_Habiles",
+        "Motivo",
+        "Certificado",
+        "Año"
+      ],
+      "filas": [
+        [
+          "A00001",
+          "1089",
+          "01/01/2024",
+          "01/01/2024",
+          "1",
+          "Enfermedad",
+          "Sí",
+          "2024"
+        ],
+        [
+          "A00002",
+          "1137",
+          "01/01/2024",
+          "08/01/2024",
+          "6",
+          "Enfermedad",
+          "No",
+          "2024"
+        ],
+        [
+          "A00003",
+          "1168",
+          "01/01/2024",
+          "01/01/2024",
+          "1",
+          "Cuidado de familiar",
+          "No",
+          "2024"
+        ],
+        [
+          "A00004",
+          "1197",
+          "01/01/2024",
+          "02/01/2024",
+          "2",
+          "Sin aviso",
+          "No",
+          "2024"
+        ]
+      ]
     }
   }
 };

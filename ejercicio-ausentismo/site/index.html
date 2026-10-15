@@ -143,6 +143,30 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; fo
 .kbd-hint { margin-top: 28px; font-size: 12px; color: rgba(255,255,255,0.55); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 kbd { font-family: inherit; font-size: 11px; font-weight: 600; border: 1px solid rgba(255,255,255,0.3); border-radius: 5px; padding: 2px 7px; }
 
+/* ---------- elección de recorrido ---------- */
+.routes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 28px; max-width: 620px; }
+.route {
+  text-align: left; display: flex; flex-direction: column; gap: 8px; padding: 18px 20px; border-radius: 14px;
+  background: var(--navy-2); border: 2px solid rgba(255,255,255,0.12); color: var(--white); transition: border-color .15s, transform .15s, background .15s;
+}
+.route:hover { border-color: var(--green); transform: translateY(-2px); }
+.route[aria-pressed="true"] { border-color: var(--green); background: var(--navy-3); }
+.route .rt { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.route b { font-size: 20px; font-weight: 800; }
+.route .time { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--green); white-space: nowrap; }
+.route .desc { font-size: 13px; line-height: 1.5; color: rgba(255,255,255,0.75); }
+.route .go { margin-top: auto; font-size: 13px; font-weight: 700; color: var(--green); }
+.path-chip {
+  display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px; border-radius: 100px; flex-shrink: 0;
+  border: 1px solid rgba(0,255,144,0.45); background: rgba(0,255,144,0.1); color: var(--green); font-size: 12px; font-weight: 700;
+}
+.path-chip:hover { background: rgba(0,255,144,0.2); }
+.path-chip[hidden] { display: none; }
+.seg { display: inline-flex; background: var(--navy-2); border-radius: 10px; padding: 4px; gap: 4px; flex-wrap: wrap; }
+.seg button { border: 0; background: transparent; color: rgba(255,255,255,0.75); font-size: 13px; font-weight: 600; padding: 8px 14px; border-radius: 7px; }
+.seg button[aria-pressed="true"] { background: var(--green); color: var(--navy); }
+[data-only][hidden] { display: none !important; }
+
 /* ---------- perfil ---------- */
 .person { display: grid; grid-template-columns: 240px 1fr; gap: 40px; align-items: center; }
 .avatar { width: 240px; height: 240px; border-radius: 24px; background: var(--navy-2); border: 3px solid var(--green); display: grid; place-items: center; overflow: hidden; font-size: 64px; font-weight: 800; color: var(--green); }
@@ -368,7 +392,7 @@ tr:last-child td { border-bottom: 0; color: var(--gray); }
 @media (max-width: 960px) {
   .g4, .toc { grid-template-columns: repeat(2, minmax(0,1fr)); }
   .g3, .links { grid-template-columns: repeat(2, minmax(0,1fr)); }
-  .cover-grid, .calc, .story, .g2, .gamma, .agenda, .controls, .measures, .qgrid { grid-template-columns: 1fr; }
+  .cover-grid, .calc, .story, .g2, .gamma, .agenda, .controls, .measures, .qgrid, .routes { grid-template-columns: 1fr; }
   .cover-art { display: none; }
   .person { grid-template-columns: 180px 1fr; gap: 28px; }
   .avatar { width: 180px; height: 180px; }
@@ -424,13 +448,14 @@ window.CONFIG = {
 <script src="datos/ejercicio.js"></script>
 
 <header class="topbar">
-  <a class="brand" href="#1" aria-label="HACHE Consultora, ir a la portada">
+  <a class="brand" href="#inicio" aria-label="HACHE Consultora, ir a la portada">
     <img src="assets/logo-hache-blanco.png" alt="HACHE" width="102" height="20" />
     <span class="sep" aria-hidden="true"></span>
     <span class="prog">Power People<small>Ejercicio · Ausentismo</small></span>
   </a>
   <span class="spacer"></span>
   <span class="slide-title-mini" id="miniTitle"></span>
+  <button class="path-chip" id="pathChip" type="button" hidden title="Cambiar de recorrido"></button>
   <button class="icon-btn" id="openToc" aria-haspopup="dialog" title="Índice (tecla I)">
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="1" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="9" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="1" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="9" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.6"/></svg>
     <span class="txt">Índice</span>
@@ -442,16 +467,24 @@ window.CONFIG = {
 
   <!-- ============================ INTRO ============================ -->
 
-  <section class="slide dark" data-title="Portada" data-group="Intro">
+  <section class="slide dark" data-id="inicio" data-title="Portada" data-group="Intro">
     <div class="slide-inner">
       <div class="cover-grid">
         <div>
           <p class="label">Power People · Ejercicio</p>
           <h1>¿Por qué <em>falta</em> la gente?</h1>
-          <p class="lead">Una base de ausentismo de dos años, una Dirección que pide respuestas y dos clases para pasar de los datos a una recomendación.</p>
-          <div class="actions">
-            <button class="btn btn-cta" data-go="next">Empezar →</button>
-            <a class="btn btn-outline" href="#7">Ir directo a la base</a>
+          <p class="lead">Una base de ausentismo de dos años y una Dirección que pide respuestas. Elegí tu recorrido para pasar de los datos a una recomendación.</p>
+          <div class="routes" role="group" aria-label="Elegí tu recorrido">
+            <button class="route" type="button" data-choose="simple" aria-pressed="false">
+              <span class="rt"><b>Exprés</b><span class="time">1 clase · 60 min</span></span>
+              <span class="desc">La base viene lista. Calculás la tasa, respondés 3 preguntas y armás tu presentación en Gamma.</span>
+              <span class="go">Elegir Exprés →</span>
+            </button>
+            <button class="route" type="button" data-choose="completo" aria-pressed="false">
+              <span class="rt"><b>Completo</b><span class="time">2 clases · 120 min</span></span>
+              <span class="desc">Limpiás la base en Power Query, creás el Calendario y el modelo. Después analizás, presentás y tenés casos extra.</span>
+              <span class="go">Elegir Completo →</span>
+            </button>
           </div>
           <p class="kbd-hint">Navegá con <kbd>←</kbd> <kbd>→</kbd> o deslizando · <kbd>I</kbd> abre el índice</p>
         </div>
@@ -471,19 +504,19 @@ window.CONFIG = {
     </div>
   </section>
 
-  <section class="slide dark" data-title="Quién te acompaña" data-group="Intro">
+  <section class="slide dark" data-id="perfil" data-title="Quién te acompaña" data-group="Intro">
     <div class="slide-inner">
       <p class="label">Quién te acompaña</p>
       <div id="people"></div>
     </div>
   </section>
 
-  <section class="slide dark" data-title="El caso" data-group="Intro">
+  <section class="slide dark" data-id="caso" data-title="El caso" data-group="Intro">
     <div class="slide-inner">
       <div class="grid g2" style="align-items:center; gap:40px">
         <div>
           <p class="label">El caso</p>
-          <h2>Te llegó este mail un lunes a las 8:47.</h2>
+          <h2>Te llegó este mail un lunes a las 9:47.</h2>
           <p class="lead">Logística del Sur S.A. es una empresa ficticia, pero el problema es muy real: más de 400 personas en tres sedes, operación 24 horas y un ausentismo que nadie termina de explicar.</p>
           <div class="grid g3 mt-32" style="gap:12px">
             <div><div class="num">410</div><p class="small muted mt-8">colaboradores</p></div>
@@ -506,7 +539,32 @@ window.CONFIG = {
     </div>
   </section>
 
-  <section class="slide light" data-title="Tu misión" data-group="Intro">
+  <section class="slide light" data-id="mision-expres" data-path="simple" data-title="Tu misión" data-group="Intro">
+    <div class="slide-inner">
+      <p class="label">Tu misión · Recorrido exprés</p>
+      <h2>Una clase de una hora. <em>Una recomendación.</em></h2>
+      <p class="lead muted">La base ya viene limpia y con la columna Año: no necesitás Power Query ni tabla Calendario. Vas directo al análisis.</p>
+      <div class="agenda mt-32" style="grid-template-columns: 1.2fr 1fr">
+        <div class="card">
+          <div class="head"><h3>Analizar y contar</h3><span class="badge badge-green">1 clase · 60 min</span></div>
+          <ol>
+            <li><b>1</b>Descargar la base y relacionar las tablas</li>
+            <li><b>2</b>Crear las medidas y calcular la tasa</li>
+            <li><b>3</b>Responder las 3 preguntas del negocio</li>
+            <li><b>4</b>Armar la historia</li>
+            <li><b>5</b>Generar la presentación con Gamma</li>
+          </ol>
+        </div>
+        <div class="card week">
+          <div class="head"><h3>¿Querés más?</h3></div>
+          <p class="small" style="color:rgba(255,255,255,0.8)">El recorrido completo suma limpieza de datos, tabla Calendario y 4 casos extra. Podés cambiarte cuando quieras desde el índice.</p>
+          <div><button class="btn btn-cta btn-sm" type="button" data-switch="completo">Pasarme al completo</button></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide light" data-id="mision" data-path="completo" data-title="Tu misión" data-group="Intro">
     <div class="slide-inner">
       <p class="label">Tu misión</p>
       <h2>Dos clases de una hora. <em>Una recomendación.</em></h2>
@@ -541,7 +599,7 @@ window.CONFIG = {
     </div>
   </section>
 
-  <section class="slide dark" data-title="Qué medimos" data-group="Intro">
+  <section class="slide dark" data-id="conceptos" data-title="Qué medimos" data-group="Intro">
     <div class="slide-inner">
       <p class="label">Conceptos clave</p>
       <h2>Una sola tasa no alcanza. <em>Mirá cuatro.</em></h2>
@@ -559,7 +617,7 @@ window.CONFIG = {
     </div>
   </section>
 
-  <section class="slide dark" data-title="Calculadora" data-group="Intro">
+  <section class="slide dark" data-id="calculadora" data-title="Calculadora" data-group="Intro">
     <div class="slide-inner">
       <p class="label">Probalo antes de abrir Power BI</p>
       <h2>¿Cuánto le cuesta el ausentismo a una empresa?</h2>
@@ -581,9 +639,47 @@ window.CONFIG = {
     </div>
   </section>
 
+  <!-- ============================ RECORRIDO EXPRÉS ============================ -->
+
+  <section class="slide light" data-id="base-expres" data-path="simple" data-title="La base" data-group="Recorrido exprés">
+    <div class="slide-inner top">
+      <p class="label">Exprés · Paso 1</p>
+      <h2>Descargá la base y <em>relacioná las tablas</em>.</h2>
+      <div class="dl-row mt-24">
+        <a class="dl" href="datos/base_lista.xlsx" download><span class="ext">XLSX</span><span><b>Descargar Excel</b><span class="sub">Base lista · 2 hojas</span></span></a>
+        <a class="dl" href="datos/base_lista_csv.zip" download><span class="ext">CSV</span><span><b>Descargar CSV</b><span class="sub">Las 2 tablas juntas, en un .zip</span></span></a>
+      </div>
+      <div class="grid g2 mt-24">
+        <div><div class="tbl-title"><b>Empleados</b><span>410 filas · una por persona</span></div><div class="tbl-wrap" id="pvEmpL"></div></div>
+        <div><div class="tbl-title"><b>Ausencias</b><span>una fila por ausencia</span></div><div class="tbl-wrap" id="pvAusL"></div></div>
+      </div>
+      <div class="grid g2 mt-24" style="align-items:start">
+        <div class="qlist" id="qBaseL"></div>
+        <div class="card">
+          <p class="label">Después, conectalas</p>
+          <div class="steps mt-8">
+            <div class="step"><span class="step-n">1</span><p>Cargá las dos hojas con <b>Inicio › Obtener datos</b> y andá a la <b>Vista de modelo</b> (tercer ícono de la barra izquierda).</p></div>
+            <div class="step"><span class="step-n">2</span><p>Arrastrá <code>Legajo</code> de Empleados y soltalo sobre <code>Legajo</code> de Ausencias.</p></div>
+            <div class="step"><span class="step-n">3</span><p>Revisá que quede <b>Uno a varios (1:*)</b>: una persona, muchas ausencias.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide light" data-id="medidas-expres" data-path="simple" data-title="Medidas" data-group="Recorrido exprés">
+    <div class="slide-inner top">
+      <p class="label">Exprés · Paso 2</p>
+      <h2>Cuatro medidas y ya tenés <em>la tasa de ausentismo</em>.</h2>
+      <p class="lead muted">Creá cada una con <span class="path">Inicio › Nueva medida</span>, pegá el código y presioná Enter. Para filtrar por año usá la columna <code>Año</code> de Ausencias.</p>
+      <div class="measures mt-24" id="measuresL"></div>
+      <div class="callout mt-16" id="checkpointL"></div>
+    </div>
+  </section>
+
   <!-- ============================ CLASE 1 ============================ -->
 
-  <section class="slide light" data-title="La base" data-group="Clase 1 · Preparar los datos">
+  <section class="slide light" data-id="base" data-path="completo" data-title="La base" data-group="Clase 1 · Preparar los datos">
     <div class="slide-inner top">
       <p class="label">Clase 1 · Paso 1</p>
       <h2>Descargá la base y <em>mirá cómo se conectan</em> las tablas.</h2>
@@ -599,7 +695,7 @@ window.CONFIG = {
     </div>
   </section>
 
-  <section class="slide dark" data-title="Limpiar" data-group="Clase 1 · Preparar los datos">
+  <section class="slide dark" data-id="limpiar" data-path="completo" data-title="Limpiar" data-group="Clase 1 · Preparar los datos">
     <div class="slide-inner top">
       <p class="label">Clase 1 · Paso 2</p>
       <h2>Cuatro controles en <em>Power Query</em> antes del primer gráfico.</h2>
@@ -608,7 +704,7 @@ window.CONFIG = {
     </div>
   </section>
 
-  <section class="slide dark" data-title="Tabla Calendario" data-group="Clase 1 · Preparar los datos">
+  <section class="slide dark" data-id="calendario" data-path="completo" data-title="Tabla Calendario" data-group="Clase 1 · Preparar los datos">
     <div class="slide-inner top">
       <p class="label">Clase 1 · Paso 3</p>
       <h2>Sumá una tabla <em>Calendario</em> para analizar por año, mes y día.</h2>
@@ -632,7 +728,7 @@ window.CONFIG = {
     </div>
   </section>
 
-  <section class="slide light" data-title="Modelo" data-group="Clase 1 · Preparar los datos">
+  <section class="slide light" data-id="modelo" data-path="completo" data-title="Modelo" data-group="Clase 1 · Preparar los datos">
     <div class="slide-inner top">
       <p class="label">Clase 1 · Paso 4</p>
       <h2>Llegó la hora de <em>conectar las tablas</em>.</h2>
@@ -669,7 +765,7 @@ window.CONFIG = {
 
   <!-- ============================ CLASE 2 ============================ -->
 
-  <section class="slide light" data-title="Medidas" data-group="Clase 2 · Analizar y contar">
+  <section class="slide light" data-id="medidas" data-path="completo" data-title="Medidas" data-group="Clase 2 · Analizar y contar">
     <div class="slide-inner top">
       <p class="label">Clase 2 · Paso 5</p>
       <h2>Cuatro medidas y ya podés <em>responderle al Comité</em>.</h2>
@@ -679,18 +775,18 @@ window.CONFIG = {
     </div>
   </section>
 
-  <section class="slide dark" data-title="Preguntas del negocio" data-group="Clase 2 · Analizar y contar">
+  <section class="slide dark" data-id="preguntas" data-title="Preguntas del negocio" data-group="Clase 2 · Analizar y contar" data-group-simple="Recorrido exprés">
     <div class="slide-inner top">
-      <p class="label">Clase 2 · Paso 6</p>
+      <p class="label" data-label-simple="Exprés · Paso 3">Clase 2 · Paso 6</p>
       <h2>Las preguntas <em>del negocio</em>.</h2>
-      <p class="lead">Armá los gráficos que necesites y completá cada conclusión con los valores de tu reporte, con un decimal. Tus respuestas arman la presentación del paso 8.</p>
+      <p class="lead">Armá los gráficos que necesites y completá cada conclusión con los valores de tu reporte, con un decimal. Tus respuestas arman la presentación del último paso.</p>
       <div class="qlist mt-24" id="qMain"></div>
     </div>
   </section>
 
-  <section class="slide dark" data-title="Contá la historia" data-group="Clase 2 · Analizar y contar">
+  <section class="slide dark" data-id="historia" data-title="Contá la historia" data-group="Clase 2 · Analizar y contar" data-group-simple="Recorrido exprés">
     <div class="slide-inner">
-      <p class="label">Clase 2 · Paso 7</p>
+      <p class="label" data-label-simple="Exprés · Paso 4">Clase 2 · Paso 7</p>
       <h2>Un gráfico muestra. <em>Un título con conclusión</em> convence.</h2>
       <div class="story mt-24">
         <div>
@@ -714,9 +810,9 @@ window.CONFIG = {
     </div>
   </section>
 
-  <section class="slide light" data-title="Presentación con Gamma" data-group="Clase 2 · Analizar y contar">
+  <section class="slide light" data-id="gamma" data-title="Presentación con Gamma" data-group="Clase 2 · Analizar y contar" data-group-simple="Recorrido exprés">
     <div class="slide-inner top">
-      <p class="label">Clase 2 · Paso 8</p>
+      <p class="label" data-label-simple="Exprés · Paso 5">Clase 2 · Paso 8</p>
       <h2>Tu presentación, <em>en 5 minutos</em> con Gamma.</h2>
       <p class="lead muted">El prompt se arma solo con tus respuestas. Sumá tu recomendación, copialo y pegalo en Gamma.</p>
       <div class="gamma mt-24">
@@ -736,6 +832,7 @@ window.CONFIG = {
             <a class="btn btn-cta" href="https://gamma.app/create" target="_blank" rel="noopener">Abrir Gamma →</a>
           </div>
           <p class="small muted mt-16" id="gEntrega"></p>
+          <div class="callout mt-16" data-only="simple" hidden><b class="hl">Terminaste el recorrido exprés.</b> ¿Querés ir más a fondo? <button class="btn btn-primary btn-sm" type="button" data-switch="completo" style="margin-left:6px">Probar el recorrido completo</button></div>
         </div>
         <div class="code" id="gPrompt"></div>
       </div>
@@ -744,7 +841,7 @@ window.CONFIG = {
 
   <!-- ============================ SEMANA ============================ -->
 
-  <section class="slide dark" data-title="Casos extra" data-group="Para la semana">
+  <section class="slide dark" data-id="extra" data-path="completo" data-title="Casos extra" data-group="Para la semana">
     <div class="slide-inner top">
       <p class="label">Para la semana</p>
       <h2>Cuatro casos más para <em>practicar por tu cuenta</em>.</h2>
@@ -753,15 +850,14 @@ window.CONFIG = {
     </div>
   </section>
 
-  <section class="slide dark" data-title="Seguí explorando" data-group="Para la semana">
+  <section class="slide dark" data-id="explorar" data-title="Seguí explorando" data-group="Cierre">
     <div class="slide-inner">
       <img class="end-logo" src="assets/logo-hache-blanco.png" alt="HACHE Consultora" width="173" height="34" />
       <p class="label">Seguí explorando</p>
       <h2>Ahora te toca a vos. <em>Que los datos hablen.</em></h2>
       <div class="links mt-32" id="links"></div>
       <div class="actions">
-        <a class="btn btn-cta" href="datos/base_ausentismo.xlsx" download>Descargar la base</a>
-        <a class="btn btn-outline" href="#1">Volver al inicio</a>
+        <a class="btn btn-outline" href="#inicio">Volver al inicio</a>
       </div>
     </div>
   </section>
@@ -785,6 +881,10 @@ window.CONFIG = {
     <div class="overlay-head">
       <div><p class="label">Índice</p><h2>Saltá a cualquier parte</h2></div>
       <button class="icon-btn" id="closeToc">Cerrar ✕</button>
+    </div>
+    <div class="seg mt-16" role="group" aria-label="Recorrido">
+      <button type="button" data-switch="simple" aria-pressed="false">Exprés · 1 clase</button>
+      <button type="button" data-switch="completo" aria-pressed="false">Completo · 2 clases</button>
     </div>
     <div id="tocGroups"></div>
   </div>
@@ -878,6 +978,8 @@ window.CONFIG = {
   }
   $("#pvEmp").innerHTML = previewTable(EJ.preview.empleados);
   $("#pvAus").innerHTML = previewTable(EJ.preview.ausencias);
+  $("#pvEmpL").innerHTML = previewTable(EJ.preview.empleados_lista);
+  $("#pvAusL").innerHTML = previewTable(EJ.preview.ausencias_lista);
 
   /* =====================================================================
      PREGUNTAS DE COMPLETAR
@@ -899,6 +1001,14 @@ window.CONFIG = {
       ok: "Exacto. Legajo identifica a cada persona: en Empleados aparece una sola vez y en Ausencias se repite una vez por ausencia. Es una relación uno a varios.",
       mal: "Esa columna no está en las dos tablas o no identifica a una persona. Probá con otra."
     }],
+    baseL: [{
+      id: "relL", titulo: "¿Qué columna relaciona las dos tablas?",
+      hint: "Mirá las dos vistas previas. Buscá la columna que está en ambas tablas e identifica a cada persona.",
+      lineas: ["La columna que conecta Empleados con Ausencias es {c:col:ID_Ausencia|Legajo|Lider|Año|Area}."],
+      esperado: { col: "Legajo" },
+      ok: "Exacto. Legajo está en las dos tablas: una vez por persona en Empleados y una vez por ausencia en Ausencias.",
+      mal: "Esa columna no está en las dos tablas o no identifica a una persona. Probá con otra."
+    }],
     main: [
       {
         id: "q1", titulo: "¿Aumentó la tasa de ausentismo de 2024 a 2025?",
@@ -909,7 +1019,9 @@ window.CONFIG = {
         ],
         esperado: { resp: R.tasa_2025 > R.tasa_2024 ? "está respaldada" : "no está respaldada", t24: [R.tasa_2024, T], t25: [R.tasa_2025, T], inc: [R.incremento_pct, 1.6] },
         ok: "¡Bien! Coincide con los datos.",
-        mal: "Revisá lo marcado en rojo. ¿Quitaste los duplicados por ID_Ausencia? Si no, la tasa te da más alta. El incremento es (tasa 2025 ÷ tasa 2024 − 1) × 100."
+        mal: () => path === "simple"
+          ? "Revisá lo marcado en rojo. ¿Filtraste por la columna Año de Ausencias? El incremento es (tasa 2025 ÷ tasa 2024 − 1) × 100."
+          : "Revisá lo marcado en rojo. ¿Quitaste los duplicados por ID_Ausencia? Si no, la tasa te da más alta. El incremento es (tasa 2025 ÷ tasa 2024 − 1) × 100."
       },
       {
         id: "q2", titulo: "¿Hay sedes o áreas donde la tasa sea más alta?",
@@ -920,7 +1032,7 @@ window.CONFIG = {
         ],
         esperado: { sede: sedeTop[0], sedeV: [sedeTop[1], T], area: areaTop[0], areaV: [areaTop[1], T] },
         ok: "¡Bien! Ya sabés dónde mirar.",
-        mal: "Revisá lo marcado en rojo. ¿Filtraste solo 2025 con el año de Calendario?"
+        mal: "Revisá lo marcado en rojo. ¿Filtraste solo 2025?"
       },
       {
         id: "q3", titulo: "¿El turno hace la diferencia?",
@@ -979,6 +1091,7 @@ window.CONFIG = {
     ]
   };
 
+  let path = store.get("path", null);
   const answers = store.get("answers", {});
   const status = store.get("status", {});
   const allQ = {};
@@ -998,7 +1111,7 @@ window.CONFIG = {
         <div class="qfoot"><button type="button" class="btn btn-cta btn-sm" data-confirm>Confirmar →</button><span class="feedback" aria-live="polite"></span></div>
       </div></div>`;
   }
-  [["base", "#qBase", ""], ["main", "#qMain", ""], ["extra", "#qExtra", "E"]].forEach(([k, sel, pre]) => {
+  [["base", "#qBase", ""], ["baseL", "#qBaseL", ""], ["main", "#qMain", ""], ["extra", "#qExtra", "E"]].forEach(([k, sel, pre]) => {
     $(sel).innerHTML = Q[k].map((q, i) => renderQ(q, i, pre)).join("");
     Q[k].forEach(q => allQ[q.id] = q);
   });
@@ -1022,7 +1135,7 @@ window.CONFIG = {
     });
     const fb = $(".feedback", card);
     fb.className = "feedback " + (ok ? "ok" : "bad");
-    fb.textContent = ok ? q.ok : q.mal;
+    fb.textContent = ok ? q.ok : (typeof q.mal === "function" ? q.mal() : q.mal);
     status[q.id] = ok; store.set("status", status);
     if (!silent && ok) toast("¡Correcto!");
     buildPrompt();
@@ -1120,12 +1233,24 @@ Dame la fórmula de cada una y explicame paso a paso dónde pegarla, cómo poner
     { n: "Días hábiles", d: "Cuenta los días de lunes a viernes del período filtrado. Si tu columna no se llama Fecha, cambiala.", code: "Días hábiles =\nCOUNTROWS (\n    FILTER ( Calendario, WEEKDAY ( Calendario[Fecha], 2 ) <= 5 )\n)" },
     { n: "Tasa de ausentismo", d: "Días perdidos sobre días que se debían trabajar. Formateala como porcentaje con un decimal.", code: "Tasa de ausentismo =\nDIVIDE ( [Días perdidos], [Dotación] * [Días hábiles] )" }
   ];
-  const hl = s => esc(s).replace(/\b(SUM|COUNTROWS|FILTER|WEEKDAY|DIVIDE)\b/g, '<span class="kw">$1</span>');
-  $("#measures").innerHTML = MEDIDAS.map((m, i) => `
-    <div class="measure"><h3>${i + 1}. ${esc(m.n)}</h3><p>${esc(m.d)}</p>
-      <div class="code"><button class="copy-btn" type="button" data-m="${i}">Copiar</button>${hl(m.code)}</div></div>`).join("");
-  $$("[data-m]").forEach(b => b.addEventListener("click", () => copy(MEDIDAS[+b.dataset.m].code, b)));
-  $("#checkpoint").innerHTML = `<b class="hl">Checkpoint:</b> en una tarjeta sin filtros, <b>Días perdidos</b> tiene que dar <b>${Number(R.dias_perdidos_total || 0).toLocaleString("es-AR")}</b>. Si te da más, te faltó quitar los duplicados.`;
+  const HAB = R.dias_habiles || { 2024: 262, 2025: 261 };
+  const MEDIDAS_L = [
+    MEDIDAS[0], MEDIDAS[1],
+    { n: "Días hábiles", d: "Días de lunes a viernes de cada año. Toma el año que filtres con la columna Año.", code: `Días hábiles =\nSWITCH (\n    SELECTEDVALUE ( Ausencias[Año] ),\n    2024, ${HAB[2024]},\n    2025, ${HAB[2025]},\n    ${HAB[2024] + HAB[2025]}\n)` },
+    MEDIDAS[3]
+  ];
+  const hl = s => esc(s).replace(/\b(SUM|COUNTROWS|FILTER|WEEKDAY|DIVIDE|SWITCH|SELECTEDVALUE)\b/g, '<span class="kw">$1</span>');
+  function renderMedidas(list, sel, key) {
+    $(sel).innerHTML = list.map((m, i) => `
+      <div class="measure"><h3>${i + 1}. ${esc(m.n)}</h3><p>${esc(m.d)}</p>
+        <div class="code"><button class="copy-btn" type="button" data-${key}="${i}">Copiar</button>${hl(m.code)}</div></div>`).join("");
+    $$(`[data-${key}]`).forEach(b => b.addEventListener("click", () => copy(list[+b.dataset[key]].code, b)));
+  }
+  renderMedidas(MEDIDAS, "#measures", "m");
+  renderMedidas(MEDIDAS_L, "#measuresL", "ml");
+  const totalDias = Number(R.dias_perdidos_total || 0).toLocaleString("es-AR");
+  $("#checkpoint").innerHTML = `<b class="hl">Checkpoint:</b> en una tarjeta sin filtros, <b>Días perdidos</b> tiene que dar <b>${totalDias}</b>. Si te da más, te faltó quitar los duplicados.`;
+  $("#checkpointL").innerHTML = `<b class="hl">Checkpoint:</b> en una tarjeta sin filtros, <b>Días perdidos</b> tiene que dar <b>${totalDias}</b>. Después armá una tabla con <b>Año</b> y <b>Tasa de ausentismo</b>: ya tenés la respuesta a la primera pregunta.`;
 
   /* ---------- storytelling ---------- */
   const ST = [["Menos de 1 año", 34], ["1 a 3 años", 21], ["3 a 5 años", 12], ["Más de 5 años", 7]];
@@ -1165,10 +1290,11 @@ Dame la fórmula de cada una y explicame paso a paso dónde pegarla, cómo poner
       `- La sede con más ausentismo en 2025 es ${val("q2", "sede")} (${val("q2", "sedeV", "%")}) y el área, ${val("q2", "area")} (${val("q2", "areaV", "%")}).`,
       `- El turno ${val("q3", "turno")} tiene una tasa de ${val("q3", "turnoV", "%")}: ${val("q3", "comp")} promedio de la empresa.`
     ];
-    if (status.x1) lines.push(`- El motivo con más casos es ${A("x1").mot}; el de mayor duración es ${A("x1").dur}, con ${dec(A("x1").durV)} días por ausencia.`);
-    if (status.x2) lines.push(`- Las ausencias cortas se concentran los ${A("x2").dia1} y los ${A("x2").dia2}.`);
-    if (status.x3) lines.push(`- En Depósito CABA, el equipo de ${A("x3").lider} tiene una tasa de ${dec(A("x3").liderV)}%, muy por encima del otro equipo con la misma tarea.`);
-    if (status.x4) lines.push(`- Atención al Cliente ${A("x4").atDir} de ${dec(A("x4").at24)}% a ${dec(A("x4").at25)}%.`);
+    const ext = path !== "simple";
+    if (ext && status.x1) lines.push(`- El motivo con más casos es ${A("x1").mot}; el de mayor duración es ${A("x1").dur}, con ${dec(A("x1").durV)} días por ausencia.`);
+    if (ext && status.x2) lines.push(`- Las ausencias cortas se concentran los ${A("x2").dia1} y los ${A("x2").dia2}.`);
+    if (ext && status.x3) lines.push(`- En Depósito CABA, el equipo de ${A("x3").lider} tiene una tasa de ${dec(A("x3").liderV)}%, muy por encima del otro equipo con la misma tarea.`);
+    if (ext && status.x4) lines.push(`- Atención al Cliente ${A("x4").atDir} de ${dec(A("x4").at24)}% a ${dec(A("x4").at25)}%.`);
 
     const prompt =
 `Creá una presentación de 7 slides para el Comité de Dirección de Logística del Sur S.A. (empresa de logística, 410 personas, 3 sedes, operación 24 horas) sobre ausentismo.
@@ -1197,7 +1323,7 @@ Estilo visual: fondo azul marino (#00344D), acentos en verde (#00FF90), tipograf
     const extras = ["x1", "x2", "x3", "x4"].filter(x => status[x]).length;
     $("#gStatus").innerHTML = [["q1", "Pregunta 01"], ["q2", "Pregunta 02"], ["q3", "Pregunta 03"]]
       .map(([id, n]) => `<div class="${status[id] ? "on" : ""}"><i></i>${n}: ${status[id] ? "confirmada" : "pendiente"}</div>`).join("")
-      + `<div class="${extras ? "on" : ""}"><i></i>Casos extra sumados: ${extras} de 4</div>`;
+      + (path === "simple" ? "" : `<div class="${extras ? "on" : ""}"><i></i>Casos extra sumados: ${extras} de 4</div>`);
   }
   ["#gReco", "#gNombre"].forEach(s => $(s).addEventListener("input", () => {
     store.set("gamma", { reco: $("#gReco").value, nombre: $("#gNombre").value }); buildPrompt();
@@ -1208,21 +1334,55 @@ Estilo visual: fondo azul marino (#00344D), acentos en verde (#00FF90), tipograf
   $$(".qcard").forEach(card => { if (status[card.dataset.q] !== undefined) check(card, true); });
   buildPrompt();
 
-  /* ---------- navegación ---------- */
-  const slides = $$(".slide");
+  /* ---------- navegación por recorrido ---------- */
+  const ALL = $$(".slide");
+  const PATH_NAME = { simple: "Exprés", completo: "Completo" };
+  let slides = [];
   let cur = 0;
-  $("#dots").innerHTML = slides.map((s, i) => {
-    const gap = i > 0 && s.dataset.group !== slides[i - 1].dataset.group ? " gap" : "";
-    return `<button class="dot${gap}" aria-label="Ir a ${esc(s.dataset.title)}" data-i="${i}"></button>`;
-  }).join("");
-  const groups = [];
-  slides.forEach((s, i) => {
-    let gr = groups.find(x => x.name === s.dataset.group);
-    if (!gr) groups.push(gr = { name: s.dataset.group, items: [] });
-    gr.items.push(i);
-  });
-  $("#tocGroups").innerHTML = groups.map(gr => `<div class="toc-group"><p>${esc(gr.name)}</p><div class="toc">${gr.items.map(i =>
-    `<button data-i="${i}"><span class="n">${String(i + 1).padStart(2, "0")}</span><span class="t">${esc(slides[i].dataset.title)}</span></button>`).join("")}</div></div>`).join("");
+  const groupOf = s => (path === "simple" && s.dataset.groupSimple) || s.dataset.group;
+
+  function applyPath() {
+    const p = path || "completo";
+    slides = ALL.filter(s => !s.dataset.path || s.dataset.path === p);
+    ALL.forEach(s => { if (!slides.includes(s)) { s.classList.remove("active", "before"); s.inert = true; s.setAttribute("aria-hidden", "true"); } });
+    $$("[data-label-simple]").forEach(el => {
+      if (!el.dataset.labelCompleto) el.dataset.labelCompleto = el.textContent;
+      el.textContent = path === "simple" ? el.dataset.labelSimple : el.dataset.labelCompleto;
+    });
+    $$("[data-only]").forEach(el => el.hidden = el.dataset.only !== path);
+    $$("[data-choose]").forEach(b => b.setAttribute("aria-pressed", b.dataset.choose === path));
+    $$(".seg [data-switch]").forEach(b => b.setAttribute("aria-pressed", b.dataset.switch === path));
+    const chip = $("#pathChip");
+    chip.hidden = !path;
+    chip.textContent = path ? PATH_NAME[path] + " ⇄" : "";
+
+    $("#dots").innerHTML = slides.map((s, i) => {
+      const gap = i > 0 && groupOf(s) !== groupOf(slides[i - 1]) ? " gap" : "";
+      return `<button class="dot${gap}" aria-label="Ir a ${esc(s.dataset.title)}" data-i="${i}"></button>`;
+    }).join("");
+    $$(".dot").forEach(d => d.addEventListener("click", () => go(+d.dataset.i)));
+
+    const groups = [];
+    slides.forEach((s, i) => {
+      let gr = groups.find(x => x.name === groupOf(s));
+      if (!gr) groups.push(gr = { name: groupOf(s), items: [] });
+      gr.items.push(i);
+    });
+    $("#tocGroups").innerHTML = groups.map(gr => `<div class="toc-group"><p>${esc(gr.name)}</p><div class="toc">${gr.items.map(i =>
+      `<button data-i="${i}"><span class="n">${String(i + 1).padStart(2, "0")}</span><span class="t">${esc(slides[i].dataset.title)}</span></button>`).join("")}</div></div>`).join("");
+    $$("#tocGroups button").forEach(b => b.addEventListener("click", () => { go(+b.dataset.i); closeToc(); }));
+    buildPrompt();
+  }
+
+  function setPath(p, goTo) {
+    const currentId = slides[cur] && slides[cur].dataset.id;
+    path = p; store.set("path", p);
+    applyPath();
+    const target = goTo || currentId;
+    let idx = slides.findIndex(s => s.dataset.id === target);
+    if (idx < 0) idx = slides.findIndex(s => /^mision/.test(s.dataset.id));
+    go(idx);
+  }
 
   function go(i, push = true) {
     i = Math.max(0, Math.min(slides.length - 1, i));
@@ -1238,30 +1398,42 @@ Estilo visual: fondo azul marino (#00344D), acentos en verde (#00FF90), tipograf
     $$("#tocGroups button").forEach(d => d.classList.toggle("on", +d.dataset.i === i));
     $("#counter").textContent = `${i + 1} / ${slides.length}`;
     $("#progress").style.width = ((i + 1) / slides.length * 100) + "%";
-    $("#miniTitle").textContent = slides[i].dataset.group === "Intro" ? slides[i].dataset.title : slides[i].dataset.group + " · " + slides[i].dataset.title;
+    const gr = groupOf(slides[i]);
+    $("#miniTitle").textContent = gr === "Intro" || gr === "Cierre" ? slides[i].dataset.title : gr + " · " + slides[i].dataset.title;
     $("#prev").disabled = i === 0;
     $("#next").disabled = i === slides.length - 1;
-    if (push && location.hash !== "#" + (i + 1)) history.replaceState(null, "", "#" + (i + 1));
+    const id = slides[i].dataset.id;
+    if (push && location.hash !== "#" + id) history.replaceState(null, "", "#" + id);
   }
-  const fromHash = () => { const n = parseInt(location.hash.slice(1), 10); return isNaN(n) ? 0 : n - 1; };
+  function next() {
+    if (cur === 0 && !path) { toast("Elegí tu recorrido para empezar"); $(".route").focus(); return; }
+    go(cur + 1);
+  }
+  const fromHash = () => {
+    const id = location.hash.slice(1);
+    const k = slides.findIndex(s => s.dataset.id === id);
+    if (k >= 0) return k;
+    if (id && ALL.some(s => s.dataset.id === id && s.dataset.path && s.dataset.path !== (path || "completo"))) return 0;
+    return 0;
+  };
 
+  $$("[data-choose]").forEach(b => b.addEventListener("click", () => setPath(b.dataset.choose, "perfil")));
+  $$("[data-switch]").forEach(b => b.addEventListener("click", () => { setPath(b.dataset.switch); closeToc(true); }));
   $("#prev").addEventListener("click", () => go(cur - 1));
-  $("#next").addEventListener("click", () => go(cur + 1));
-  $$("[data-go=next]").forEach(b => b.addEventListener("click", () => go(cur + 1)));
-  $$(".dot").forEach(d => d.addEventListener("click", () => go(+d.dataset.i)));
+  $("#next").addEventListener("click", next);
   window.addEventListener("hashchange", () => go(fromHash(), false));
 
   const toc = $("#toc");
   const openToc = () => { toc.classList.add("open"); const on = $("#tocGroups button.on"); if (on) on.focus(); };
-  const closeToc = () => { toc.classList.remove("open"); $("#openToc").focus(); };
+  function closeToc(silent) { if (!toc.classList.contains("open")) return; toc.classList.remove("open"); if (silent !== true) $("#openToc").focus(); }
   $("#openToc").addEventListener("click", openToc);
+  $("#pathChip").addEventListener("click", openToc);
   $("#closeToc").addEventListener("click", closeToc);
-  $$("#tocGroups button").forEach(b => b.addEventListener("click", () => { go(+b.dataset.i); closeToc(); }));
 
   document.addEventListener("keydown", e => {
     if (e.target.closest("input, textarea, select")) return;
     if (toc.classList.contains("open")) { if (e.key === "Escape" || e.key.toLowerCase() === "i") closeToc(); return; }
-    if (["ArrowRight", "PageDown"].includes(e.key) || (e.key === " " && !e.target.closest("button, a, summary"))) { e.preventDefault(); go(cur + 1); }
+    if (["ArrowRight", "PageDown"].includes(e.key) || (e.key === " " && !e.target.closest("button, a, summary"))) { e.preventDefault(); next(); }
     else if (["ArrowLeft", "PageUp"].includes(e.key)) { e.preventDefault(); go(cur - 1); }
     else if (e.key === "Home") go(0);
     else if (e.key === "End") go(slides.length - 1);
@@ -1273,9 +1445,10 @@ Estilo visual: fondo azul marino (#00344D), acentos en verde (#00FF90), tipograf
   $("#deck").addEventListener("touchend", e => {
     if (e.target.closest(".tbl-wrap, .code, input, textarea")) return;
     const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
-    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5 && Date.now() - st < 600) go(cur + (dx < 0 ? 1 : -1));
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5 && Date.now() - st < 600) { if (dx < 0) next(); else go(cur - 1); }
   }, { passive: true });
 
+  applyPath();
   go(fromHash(), false);
 })();
 </script>

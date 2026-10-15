@@ -3,8 +3,8 @@
 Uso:  python3 scripts/generar_base.py   (desde ejercicio-ausentismo/)
 
 Salida en site/datos/:
-  - base_ausentismo.xlsx      hojas Empleados y Ausencias
-  - base_ausentismo_csv.zip   empleados.csv + ausencias.csv
+  - base_ausentismo.xlsx / _csv.zip   recorrido completo: base con 4 errores a propósito
+  - base_lista.xlsx / _csv.zip        recorrido exprés: base limpia, con columna Año
   - ejercicio.js              respuestas esperadas + vista previa de las tablas (lo usa la web)
 
 La semilla es fija: correrlo de nuevo devuelve exactamente la misma base.
@@ -253,6 +253,13 @@ respuestas = {
     "duracion_media_top_2025": round(motivo_dur.iloc[0], 1),
 }
 
+# ---------------------------------------------------------------- base lista (recorrido exprés)
+# Misma base, sin errores, con fechas reales y la columna Año para no necesitar Calendario.
+
+emp_lista = df_emp.copy()
+aus_lista = df_aus.copy()
+aus_lista["Año"] = aus_lista["Fecha_Inicio"].map(lambda d: d.year)
+
 # ---------------------------------------------------------------- errores a propósito
 
 # 2) Duplicados con el mismo ID: ausencias largas que se actualizaron y el reporte volvió a traer
@@ -292,23 +299,36 @@ SALIDA.mkdir(parents=True, exist_ok=True)
 for viejo in ("empleados.csv", "ausencias.csv"):
     (SALIDA / viejo).unlink(missing_ok=True)
 
-with pd.ExcelWriter(SALIDA / "base_ausentismo.xlsx", engine="openpyxl") as xl:
-    df_emp.to_excel(xl, sheet_name="Empleados", index=False)
-    df_aus.to_excel(xl, sheet_name="Ausencias", index=False)
-    for hoja in xl.sheets.values():
-        for col in hoja.columns:
-            hoja.column_dimensions[col[0].column_letter].width = 18
+def guardar(nombre, emp, aus):
+    with pd.ExcelWriter(SALIDA / f"{nombre}.xlsx", engine="openpyxl",
+                        date_format="DD/MM/YYYY", datetime_format="DD/MM/YYYY") as xl:
+        emp.to_excel(xl, sheet_name="Empleados", index=False)
+        aus.to_excel(xl, sheet_name="Ausencias", index=False)
+        for hoja in xl.sheets.values():
+            for col in hoja.columns:
+                hoja.column_dimensions[col[0].column_letter].width = 18
+    with zipfile.ZipFile(SALIDA / f"{nombre}_csv.zip", "w", zipfile.ZIP_DEFLATED) as z:
+        for archivo, df in (("empleados.csv", emp), ("ausencias.csv", aus)):
+            buf = io.StringIO()
+            df.to_csv(buf, index=False, date_format="%Y-%m-%d")
+            z.writestr(archivo, "\ufeff" + buf.getvalue())
 
-with zipfile.ZipFile(SALIDA / "base_ausentismo_csv.zip", "w", zipfile.ZIP_DEFLATED) as z:
-    for nombre, df in (("empleados.csv", df_emp), ("ausencias.csv", df_aus)):
-        buf = io.StringIO()
-        df.to_csv(buf, index=False)
-        z.writestr(nombre, "﻿" + buf.getvalue())
+
+def muestra(df):
+    df = df.head(4).copy()
+    for col in df.columns:
+        if col.startswith("Fecha"):
+            df[col] = df[col].map(lambda v: v.strftime("%d/%m/%Y") if hasattr(v, "strftime") else v)
+    return {"columnas": list(df.columns), "filas": df.astype(str).values.tolist()}
+
+
+guardar("base_ausentismo", df_emp, df_aus)   # recorrido completo: con errores
+guardar("base_lista", emp_lista, aus_lista)  # recorrido exprés: limpia
 
 (SALIDA / "respuestas.json").unlink(missing_ok=True)
 preview = {
-    nombre: {"columnas": list(df.columns), "filas": df.head(4).astype(str).values.tolist()}
-    for nombre, df in (("empleados", df_emp), ("ausencias", df_aus))
+    "empleados": muestra(df_emp), "ausencias": muestra(df_aus),
+    "empleados_lista": muestra(emp_lista), "ausencias_lista": muestra(aus_lista),
 }
 (SALIDA / "ejercicio.js").write_text(
     "// Generado por scripts/generar_base.py. No editar a mano.\n"
