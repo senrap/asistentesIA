@@ -548,7 +548,7 @@ tr:last-child td { border-bottom: 0; color: var(--gray); }
 .pack-fb .r { color: #FFB4B4; }
 
 /* resultados */
-.budget { position: sticky; top: -44px; z-index: 5; background: var(--navy); color: var(--white); border-radius: 14px; padding: 14px 20px; display: grid; grid-template-columns: auto minmax(0,1fr) auto; gap: 18px; align-items: center; box-shadow: 0 8px 24px rgba(0,52,77,0.18); }
+.budget { position: sticky; top: -44px; margin-left: -4px; margin-right: -4px; z-index: 5; background: var(--navy); color: var(--white); border-radius: 14px; padding: 14px 20px; display: grid; grid-template-columns: auto minmax(0,1fr) auto; gap: 18px; align-items: center; box-shadow: 0 8px 24px rgba(0,52,77,0.18); }
 .budget .lbl { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.6); }
 .budget .val { font-size: 26px; font-weight: 800; color: var(--green); font-variant-numeric: tabular-nums; line-height: 1.1; }
 .budget .track { position: relative; height: 12px; border-radius: 6px; background: rgba(255,255,255,0.12); }
@@ -607,14 +607,83 @@ tr:last-child td { border-bottom: 0; color: var(--gray); }
 .iter button:hover { border-color: var(--green); }
 .iter button::after { content: "  Copiar"; color: var(--green); font-weight: 700; font-size: 11px; }
 
+/* preguntas en 3 columnas + cartel */
+.choices.c3 { grid-template-columns: repeat(3, minmax(0,1fr)); }
+.cartel { background: var(--white); color: var(--navy); border-radius: 14px; padding: 22px 26px; border-left: 6px solid var(--green); box-shadow: 0 10px 40px rgba(0,0,0,0.25); }
+.cartel[hidden] { display: none; }
+.cartel h3 { font-size: 19px; margin: 4px 0 8px; }
+.cartel .ia-badge { margin-bottom: 4px; }
+.cartel > p { font-size: 15px; line-height: 1.6; }
+.cartel-list { margin: 10px 0 12px; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px 20px; counter-reset: c; }
+.cartel-list li { counter-increment: c; display: grid; grid-template-columns: 30px minmax(0,1fr); gap: 2px 10px; font-size: 13.5px; color: var(--gray); line-height: 1.5; }
+.cartel-list li::before { content: counter(c); grid-row: span 2; width: 26px; height: 26px; border-radius: 50%; background: var(--navy); color: var(--green); font-weight: 800; font-size: 13px; display: grid; place-items: center; }
+.cartel-list li b { color: var(--navy); font-size: 14.5px; }
+
+/* modelo estilo diagrama */
+.erd { position: relative; display: grid; grid-template-columns: repeat(2, minmax(0, 280px)); justify-content: center; gap: 48px 160px; padding: 10px 0; }
+.erd-lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+.etable { position: relative; z-index: 1; background: var(--white); border: 1px solid var(--light); border-radius: 10px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,52,77,0.08); align-self: start; }
+.etable b { display: block; background: var(--navy); color: var(--white); padding: 9px 14px; font-size: 13px; }
+.ecol { display: flex; justify-content: space-between; align-items: center; width: 100%; text-align: left; border: 0; border-top: 1px solid var(--light); background: var(--white); padding: 7px 14px; font-size: 12.5px; color: var(--navy); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.ecol:hover { background: var(--green-soft); }
+.ecol .pk { font-family: 'Poppins', sans-serif; font-size: 10px; font-weight: 700; color: var(--green-dark); }
+.ecol.sel { background: var(--green); color: var(--navy); font-weight: 700; }
+.ecol.linked { box-shadow: inset 4px 0 0 var(--navy); }
+.rel-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.rel-chip { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 600; padding: 6px 10px 6px 12px; border-radius: 100px; background: var(--white); border: 1px solid var(--light); color: var(--navy); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.rel-chip.good { border-color: var(--green-2); background: var(--green-soft); }
+.rel-chip.bad { border-color: #E53E3E; background: #FFF0F0; }
+.rel-chip button { border: 0; background: transparent; color: var(--gray); font-size: 14px; line-height: 1; padding: 0 2px; }
+.light .pack-fb .g { color: var(--green-dark); }
+.light .pack-fb .w { color: #9A6B00; }
+.light .pack-fb .r { color: #C53030; }
+
+/* mesa de debate */
+.summary { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 14px; }
+.sum-card { background: var(--navy-2); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 16px 18px; min-width: 0; }
+.sum-card.wide { grid-column: 1 / -1; }
+.sum-card h3 { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--green); margin-bottom: 8px; }
+.sum-card p, .sum-card li { font-size: 14px; line-height: 1.55; color: rgba(255,255,255,0.9); white-space: pre-line; }
+.sum-card ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+.sum-card .pend { color: rgba(255,255,255,0.45); font-style: italic; }
+.debate-q { display: grid; gap: 8px; }
+.debate-q div { display: flex; gap: 10px; font-size: 14px; color: rgba(255,255,255,0.88); }
+.debate-q div::before { content: "?"; flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%; background: var(--green); color: var(--navy); font-weight: 800; font-size: 12px; display: grid; place-items: center; }
+
+/* PDF del resumen (impresión) */
+#printArea { display: none; }
+@media print {
+  @page { size: A4; margin: 14mm; }
+  html, body { height: auto; overflow: visible; background: #fff !important; }
+  body > *:not(#printArea) { display: none !important; }
+  #printArea { display: block; color: #00344D; font-family: 'Poppins', Arial, sans-serif; font-size: 11pt; }
+  #printArea .ph { background: #00344D; color: #fff; padding: 14px 18px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  #printArea .ph img { height: 16px; }
+  #printArea .ph b { color: #00FF90; }
+  #printArea h1 { font-size: 20pt; margin: 14px 0 2px; }
+  #printArea .sub { color: #6B7280; font-size: 10pt; margin-bottom: 10px; }
+  #printArea h2 { font-size: 10pt; letter-spacing: 2px; text-transform: uppercase; color: #008C4F; margin: 14px 0 4px; border-bottom: 1px solid #E8EDF2; padding-bottom: 3px; }
+  #printArea p, #printArea li { font-size: 10.5pt; line-height: 1.5; white-space: pre-line; margin: 0; }
+  #printArea ul { margin: 0; padding-left: 16px; }
+  #printArea .core { break-before: page; }
+  #printArea .core li { margin-bottom: 6px; }
+  #printArea .pf { margin-top: 18px; font-size: 9pt; color: #6B7280; border-top: 1px solid #E8EDF2; padding-top: 6px; }
+}
+
 @media (max-width: 960px) {
+  .choices.c3, .cartel-list, .summary { grid-template-columns: minmax(0,1fr); }
+  .erd { grid-template-columns: minmax(0, 300px); gap: 28px; justify-content: start; }
   .levels, .catalog { grid-template-columns: repeat(2, minmax(0,1fr)); }
   .choices, .programs { grid-template-columns: minmax(0,1fr); }
-  .budget { grid-template-columns: minmax(0,1fr); gap: 10px; position: static; }
+  .budget { grid-template-columns: minmax(0,1fr); gap: 6px; padding: 10px 14px; }
+  .budget .val { font-size: 20px; }
+  .budget .msg { font-size: 12px; }
+  .budget .track { margin-bottom: 16px; }
   .budget .msg { max-width: none; }
 }
 @media (max-width: 640px) {
   .levels, .catalog { grid-template-columns: minmax(0,1fr); }
+  .budget { top: -28px; }
   .level { min-height: 0 !important; }
   .stmt { grid-template-columns: minmax(0,1fr); }
   .stmt .opts { justify-content: flex-start; }
@@ -748,14 +817,16 @@ window.CONFIG = {
         <div class="card">
           <div class="head"><h3>De la pregunta a la recomendación</h3><span class="badge badge-green">90 minutos</span></div>
           <ol>
-            <li><b>1</b>Definir la pregunta<span class="min">10 min</span></li>
+            <li><b>1</b>Definir la pregunta<span class="min">5 min</span></li>
             <li><b>2</b>Formular hipótesis<span class="min">10 min</span></li>
             <li><b>3</b>Debatirlas con una IA<span class="min">5 min</span></li>
-            <li><b>4</b>Armar el paquete de datos<span class="min">10 min</span></li>
-            <li><b>5</b>Leer los resultados y decidir<span class="min">15 min</span></li>
-            <li><b>6</b>Escribir las recomendaciones<span class="min">10 min</span></li>
-            <li><b>7</b>Construir la herramienta de medición<span class="min">15 min</span></li>
-            <li><b>8</b>Generar la presentación<span class="min">10 min</span></li>
+            <li><b>4</b>Elegir los datos<span class="min">5 min</span></li>
+            <li><b>5</b>Armar el modelo<span class="min">10 min</span></li>
+            <li><b>6</b>Leer los resultados y decidir<span class="min">15 min</span></li>
+            <li><b>7</b>Escribir las recomendaciones<span class="min">10 min</span></li>
+            <li><b>8</b>Construir la herramienta de medición<span class="min">15 min</span></li>
+            <li><b>9</b>Generar la presentación<span class="min">10 min</span></li>
+            <li><b>10</b>Llevarlo a la mesa de debate<span class="min">5 min</span></li>
           </ol>
         </div>
         <div class="card week">
@@ -791,20 +862,22 @@ window.CONFIG = {
 
   <section class="slide dark" data-id="pregunta" data-title="La pregunta" data-group="Ejercicio">
     <div class="slide-inner top">
-      <p class="label">Paso 1 · 10 minutos</p>
+      <p class="label">Paso 1 · 5 minutos</p>
       <h2>Todo empieza con <em>una buena pregunta</em>.</h2>
-      <p class="lead">¿Qué pregunta tiene que responder el análisis? Elegí la que te parezca mejor y mirá por qué.</p>
-      <div class="choices mt-24" id="choices"></div>
-      <div class="grid g2 mt-24" style="align-items:start">
-        <div class="field" style="margin:0">
-          <label for="myQ">Ahora escribila con tus palabras</label>
-          <textarea id="myQ" placeholder="Ej.: ¿Qué programas de formación de 2025 movieron la rotación, el ausentismo o las ventas, y cuáles no?"></textarea>
-          <span class="hint">Es la que va a abrir tu presentación.</span>
-        </div>
-        <div class="card-dark">
-          <p class="label">Revisá tu pregunta</p>
-          <div class="criteria" id="criteria"></div>
-        </div>
+      <p class="lead">Solo una de estas seis le sirve al Directorio. ¿Cuál es?</p>
+      <div class="choices c3 mt-24" id="choices"></div>
+      <div class="cartel mt-24" id="cartel" hidden>
+        <span class="ia-badge">Anotalo</span>
+        <h3>¿Por qué esta es la pregunta?</h3>
+        <p>Está atada a la decisión que tiene que tomar el Directorio (dónde recortar y dónde invertir), se responde con datos de resultados y no da por hecho que la formación sirve o que no sirve.</p>
+        <p class="label mt-16" style="margin-bottom:0">Una buena pregunta</p>
+        <ol class="cartel-list">
+          <li><b>Está atada a una decisión</b>Si la respuesta no cambia lo que vamos a hacer, no es la pregunta.</li>
+          <li><b>Se responde con datos</b>Podés imaginar qué tabla o qué gráfico la contesta.</li>
+          <li><b>Define qué compara</b>Programas, personas o sucursales: con y sin, antes y después.</li>
+          <li><b>No da por hecha la respuesta</b>Deja lugar a que el resultado te sorprenda.</li>
+        </ol>
+        <p class="small muted">Tenela a mano: cuando analices los datos, cada gráfico tiene que ayudar a responderla.</p>
       </div>
     </div>
   </section>
@@ -844,21 +917,32 @@ window.CONFIG = {
     </div>
   </section>
 
-  <section class="slide dark" data-id="datos" data-title="El paquete de datos" data-group="Ejercicio">
+  <section class="slide dark" data-id="datos" data-title="Los datos" data-group="Ejercicio">
     <div class="slide-inner top">
-      <p class="label">Paso 4 · 10 minutos</p>
-      <h2>¿Qué datos necesitás para <em>probar tus hipótesis</em>?</h2>
-      <p class="lead">Armá el pedido a las distintas áreas. Ni de más ni de menos: cada dato que pedís alguien lo tiene que buscar, y algunos no corresponde pedirlos.</p>
+      <p class="label">Paso 4 · 5 minutos</p>
+      <h2>Para responder tu pregunta <em>alcanzan 4 tablas</em>. ¿Cuáles?</h2>
+      <p class="lead">Cada dato que pedís alguien lo tiene que buscar, y algunos no corresponde pedirlos. Elegí las 4 que necesitás.</p>
       <div class="catalog mt-24" id="catalog"></div>
-      <div class="actions" style="margin-top:16px"><button class="btn btn-cta btn-sm" type="button" id="checkPack">Revisar mi paquete →</button><span class="small muted" id="packCount"></span></div>
+      <div class="actions" style="margin-top:16px"><button class="btn btn-cta btn-sm" type="button" id="checkPack">Revisar mi pedido →</button><span class="small muted" id="packCount"></span></div>
       <div class="pack-fb" id="packFb" aria-live="polite"></div>
-      <div class="qlist mt-24" id="qCruce"></div>
+    </div>
+  </section>
+
+  <section class="slide light" data-id="modelo" data-title="El modelo" data-group="Ejercicio">
+    <div class="slide-inner top">
+      <p class="label">Paso 5 · 10 minutos</p>
+      <h2>Conectá las tablas: <em>armá el modelo</em>.</h2>
+      <p class="lead muted">Tocá una columna y después la columna de otra tabla con la que se relaciona. Hacen falta 3 relaciones.</p>
+      <div class="erd mt-24" id="erd"><svg class="erd-lines" id="erdLines" aria-hidden="true"></svg></div>
+      <div class="rel-list" id="relList"></div>
+      <div class="actions" style="margin-top:14px"><button class="btn btn-cta btn-sm" type="button" id="checkModel">Revisar modelo →</button><button class="btn btn-outline btn-sm" type="button" id="resetModel">Borrar relaciones</button></div>
+      <div class="pack-fb" id="modelFb" aria-live="polite"></div>
     </div>
   </section>
 
   <section class="slide light" data-id="resultados" data-title="Resultados y decisiones" data-group="Ejercicio">
     <div class="slide-inner top">
-      <p class="label">Paso 5 · 15 minutos</p>
+      <p class="label">Paso 6 · 15 minutos</p>
       <h2>Llegaron los datos. <em>¿Qué hacés con cada programa?</em></h2>
       <p class="lead muted">Comparamos a quienes hicieron cada programa con quienes todavía no lo hicieron. Decidí qué hacer con cada uno: el presupuesto se actualiza solo.</p>
       <div class="budget mt-24" id="budget">
@@ -873,22 +957,22 @@ window.CONFIG = {
 
   <section class="slide light" data-id="recomendaciones" data-title="Recomendaciones" data-group="Ejercicio">
     <div class="slide-inner top">
-      <p class="label">Paso 6 · 10 minutos</p>
+      <p class="label">Paso 7 · 10 minutos</p>
       <h2>Vamos a preparar la presentación para el Directorio. <em>¿Qué le recomendás?</em></h2>
       <div class="reco mt-32">
         <div>
           <div class="field">
             <label for="gReco">Tus recomendaciones</label>
-            <textarea id="gReco" style="min-height:130px" placeholder="Ej.: 1) Extender el Onboarding presencial a las 18 sucursales que no lo tienen (RRHH, meta: bajas a 90 días por debajo de 20%). 2) Eliminar las charlas inspiracionales y reinvertir en lo que muestra impacto."></textarea>
+            <textarea id="gReco" style="min-height:130px" placeholder="Ej.: 1) Qué vamos a hacer · quién · cómo lo medimos."></textarea>
             <span class="hint">2 o 3 acciones concretas, con responsable e indicador.</span>
           </div>
           <div class="field">
             <label for="gMedir">¿Cómo lo van a medir el año que viene?</label>
-            <textarea id="gMedir" style="min-height:80px" placeholder="Ej.: Cada programa nuevo arranca con un indicador de negocio definido y un grupo de comparación."></textarea>
+            <textarea id="gMedir" style="min-height:80px" placeholder="Ej.: Qué indicador seguimos y cada cuánto."></textarea>
           </div>
           <div class="field">
-            <label for="gNombre">Tu nombre</label>
-            <input id="gNombre" type="text" placeholder="Para la portada de la presentación" style="font-size:15px" />
+            <label for="gNombre">Nombre del equipo</label>
+            <input id="gNombre" type="text" placeholder="Ej.: Equipo 3" style="font-size:15px" />
           </div>
         </div>
         <div style="display:grid; gap:16px">
@@ -912,7 +996,7 @@ window.CONFIG = {
   <section class="slide dark" data-id="lovable" data-title="Herramienta en Lovable" data-group="Ejercicio">
     <div class="slide-inner top">
       <span class="ia-badge">IA 2 · Lovable</span>
-      <p class="label">Paso 7 · 15 minutos</p>
+      <p class="label">Paso 8 · 15 minutos</p>
       <h2>Construí la herramienta para <em>medir la formación</em>.</h2>
       <p class="lead">El problema de fondo es que Mercado Austral no mide nada más que la satisfacción. Con Lovable podés crear, sin programar, la app que los líderes completan a los 3 meses de cada curso.</p>
       <div class="gamma mt-24">
@@ -932,7 +1016,7 @@ window.CONFIG = {
   <section class="slide dark" data-id="gamma" data-title="Presentación en Gamma" data-group="Ejercicio">
     <div class="slide-inner top">
       <span class="ia-badge">IA 3 · Gamma</span>
-      <p class="label">Paso 8 · 10 minutos</p>
+      <p class="label">Paso 9 · 10 minutos</p>
       <h2>Tu prompt está listo. <em>Llevalo a Gamma.</em></h2>
       <p class="lead">Gamma es una IA que genera presentaciones a partir de un texto. El prompt ya tiene tu pregunta, tus hipótesis, los datos, tus decisiones y tus recomendaciones.</p>
       <div class="gamma mt-24">
@@ -948,12 +1032,34 @@ window.CONFIG = {
     </div>
   </section>
 
+  <section class="slide dark" data-id="mesa" data-title="Mesa de debate" data-group="Ejercicio">
+    <div class="slide-inner top">
+      <p class="label">Paso 10 · 5 minutos</p>
+      <h2>Llevá lo que definieron <em>a la mesa de debate</em>.</h2>
+      <p class="lead">Este es el resumen de tu equipo. Compartilo, comparalo con el de otros equipos y defendé tus decisiones.</p>
+      <div class="actions" style="margin-top:18px">
+        <button class="btn btn-cta btn-sm" type="button" id="copySum">Copiar resumen</button>
+        <button class="btn btn-outline btn-sm" type="button" id="printSum">Descargar resumen en PDF</button>
+        <a class="btn btn-outline btn-sm" href="assets/guia-del-dato-a-la-decision.pdf" download>Descargar guía de recomendaciones (PDF)</a>
+      </div>
+      <div class="summary mt-24" id="summary"></div>
+      <div class="card-dark mt-16">
+        <p class="label">Para debatir entre equipos</p>
+        <div class="debate-q">
+          <div>¿En qué programa decidieron distinto que otro equipo? ¿Qué dato los hizo decidir?</div>
+          <div>¿Qué dato les faltó para estar más seguros?</div>
+          <div>Si fueran el Director Financiero, ¿qué le preguntarían a otro equipo?</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="slide dark" data-id="explorar" data-title="Seguí explorando" data-group="Cierre">
     <div class="slide-inner">
       <p class="label">Seguí explorando</p>
       <h2>Ahora te toca a vos. <em>Que los datos hablen.</em></h2>
       <div class="links mt-32" id="links"></div>
-      <div class="actions"><a class="btn btn-outline" href="#inicio">Volver al inicio</a></div>
+      <div class="actions"><a class="btn btn-cta" href="assets/guia-del-dato-a-la-decision.pdf" download>Descargar guía de recomendaciones (PDF)</a><a class="btn btn-outline" href="#inicio">Volver al inicio</a></div>
     </div>
   </section>
 </main>
@@ -982,6 +1088,7 @@ window.CONFIG = {
 </div>
 
 <div class="toast" id="toast" role="status"></div>
+<div id="printArea"></div>
 
 <script>
 (function () {
@@ -1039,21 +1146,20 @@ window.CONFIG = {
      PASO 1 · LA PREGUNTA
      ===================================================================== */
   const PREGUNTAS = [
-    { t: "Describe", q: "¿Cuántas horas de capacitación dimos en 2025?", ok: false,
+    { q: "¿Cuántas horas de capacitación dimos en 2025?", ok: false,
       why: "Es descriptiva: dice cuánto hicimos, no si sirvió. No ayuda a decidir qué recortar." },
-    { t: "Decide", q: "¿Qué programas mejoran indicadores del negocio y cuáles no, para decidir dónde recortar y dónde invertir?", ok: true,
-      why: "Esta es. Está atada a la decisión del Directorio, se puede medir y no da por hecha la respuesta." },
-    { t: "Satisfacción", q: "¿Los participantes están satisfechos con los cursos?", ok: false,
+    { q: "¿Los participantes están satisfechos con los cursos?", ok: false,
       why: "Ya lo sabemos: 4,6 sobre 5. Es el nivel 1, justo lo que no convence al Directorio." },
-    { t: "Defiende", q: "¿Cómo convencemos al Directorio de que no recorte?", ok: false,
+    { q: "¿Cuánto gastamos en formación por persona?", ok: false,
+      why: "Es un dato útil, pero solo mira el costo. No dice qué se obtuvo a cambio." },
+    { q: "¿Qué programas mejoran indicadores del negocio y cuáles no, para decidir dónde recortar y dónde invertir?", ok: true,
+      why: "¡Esta es! Mirá el cartel de abajo." },
+    { q: "¿Qué cursos dan otras empresas del sector?", ok: false,
+      why: "Compararse sirve, pero no responde si nuestros programas funcionan." },
+    { q: "¿Cómo convencemos al Directorio de que no recorte?", ok: false,
       why: "Arranca con la respuesta puesta. Si un programa no sirve, el análisis también lo tiene que decir." }
   ];
-  const CRITERIOS = [
-    "Está conectada con la decisión que hay que tomar",
-    "Se puede responder con datos",
-    "Define qué se compara (programas, personas, sucursales)",
-    "No da por hecha la respuesta"
-  ];
+  const PREGUNTA_OK = PREGUNTAS.find(p => p.ok).q;
   $("#choices").innerHTML = PREGUNTAS.map((p, i) => `
     <button type="button" class="choice" data-i="${i}"><span class="tag">Opción ${String.fromCharCode(65 + i)}</span><span class="opt-q">${esc(p.q)}</span><span class="why">${esc(p.why)}</span></button>`).join("");
   function paintChoices() {
@@ -1061,16 +1167,13 @@ window.CONFIG = {
       const p = PREGUNTAS[+b.dataset.i], picked = (state.picked || []).includes(+b.dataset.i);
       b.classList.toggle("picked", picked); b.classList.toggle("good", picked && p.ok); b.classList.toggle("bad", picked && !p.ok);
     });
+    $("#cartel").hidden = !(state.picked || []).some(i => PREGUNTAS[i].ok);
   }
   $$(".choice").forEach(b => b.addEventListener("click", () => {
     const i = +b.dataset.i;
     state.picked = [...new Set([...(state.picked || []), i])];
-    if (PREGUNTAS[i].ok) toast("¡Esa es!");
     paintChoices(); save();
-  }));
-  $("#criteria").innerHTML = CRITERIOS.map((c, i) => `<label><input type="checkbox" data-c="${i}"> <span>${esc(c)}</span></label>`).join("");
-  $$("[data-c]").forEach(cb => cb.addEventListener("change", () => {
-    state.crit = state.crit || {}; state.crit[cb.dataset.c] = cb.checked; save();
+    if (PREGUNTAS[i].ok) { toast("¡Esa es!"); setTimeout(() => $("#cartel").scrollIntoView({ behavior: "smooth", block: "start" }), 150); }
   }));
 
   /* =====================================================================
@@ -1081,7 +1184,7 @@ window.CONFIG = {
     { s: "Las sucursales con Onboarding presencial tienen menos bajas en los primeros 90 días que las que no lo tienen.", ok: true, why: "Concreta: programa, indicador y contra qué comparar." },
     { s: "A la gente le gustan los cursos.", ok: false, why: "Es nivel 1 y no se conecta con ningún resultado del negocio." },
     { s: "Los equipos de líderes que hicieron Liderazgo en acción tienen menos ausentismo que el resto.", ok: true, why: "Se puede probar: compara equipos con y sin líderes formados." },
-    { s: "Como el curso de Excel tuvo 4,8 de satisfacción, mejoró la productividad.", ok: false, why: "Confunde que les guste con que lo apliquen. Satisfacción no es impacto." }
+    { s: "Como el curso de IA tuvo 4,8 de satisfacción, mejoró la productividad.", ok: false, why: "Confunde que les guste con que lo apliquen. Satisfacción no es impacto." }
   ];
   $("#stmts").innerHTML = ENUNCIADOS.map((e, i) => `
     <div class="stmt" data-i="${i}">
@@ -1110,7 +1213,7 @@ window.CONFIG = {
     state.stmts = state.stmts || {}; state.stmts[el.dataset.i] = +b.dataset.a; paintStmts(); save();
   })));
 
-  const PROGRAMAS_N = ["Onboarding presencial", "Liderazgo en acción", "Excel avanzado", "Atención al cliente (e-learning)", "Charlas inspiracionales"];
+  const PROGRAMAS_N = ["Onboarding presencial", "Liderazgo en acción", "IA en el trabajo diario", "Atención al cliente (e-learning)", "Charlas inspiracionales"];
   const H_PARTS = [
     { k: "prog", opts: PROGRAMAS_N, ph: "Elegí un programa" },
     { k: "efecto", opts: ["reduce", "mejora"], ph: "efecto" },
@@ -1138,102 +1241,134 @@ window.CONFIG = {
   });
 
   /* =====================================================================
-     PASO 3 · PAQUETE DE DATOS
-     tipo: clave (imprescindible) · resultado (nivel 4) · proceso (niveles 1 a 3) · no (no corresponde)
+     PASOS 4 y 5 · DATOS (4 tablas) Y MODELO
      ===================================================================== */
   const DATOS = [
-    { id: "nomina", own: "RRHH", n: "Nómina", d: "Legajo, puesto, sucursal, líder y antigüedad.", tipo: "clave" },
-    { id: "lms", own: "Formación", n: "Registro de cursos", d: "Quién hizo cada curso y cuándo.", tipo: "clave" },
-    { id: "costos", own: "Finanzas", n: "Costos por programa", d: "Cuánto costó cada curso en 2025.", tipo: "clave" },
-    { id: "satis", own: "Formación", n: "Encuestas de satisfacción", d: "Nivel 1: si les gustó.", tipo: "proceso" },
-    { id: "evals", own: "Formación", n: "Evaluaciones antes y después", d: "Nivel 2: si aprendieron.", tipo: "proceso" },
-    { id: "uso", own: "Líderes", n: "Uso a los 3 meses", d: "Nivel 3: si lo aplican en el puesto.", tipo: "proceso" },
-    { id: "bajas", own: "RRHH", n: "Bajas con fecha y motivo", d: "Para medir rotación temprana.", tipo: "resultado" },
-    { id: "ausen", own: "RRHH", n: "Ausentismo por persona", d: "Días de ausencia por mes.", tipo: "resultado" },
-    { id: "ventas", own: "Comercial", n: "Ventas por sucursal", d: "Ventas mensuales por empleado.", tipo: "resultado" },
-    { id: "nps", own: "Comercial", n: "NPS de clientes", d: "Satisfacción de clientes por sucursal.", tipo: "resultado" },
-    { id: "clima", own: "RRHH", n: "Encuesta de clima", d: "Resultados por equipo.", tipo: "resultado" },
-    { id: "salud", own: "Medicina laboral", n: "Diagnósticos médicos", d: "Historias clínicas de cada persona.", tipo: "no", why: "Son datos de salud: sensibles y no responden la pregunta." },
-    { id: "chats", own: "Sistemas", n: "Mails y chats internos", d: "Mensajes de los colaboradores.", tipo: "no", why: "Es invasivo y no hace falta para medir impacto." },
-    { id: "redes", own: "Internet", n: "Redes sociales personales", d: "Perfiles fuera del trabajo.", tipo: "no", why: "No corresponde: es la vida privada de las personas." }
+    { id: "nomina", own: "RRHH", n: "Nómina", d: "Legajo, puesto, sucursal, líder, fechas de ingreso y egreso.", ok: true,
+      falta: "sin la nómina no sabés quién es quién, en qué sucursal trabaja ni quién se fue." },
+    { id: "cursos", own: "Formación", n: "Cursos realizados", d: "Quién hizo cada programa, cuándo y si lo terminó.", ok: true,
+      falta: "sin saber quién hizo cada programa no hay comparación posible." },
+    { id: "programas", own: "Formación y Finanzas", n: "Programas", d: "Costo, modalidad y satisfacción de cada programa.", ok: true,
+      falta: "sin costos no podés decidir dónde recortar." },
+    { id: "sucursales", own: "Comercial", n: "Sucursales", d: "Ventas, NPS y ausentismo de cada sucursal.", ok: true,
+      falta: "sin indicadores de negocio no llegás al nivel 4." },
+    { id: "satis", own: "Formación", n: "Respuestas de satisfacción", d: "Cada respuesta de cada encuesta.", ok: false,
+      why: "no suma: el promedio ya está en Programas y es nivel 1." },
+    { id: "salud", own: "Medicina laboral", n: "Diagnósticos médicos", d: "Historias clínicas de cada persona.", ok: false,
+      why: "son datos de salud: sensibles y no responden la pregunta." },
+    { id: "chats", own: "Sistemas", n: "Mails y chats internos", d: "Mensajes de los colaboradores.", ok: false,
+      why: "es invasivo y no hace falta para medir impacto." },
+    { id: "redes", own: "Internet", n: "Redes sociales personales", d: "Perfiles fuera del trabajo.", ok: false,
+      why: "no corresponde: es la vida privada de las personas." }
   ];
   $("#catalog").innerHTML = DATOS.map(d => `
     <button type="button" class="dcard" data-d="${d.id}" aria-pressed="false">
       <span class="own">${esc(d.own)}</span><b>${esc(d.n)}</b><span class="d">${esc(d.d)}</span><span class="chk"></span>
     </button>`).join("");
-  function paintPack(showFlags) {
+  function paintPack() {
     const sel = state.pack || [];
     $$(".dcard").forEach(b => {
       const on = sel.includes(b.dataset.d);
       b.setAttribute("aria-pressed", on);
       $(".chk", b).textContent = on ? "✓ En el pedido" : "+ Pedir";
-      if (!showFlags) b.classList.remove("flag-bad", "flag-miss");
     });
-    $("#packCount").textContent = `${sel.length} dato${sel.length === 1 ? "" : "s"} en tu pedido`;
+    $("#packCount").textContent = `${sel.length} de 4 tablas elegidas`;
   }
   $$(".dcard").forEach(b => b.addEventListener("click", () => {
     const id = b.dataset.d; state.pack = state.pack || [];
     state.pack = state.pack.includes(id) ? state.pack.filter(x => x !== id) : [...state.pack, id];
     b.classList.remove("flag-bad", "flag-miss");
-    paintPack(true); save();
+    paintPack(); save();
   }));
   function checkPack(silent) {
     const sel = state.pack || [];
-    const byId = id => DATOS.find(d => d.id === id);
-    const faltan = DATOS.filter(d => d.tipo === "clave" && !sel.includes(d.id));
-    const malos = sel.map(byId).filter(d => d.tipo === "no");
-    const res = sel.map(byId).filter(d => d.tipo === "resultado");
-    const proc = sel.map(byId).filter(d => d.tipo === "proceso" && d.id !== "satis");
+    const faltan = DATOS.filter(d => d.ok && !sel.includes(d.id));
+    const sobran = DATOS.filter(d => !d.ok && sel.includes(d.id));
     const lines = [];
     $$(".dcard").forEach(b => b.classList.remove("flag-bad", "flag-miss"));
-    faltan.forEach(d => { lines.push(["w", "Falta", `${d.n}: ${d.id === "nomina" ? "sin la nómina no podés cruzar nada con nada." : d.id === "lms" ? "sin saber quién hizo cada curso no hay comparación posible." : "sin costos no podés decidir dónde recortar."}`]); $(`[data-d="${d.id}"]`).classList.add("flag-miss"); });
-    if (res.length < 2) lines.push(["w", "Falta", `Indicadores de resultado (nivel 4). Pediste ${res.length}: sumá al menos 2 entre bajas, ausentismo, ventas, NPS o clima.`]);
-    malos.forEach(d => { lines.push(["r", "Sacá", `${d.n}. ${d.why}`]); $(`[data-d="${d.id}"]`).classList.add("flag-bad"); });
-    const ok = !faltan.length && res.length >= 2 && !malos.length;
-    if (ok) {
-      lines.unshift(["g", "¡Bien!", `Tu paquete permite cruzar personas, cursos, costos y ${res.length} indicadores de resultado.`]);
-      if (proc.length) lines.push(["g", "Plus", "Sumaste datos de aprendizaje o aplicación: así vas a poder explicar por qué un curso no funcionó."]);
-      else lines.push(["w", "Tip", "Pensá en sumar evaluaciones o uso a los 3 meses: ayudan a entender por qué un curso no funciona."]);
-    }
+    faltan.forEach(d => { lines.push(["w", "Falta", `${d.n}: ${d.falta}`]); $(`[data-d="${d.id}"]`).classList.add("flag-miss"); });
+    sobran.forEach(d => { lines.push(["r", "Sacá", `${d.n}: ${d.why}`]); $(`[data-d="${d.id}"]`).classList.add("flag-bad"); });
+    const ok = !faltan.length && !sobran.length;
+    if (ok) lines.unshift(["g", "¡Bien!", "Con estas 4 tablas sabés quién hizo qué programa, cuánto costó y qué pasó con el negocio. Ahora hay que conectarlas."]);
     state.packOk = ok;
     $("#packFb").innerHTML = lines.map(([c, k, t]) => `<div class="${c}"><span class="k">${k}</span><span>${esc(t)}</span></div>`).join("");
-    if (!silent) { store.set("state", state); buildAll(); if (ok) toast("¡Paquete listo!"); }
+    if (!silent) { store.set("state", state); buildAll(); if (ok) toast("¡Pedido listo!"); }
   }
   $("#checkPack").addEventListener("click", () => checkPack());
 
-  /* ---------- pregunta de cruce (mismo formato que el ejercicio de ausentismo) ---------- */
-  const CRUCE = {
-    id: "cruce", titulo: "¿Cómo cruzás los datos?",
-    hint: "Pensá qué columna está en las dos fuentes que querés unir.",
-    lineas: [
-      "Para cruzar quién hizo cada curso con las bajas, usás {c:a:Nombre y apellido|Legajo|Sucursal|Mes}.",
-      "Para cruzar los cursos con las ventas y el NPS, usás {c:b:Legajo|Sucursal|Puesto}, porque esos datos no son por persona."
-    ],
-    esperado: { a: "Legajo", b: "Sucursal" },
-    ok: "Exacto. Legajo une todo lo que es por persona; Sucursal, lo que se mide por local. La nómina tiene las dos.",
-    mal: "Revisá lo marcado. El nombre se repite y se escribe distinto; el legajo es único."
+  /* ---------- modelo: conectar tablas estilo diagrama ---------- */
+  const TABLAS = [
+    { id: "programas", n: "Programas", cols: [["Programa", 1], ["Costo_2025"], ["Modalidad"], ["Satisfaccion"]] },
+    { id: "nomina", n: "Nómina", cols: [["Legajo", 1], ["Nombre"], ["Puesto"], ["Sucursal"], ["Lider"], ["Fecha_Ingreso"], ["Fecha_Egreso"]] },
+    { id: "cursos", n: "Cursos realizados", cols: [["Legajo"], ["Programa"], ["Fecha"], ["Completo"]] },
+    { id: "sucursales", n: "Sucursales", cols: [["Sucursal", 1], ["Region"], ["Ventas_mensuales"], ["NPS"], ["Ausentismo"]] }
+  ];
+  const REL_OK = ["cursos.Legajo|nomina.Legajo", "cursos.Programa|programas.Programa", "nomina.Sucursal|sucursales.Sucursal"];
+  const REL_HINT = {
+    "cursos.Legajo|nomina.Legajo": "Cursos realizados dice quién hizo cada programa: ¿dónde está la información de esa persona?",
+    "cursos.Programa|programas.Programa": "Cursos realizados tiene el nombre del programa: ¿qué tabla tiene su costo?",
+    "nomina.Sucursal|sucursales.Sucursal": "La nómina dice dónde trabaja cada persona: ¿qué tabla tiene los resultados de cada sucursal?"
   };
-  const cr = state.cruce || {};
-  $("#qCruce").innerHTML = `<div class="qcard" data-q="cruce">
-      <div class="qhead"><span class="qnum">✓</span><h3>${esc(CRUCE.titulo)}</h3></div>
-      <div class="qbody"><p class="qhint">${esc(CRUCE.hint)}</p>
-      ${CRUCE.lineas.map(l => `<div class="qline">${esc(l).replace(/\{c:(\w+):([^}]+)\}/g, (_, k, o) => o.split("|").map(v => `<button type="button" class="opt" data-k="${k}" data-v="${v}" aria-pressed="${cr[k] === v}">${v}</button>`).join(" "))}</div>`).join("")}
-      <div class="qfoot"><button type="button" class="btn btn-cta btn-sm" data-confirm>Confirmar →</button><span class="feedback" aria-live="polite"></span></div></div></div>`;
-  const crCard = $("#qCruce .qcard");
-  crCard.addEventListener("click", e => {
-    const b = e.target.closest(".opt");
-    if (b) { state.cruce = state.cruce || {}; state.cruce[b.dataset.k] = b.dataset.v; $$(`.opt[data-k="${b.dataset.k}"]`, crCard).forEach(o => { o.setAttribute("aria-pressed", o === b); o.classList.remove("bad"); }); save(); }
-    if (e.target.closest("[data-confirm]")) checkCruce();
-  });
-  function checkCruce(silent) {
-    const st = state.cruce || {}; let ok = true;
-    Object.entries(CRUCE.esperado).forEach(([k, v]) => {
-      const good = st[k] === v; ok = ok && good;
-      $$(`.opt[data-k="${k}"]`, crCard).forEach(b => b.classList.toggle("bad", !good && (b.getAttribute("aria-pressed") === "true" || !st[k])));
-    });
-    const fb = $(".feedback", crCard); fb.className = "feedback " + (ok ? "ok" : "bad"); fb.textContent = ok ? CRUCE.ok : CRUCE.mal;
-    if (!silent && ok) toast("¡Correcto!");
+  const tName = id => TABLAS.find(t => t.id === id).n;
+  const key = (a, b) => [a, b].sort().join("|");
+  const label = k => k.split("|").map(x => { const [t, c] = x.split("."); return `${tName(t)}.${c}`; }).join(" ↔ ");
+  $("#erd").insertAdjacentHTML("beforeend", TABLAS.map(t => `
+    <div class="etable" data-t="${t.id}"><b>${esc(t.n)}</b>${t.cols.map(([c, pk]) => `<button type="button" class="ecol" data-col="${t.id}.${c}"><span>${c}</span>${pk ? '<span class="pk">CLAVE</span>' : ""}</button>`).join("")}</div>`).join(""));
+  let selCol = null, modelChecked = false;
+  function drawModel() {
+    const links = state.links || [];
+    const box = $("#erd").getBoundingClientRect();
+    const linked = new Set(links.flatMap(k => k.split("|")));
+    $$(".ecol").forEach(b => { b.classList.toggle("sel", b.dataset.col === selCol); b.classList.toggle("linked", linked.has(b.dataset.col)); });
+    $("#erdLines").innerHTML = links.map(k => {
+      const [a, b] = k.split("|").map(c => $(`.ecol[data-col="${c}"]`).getBoundingClientRect());
+      const ay = a.top + a.height / 2 - box.top, by = b.top + b.height / 2 - box.top;
+      let x1, x2, c1, c2;
+      if (Math.abs((a.left + a.right) / 2 - (b.left + b.right) / 2) < 40) {
+        x1 = a.right - box.left; x2 = b.right - box.left; c1 = x1 + 70; c2 = x2 + 70;
+      } else if (a.left < b.left) {
+        x1 = a.right - box.left; x2 = b.left - box.left; c1 = x1 + 60; c2 = x2 - 60;
+      } else {
+        x1 = a.left - box.left; x2 = b.right - box.left; c1 = x1 - 60; c2 = x2 + 60;
+      }
+      const good = REL_OK.includes(k);
+      const col = !modelChecked ? "#00344D" : good ? "#00CC72" : "#E53E3E";
+      const dash = modelChecked && !good ? ' stroke-dasharray="6 5"' : "";
+      const mx = (x1 + x2 + c1 + c2) / 4, my = (ay + by) / 2;
+      const tag = modelChecked && good ? `<rect x="${mx - 20}" y="${my - 10}" width="40" height="20" rx="10" fill="#00CC72"/><text x="${mx}" y="${my + 4}" font-size="11" font-weight="700" text-anchor="middle" fill="#00344D" font-family="Poppins, sans-serif">1 : *</text>` : "";
+      return `<path d="M${x1},${ay} C${c1},${ay} ${c2},${by} ${x2},${by}" fill="none" stroke="${col}" stroke-width="2.5"${dash}/><circle cx="${x1}" cy="${ay}" r="4" fill="${col}"/><circle cx="${x2}" cy="${by}" r="4" fill="${col}"/>${tag}`;
+    }).join("");
+    $("#relList").innerHTML = links.map((k, i) => `<span class="rel-chip ${modelChecked ? (REL_OK.includes(k) ? "good" : "bad") : ""}">${esc(label(k))}<button type="button" data-rm="${i}" aria-label="Quitar relación">✕</button></span>`).join("");
+    $$("[data-rm]").forEach(b => b.addEventListener("click", () => { state.links.splice(+b.dataset.rm, 1); modelChecked = false; $("#modelFb").innerHTML = ""; drawModel(); save(); }));
   }
+  $$(".ecol").forEach(b => b.addEventListener("click", () => {
+    const c = b.dataset.col;
+    if (!selCol) { selCol = c; }
+    else if (selCol === c) { selCol = null; }
+    else if (selCol.split(".")[0] === c.split(".")[0]) { selCol = c; toast("Elegí una columna de otra tabla"); }
+    else {
+      const k = key(selCol, c); state.links = state.links || [];
+      if (!state.links.includes(k)) state.links.push(k);
+      selCol = null; modelChecked = false; $("#modelFb").innerHTML = ""; save();
+    }
+    drawModel();
+  }));
+  function checkModel(silent) {
+    const links = state.links || [];
+    const malas = links.filter(k => !REL_OK.includes(k));
+    const faltan = REL_OK.filter(k => !links.includes(k));
+    const lines = [];
+    if (!malas.length && !faltan.length) lines.push(["g", "¡Modelo listo!", "Legajo une a las personas con sus cursos, Programa une cada curso con su costo y Sucursal une a las personas con los resultados del negocio. Las tres son relaciones uno a varios."]);
+    malas.forEach(k => lines.push(["r", "Revisá", `${label(k)}: esas columnas no guardan la misma información.`]));
+    faltan.forEach(k => lines.push(["w", "Falta", REL_HINT[k]]));
+    modelChecked = true; state.modelOk = !malas.length && !faltan.length;
+    $("#modelFb").innerHTML = lines.map(([c, k, t]) => `<div class="${c}"><span class="k">${k}</span><span>${esc(t)}</span></div>`).join("");
+    drawModel();
+    if (!silent) { store.set("state", state); buildAll(); if (state.modelOk) toast("¡Modelo listo!"); }
+  }
+  $("#checkModel").addEventListener("click", () => checkModel());
+  $("#resetModel").addEventListener("click", () => { state.links = []; selCol = null; modelChecked = false; $("#modelFb").innerHTML = ""; drawModel(); save(); });
+  window.addEventListener("resize", () => drawModel());
 
   /* =====================================================================
      PASO 4 · RESULTADOS Y DECISIONES
@@ -1256,12 +1391,12 @@ window.CONFIG = {
             "Mantener": ["good", "Bien: muestra impacto en ausentismo y clima. Se sostiene y se sigue midiendo."],
             "Rediseñar": ["bad", "Los resultados son buenos: no hay nada que justifique cambiarlo."],
             "Recortar": ["bad", "Sus equipos faltan menos y tienen mejor clima. Recortarlo es perder ese efecto."] } },
-    { id: "xls", n: "Excel avanzado", who: "Oficinas centrales · 140 personas", cost: 24, sat: "4,8",
+    { id: "xls", n: "IA en el trabajo diario", who: "Oficinas centrales · 140 personas", cost: 24, sat: "4,8",
       metric: "Días para el cierre contable", con: 6.1, sin: 6.2, unit: " días", max: 8, menosEsMejor: true,
-      extra: "Es el curso mejor puntuado, pero solo el 35% usa lo aprendido a los 3 meses.",
+      extra: "Es el curso mejor puntuado, pero a los 3 meses solo el 35% usa IA en su trabajo.",
       fb: { "Invertir más": ["bad", "Gusta mucho, pero no cambió nada: 6,1 contra 6,2 días. Satisfacción no es impacto."],
             "Mantener": ["bad", "Mantenerlo así es seguir pagando por un curso que casi nadie aplica."],
-            "Rediseñar": ["good", "Bien: el tema sirve, el formato no. Rediseñarlo con casos reales del puesto puede hacer que se use."],
+            "Rediseñar": ["good", "Bien: el tema sirve, el formato no. Con casos reales de cada puesto, la IA se empieza a usar."],
             "Recortar": ["ok", "Es defendible: no muestra impacto. Pero antes de eliminarlo, se puede probar un formato aplicado."] } },
     { id: "atc", n: "Atención al cliente (e-learning)", who: "Personal de sucursal · 1.200 inscriptos", cost: 18, sat: "4,0",
       metric: "NPS de clientes", con: 41, sin: 40, unit: "", max: 60, menosEsMejor: false,
@@ -1320,7 +1455,7 @@ window.CONFIG = {
   /* =====================================================================
      PASO 5 y 6 · RECOMENDACIONES Y PROMPT
      ===================================================================== */
-  const FIELDS = { myQ: "#myQ", reco: "#gReco", medir: "#gMedir", nombre: "#gNombre", aprendi: "#sAprendi", link: "#lLink" };
+  const FIELDS = { reco: "#gReco", medir: "#gMedir", nombre: "#gNombre", aprendi: "#sAprendi", link: "#lLink" };
   const g = store.get("gamma", {});
   Object.entries(FIELDS).forEach(([k, sel]) => {
     $(sel).value = g[k] || "";
@@ -1390,9 +1525,11 @@ Diseño: limpio, en español, fondo blanco con encabezado azul marino (#00344D),
       return `<div><span>${esc(p.n.replace(/ «.*»/, ""))}</span>${d ? `<b>${d} · ${fmtM(p.cost * FACTOR[d])}</b>` : `<span class="pend">sin decidir</span>`}</div>`;
     }).join("") + `<div><span><b>Total 2026</b></span><b>${fmtM(budgetOf(dec))}</b></div>`;
 
-    const pregunta = $("#myQ").value.trim() || ((state.picked || []).includes(1) ? PREGUNTAS[1].q : "[definí tu pregunta en el paso 1]");
+    const preguntaOk = (state.picked || []).some(i => PREGUNTAS[i].ok);
+    const pregunta = preguntaOk ? PREGUNTA_OK : "[encontrá la pregunta en el paso 1]";
     const hyps = (state.hyps || []).map((h, i) => `- H${i + 1}: ${hypText(h)}`).join("\n") || "- [agregá tus hipótesis en el paso 2]";
-    const pack = (state.pack || []).map(id => DATOS.find(d => d.id === id)).filter(d => d.tipo !== "no").map(d => `${d.n} (${d.own})`).join(", ") || "[armá tu paquete de datos en el paso 3]";
+    const pack = (state.pack || []).map(id => DATOS.find(d => d.id === id)).filter(d => d.ok).map(d => `${d.n} (${d.d.replace(/\.$/, "")})`).join("; ") || "[elegí los datos en el paso 4]";
+    const modelo = (state.links || []).filter(k => REL_OK.includes(k)).map(label).join("; ");
     const hall = PROGS.map(p => {
       const dato = p.metric ? `${p.metric}: ${fmt(p.con, Number.isInteger(p.con) ? 0 : 1)}${p.unit} con el programa contra ${fmt(p.sin, Number.isInteger(p.sin) ? 0 : 1)}${p.unit} sin el programa` : "sin datos de impacto";
       return `- ${p.n.replace(/ «.*»/, "")} (${fmtM(p.cost)}, satisfacción ${p.sat}): ${dato}. ${p.extra} Decisión: ${dec[p.id] || "[sin decidir]"}.`;
@@ -1414,7 +1551,7 @@ ${pregunta}
 Hipótesis:
 ${hyps}
 
-Datos que usamos: ${pack}.
+Datos que usamos: ${pack}.${modelo ? `\nRelaciones del modelo: ${modelo}.` : ""}
 
 Resultados por programa (con programa vs. sin programa):
 ${hall}
@@ -1441,16 +1578,64 @@ Estilo visual: fondo azul marino (#00344D), acentos en verde (#00FF90), tipograf
     $("#gPrompt").innerHTML = `<button class="copy-btn" type="button" id="gCopyInner">Copiar</button>` + esc(prompt);
     $("#gCopyInner").addEventListener("click", e => copy(prompt, e.currentTarget));
     $("#gPrompt").dataset.prompt = prompt;
+    buildSummary({ pregunta: preguntaOk ? PREGUNTA_OK : "", reco, medir, nombre, dec });
   }
+
+  /* ---------- mesa de debate: resumen en pantalla, texto y PDF ---------- */
+  const CORE = [
+    ["La pregunta", "Atada a una decisión, que se responda con datos, que defina qué compara y que no dé por hecha la respuesta."],
+    ["Las hipótesis", "Creemos que [programa] mejora o reduce [indicador]. Lo comprobamos comparando [con y sin, antes y después]. Una opinión no es una hipótesis."],
+    ["El debate con IA", "Usá un LLM como sparring: pedile qué dato te refuta, qué sesgo tenés y qué explicación alternativa existe. No aceptes todo."],
+    ["Los datos", "Pedí lo justo: quién, qué hizo, cuánto costó y qué resultado tuvo. Los datos de salud, chats o redes no corresponden."],
+    ["El modelo", "Conectá por claves: Legajo para personas, Programa para cursos, Sucursal para resultados. Relaciones uno a varios."],
+    ["El análisis", "Compará con y sin programa, y llegá al nivel 4: resultados de negocio. Satisfacción no es impacto."],
+    ["Las recomendaciones", "Cada una responde a un hallazgo, tiene responsable y se puede medir con un indicador y una meta."],
+    ["La medición", "Todo programa nuevo arranca con un indicador de negocio definido, un grupo de comparación y una medición a los 3 meses."]
+  ];
+  let summaryText = "";
+  function buildSummary({ pregunta, reco, medir, nombre, dec }) {
+    const hyps = (state.hyps || []).map(hypText);
+    const pack = (state.pack || []).map(id => DATOS.find(d => d.id === id)).filter(d => d.ok).map(d => d.n);
+    const modelo = (state.links || []).filter(k => REL_OK.includes(k)).map(label);
+    const decs = PROGS.filter(p => dec[p.id]).map(p => `${p.n.replace(/ «.*»/, "")}: ${dec[p.id]}`);
+    const total = budgetOf(dec), pct = (total / PRESUPUESTO - 1) * 100;
+    const aprendi = $("#sAprendi").value.trim(), link = $("#lLink").value.trim();
+    const S = [
+      ["Pregunta", pregunta ? [pregunta] : [], true],
+      ["Hipótesis", hyps, false],
+      ["Lo que nos dijo la IA", aprendi ? [aprendi] : [], false],
+      ["Datos y modelo", [...pack.length ? [`Tablas: ${pack.join(", ")}`] : [], ...modelo.length ? [`Relaciones: ${modelo.join("; ")}`] : []], false],
+      ["Decisiones", decs.length ? [...decs, `Presupuesto 2026: ${fmtM(total)} (${pct > 0 ? "+" : ""}${fmt(pct)}%)`] : [], false],
+      ["Recomendaciones", reco ? [reco] : [], false],
+      ["Cómo lo vamos a medir", [...medir ? [medir] : [], ...link ? [`Herramienta en Lovable: ${link}`] : []], true]
+    ];
+    const body = items => items.length > 1 ? `<ul>${items.map(t => `<li>${esc(t)}</li>`).join("")}</ul>` : items.length ? `<p>${esc(items[0])}</p>` : `<p class="pend">Todavía sin completar</p>`;
+    $("#summary").innerHTML = (nombre ? `<div class="sum-card wide"><h3>Equipo</h3><p>${esc(nombre)}</p></div>` : "") +
+      S.map(([t, items, wide]) => `<div class="sum-card${wide ? " wide" : ""}"><h3>${t}</h3>${body(items)}</div>`).join("");
+    summaryText = `RESUMEN · Ejercicio de formación · Power People${nombre ? `\nEquipo: ${nombre}` : ""}\n\n` +
+      S.map(([t, items]) => `${t.toUpperCase()}\n${items.length ? items.map(x => (items.length > 1 ? "- " : "") + x).join("\n") : "(sin completar)"}`).join("\n\n");
+    $("#printArea").innerHTML = `
+      <div class="ph"><img src="assets/logo-hache-blanco.png" alt="HACHE"><span>Power People · <b>Ejercicio de formación</b></span></div>
+      <h1>Resumen ${nombre ? "· " + esc(nombre) : "del equipo"}</h1>
+      <p class="sub">Mercado Austral: ¿qué hacemos con el presupuesto de formación?</p>
+      ${S.map(([t, items]) => `<h2>${t}</h2>${items.length > 1 ? `<ul>${items.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : `<p>${items.length ? esc(items[0]) : "—"}</p>`}`).join("")}
+      <div class="core">
+        <div class="ph"><img src="assets/logo-hache-blanco.png" alt="HACHE"><span>Power People · <b>Del dato a la decisión</b></span></div>
+        <h1>Recomendaciones clave</h1>
+        <p class="sub">El recorrido de este ejercicio sirve para cualquier análisis de People Analytics.</p>
+        ${CORE.map(([t, x]) => `<h2>${t}</h2><p>${esc(x)}</p>`).join("")}
+        <p class="pf">© ${new Date().getFullYear()} Consultora HACHE · www.hacheconsultora.com</p>
+      </div>`;
+  }
+  $("#copySum").addEventListener("click", e => copy(summaryText, e.currentTarget, "Copiar resumen"));
+  $("#printSum").addEventListener("click", () => { buildAll(); window.print(); });
   $("#gCopy").addEventListener("click", e => copy($("#gPrompt").dataset.prompt, e.currentTarget, "Copiar prompt"));
   $("#sCopy").addEventListener("click", e => copy($("#sPrompt").dataset.prompt, e.currentTarget, "Copiar prompt"));
   $("#lCopy").addEventListener("click", e => copy($("#lPrompt").dataset.prompt, e.currentTarget, "Copiar prompt"));
 
   // Restaurar estado guardado
-  paintChoices(); paintStmts(); paintHyps(); paintPack(false); paintProgs();
-  Object.entries(state.crit || {}).forEach(([i, v]) => { const cb = $(`[data-c="${i}"]`); if (cb) cb.checked = v; });
+  paintChoices(); paintStmts(); paintHyps(); paintPack(); paintProgs();
   if (state.packOk !== undefined) checkPack(true);
-  if (state.cruce && Object.keys(state.cruce).length === 2) checkCruce(true);
   buildAll();
 
   /* =====================================================================
@@ -1489,6 +1674,7 @@ Estilo visual: fondo azul marino (#00344D), acentos en verde (#00FF90), tipograf
     $("#prev").disabled = i === 0;
     $("#next").disabled = i === slides.length - 1;
     const id = slides[i].dataset.id;
+    if (id === "modelo") setTimeout(() => { if (state.modelOk !== undefined) checkModel(true); else drawModel(); }, 480);
     if (push && location.hash !== "#" + id) history.replaceState(null, "", "#" + id);
   }
   const fromHash = () => Math.max(0, slides.findIndex(s => s.dataset.id === location.hash.slice(1)));
