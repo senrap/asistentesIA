@@ -1,0 +1,1532 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ejercicio · Formación | Power People</title>
+  <meta name="description" content="Ejercicio de Power People: definí la pregunta, las hipótesis, los datos y las recomendaciones para decidir qué hacer con el presupuesto de formación." />
+  <meta name="theme-color" content="#00344D" />
+  <meta property="og:title" content="¿Sirve lo que enseñamos? · Ejercicio de formación · Power People" />
+  <meta property="og:description" content="El Directorio quiere recortar 30% del presupuesto de formación. Vos decidís qué preguntar, qué datos pedir y qué recomendar." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2300344D'/%3E%3Ctext x='16' y='23' font-family='Poppins,sans-serif' font-size='19' font-weight='800' fill='%2300FF90' text-anchor='middle'%3EH%3C/text%3E%3C/svg%3E" />
+
+<style>
+:root {
+  color-scheme: light;
+  --navy: #00344D;
+  --navy-2: #0A4560;
+  --navy-3: #13536F;
+  --ink: #011F2E;
+  --green: #00FF90;
+  --green-2: #00CC72;
+  --green-dark: #008C4F;
+  --green-soft: #E6FFF3;
+  --red: #FF6B6B;
+  --white: #FFFFFF;
+  --off: #F4F5F7;
+  --gray: #6B7280;
+  --light: #E8EDF2;
+  --top-h: 64px;
+  --nav-h: 60px;
+  --foot-h: 40px;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body {
+  font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  background: var(--navy);
+  color: var(--navy);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; }
+button { font-family: inherit; cursor: pointer; }
+:focus-visible { outline: 3px solid var(--green); outline-offset: 2px; }
+
+/* ---------- barra superior ---------- */
+.topbar {
+  position: fixed; inset: 0 0 auto 0; height: var(--top-h); z-index: 20;
+  display: flex; align-items: center; gap: 16px; padding: 0 24px;
+  background: rgba(0, 52, 77, 0.94); backdrop-filter: blur(8px);
+  color: var(--white); border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.brand { display: flex; align-items: center; gap: 14px; text-decoration: none; min-width: 0; }
+.brand img { height: 20px; width: auto; display: block; }
+.brand .sep { width: 1px; height: 28px; background: rgba(255,255,255,0.25); }
+.brand .prog { font-weight: 600; font-size: 14px; line-height: 1.2; white-space: nowrap; }
+.brand .prog small { display: block; font-weight: 300; font-size: 11px; opacity: .75; }
+.topbar .spacer { flex: 1; }
+.slide-title-mini { font-size: 13px; font-weight: 500; opacity: .8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.icon-btn {
+  display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px;
+  border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: transparent;
+  color: var(--white); font-size: 13px; font-weight: 600; flex-shrink: 0;
+}
+.icon-btn:hover { border-color: var(--green); color: var(--green); }
+.progress { position: absolute; left: 0; bottom: -1px; height: 3px; background: var(--green); transition: width .4s ease; }
+
+/* ---------- escenario ---------- */
+.deck { position: fixed; top: var(--top-h); left: 0; right: 0; bottom: calc(var(--nav-h) + var(--foot-h)); }
+.slide {
+  position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden;
+  padding: 44px 24px 48px;
+  opacity: 0; visibility: hidden; transform: translateX(40px);
+  transition: opacity .45s ease, transform .45s ease, visibility .45s;
+}
+.slide.active { opacity: 1; visibility: visible; transform: none; }
+.slide.before { transform: translateX(-40px); }
+.slide.dark { background: var(--navy); color: var(--white); }
+.slide.light { background: var(--off); color: var(--navy); }
+.slide-inner { max-width: 1080px; margin: 0 auto; min-height: 100%; display: flex; flex-direction: column; justify-content: center; }
+.slide-inner.top { justify-content: flex-start; }
+
+/* ---------- tipografía ---------- */
+.label { font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--green-2); margin: 0 0 10px; }
+.dark .label { color: var(--green); }
+h1, h2, h3 { margin: 0; line-height: 1.12; text-wrap: balance; }
+h1 { font-size: clamp(36px, 6vw, 64px); font-weight: 800; letter-spacing: -1px; }
+h2 { font-size: clamp(26px, 3.4vw, 36px); font-weight: 700; letter-spacing: -.5px; }
+h3 { font-size: 18px; font-weight: 600; }
+h1 em, h2 em { font-style: normal; color: var(--green); }
+.light h2 em { color: var(--green-2); }
+p { line-height: 1.6; margin: 0; }
+.lead { font-size: clamp(16px, 1.5vw, 18px); max-width: 720px; margin-top: 16px; }
+.dark .lead, .dark .muted { color: rgba(255,255,255,0.78); }
+.muted { color: var(--gray); }
+.small { font-size: 13px; }
+.mt-8 { margin-top: 8px; } .mt-16 { margin-top: 16px; } .mt-24 { margin-top: 24px; } .mt-32 { margin-top: 32px; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .92em; padding: 1px 6px; border-radius: 4px; }
+.light code { background: var(--off); border: 1px solid var(--light); }
+.dark code { background: var(--ink); color: #D7F5E7; }
+.path { font-weight: 600; }
+
+/* ---------- componentes ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  font-weight: 600; font-size: 14px; padding: 12px 22px; border-radius: 8px;
+  border: 2px solid transparent; text-decoration: none; transition: transform .15s, background .15s;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn-cta { background: var(--green); color: var(--navy); font-weight: 700; }
+.btn-cta:hover { background: #33FFA6; }
+.btn-primary { background: var(--navy); color: var(--white); }
+.btn-outline { background: transparent; border-color: currentColor; }
+.dark .btn-outline { color: var(--white); }
+.btn-sm { padding: 8px 16px; font-size: 13px; }
+.actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; align-items: center; }
+
+.grid { display: grid; gap: 20px; }
+.g2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.g3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.g4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.grid > * { min-width: 0; }
+
+.card { background: var(--white); border: 1px solid var(--light); border-radius: 12px; padding: 22px 24px; box-shadow: 0 2px 12px rgba(0,52,77,0.06); color: var(--navy); }
+.card-dark { background: var(--navy-2); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 22px 24px; color: var(--white); }
+.card h3 { margin-bottom: 8px; }
+
+.badge { display: inline-block; border-radius: 100px; padding: 4px 12px; font-size: 12px; font-weight: 600; background: var(--off); border: 1px solid var(--light); color: var(--navy); white-space: nowrap; }
+.badge-green { background: var(--green-soft); border-color: var(--green); color: var(--green-dark); }
+.badge-navy { background: var(--navy); color: var(--green); border-color: var(--navy); }
+
+.num { font-size: 40px; font-weight: 800; line-height: 1; color: var(--green); font-variant-numeric: tabular-nums; }
+.step-n { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; flex-shrink: 0; background: var(--green); color: var(--navy); font-weight: 800; font-size: 14px; }
+.light .step-n { background: var(--navy); color: var(--green); }
+
+/* ---------- portada ---------- */
+.cover-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 48px; align-items: center; }
+.cover-art { aspect-ratio: 1; max-width: 400px; justify-self: end; width: 100%; }
+.cover-art svg { width: 100%; height: 100%; }
+.kbd-hint { margin-top: 28px; font-size: 12px; color: rgba(255,255,255,0.55); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+kbd { font-family: inherit; font-size: 11px; font-weight: 600; border: 1px solid rgba(255,255,255,0.3); border-radius: 5px; padding: 2px 7px; }
+
+/* ---------- elección de recorrido ---------- */
+.routes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 28px; max-width: 620px; }
+.route {
+  text-align: left; display: flex; flex-direction: column; gap: 8px; padding: 18px 20px; border-radius: 14px;
+  background: var(--navy-2); border: 2px solid rgba(255,255,255,0.12); color: var(--white); transition: border-color .15s, transform .15s, background .15s;
+}
+.route:hover { border-color: var(--green); transform: translateY(-2px); }
+.route[aria-pressed="true"] { border-color: var(--green); background: var(--navy-3); }
+.route .rt { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.route b { font-size: 20px; font-weight: 800; }
+.route .time { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--green); white-space: nowrap; }
+.route .desc { font-size: 13px; line-height: 1.5; color: rgba(255,255,255,0.75); }
+.route .go { margin-top: auto; font-size: 13px; font-weight: 700; color: var(--green); }
+.path-chip {
+  display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px; border-radius: 100px; flex-shrink: 0;
+  border: 1px solid rgba(0,255,144,0.45); background: rgba(0,255,144,0.1); color: var(--green); font-size: 12px; font-weight: 700;
+}
+.path-chip[hidden] { display: none; }
+.seg { display: inline-flex; background: var(--navy-2); border-radius: 10px; padding: 4px; gap: 4px; flex-wrap: wrap; }
+.seg button { border: 0; background: transparent; color: rgba(255,255,255,0.75); font-size: 13px; font-weight: 600; padding: 8px 14px; border-radius: 7px; }
+.seg button[aria-pressed="true"] { background: var(--green); color: var(--navy); }
+[data-only][hidden] { display: none !important; }
+
+/* ---------- base: pestañas + pregunta ---------- */
+.base-grid { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+.base-grid > * { min-width: 0; }
+.measures.m3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.measures.m3 .code { font-size: 12px; }
+.tabs { display: inline-flex; background: var(--white); border: 1px solid var(--light); border-radius: 10px; padding: 4px; gap: 4px; margin-bottom: 12px; flex-wrap: wrap; }
+.tab { border: 0; background: transparent; padding: 8px 16px; border-radius: 7px; font-size: 13px; font-weight: 600; color: var(--gray); }
+.tab small { font-weight: 400; opacity: .75; margin-left: 4px; }
+.tab[aria-selected="true"] { background: var(--navy); color: var(--white); }
+.narrow .qhead { padding: 14px 16px; align-items: flex-start; }
+.narrow .qhead h3 { font-size: 15px; }
+.narrow .qbody { padding: 12px 16px 16px; }
+.narrow .qline { font-size: 14px; line-height: 2.3; }
+.narrow .qfoot { flex-direction: column; align-items: stretch; }
+.narrow .qfoot .btn { align-self: flex-start; }
+.narrow .feedback { min-width: 0; }
+.feedback { overflow-wrap: anywhere; line-height: 1.5; }
+.connect { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-top: 10px; }
+
+/* ---------- fórmula ---------- */
+.builder { margin-top: 16px; }
+.formula { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 14px; font-size: 16px; font-weight: 700; }
+.formula .paren { font-size: 30px; font-weight: 300; color: var(--gray); line-height: 1; }
+.formula select {
+  font-family: inherit; font-size: 14px; font-weight: 600; color: var(--navy); background: var(--off);
+  border: 2px dashed #C9D3DC; border-radius: 8px; padding: 8px 10px; cursor: pointer;
+}
+.formula select.sign { width: 64px; text-align: center; font-size: 18px; padding: 6px; }
+.formula select.filled { border-style: solid; border-color: var(--green-2); background: var(--green-soft); }
+.formula select.bad { border-color: #E53E3E; background: #FFF0F0; }
+.locked { border: 2px dashed #C9D3DC; border-radius: 12px; padding: 22px; display: grid; place-items: center; text-align: center; color: var(--gray); font-size: 14px; min-height: 120px; }
+
+/* ---------- recomendaciones ---------- */
+.reco { display: grid; grid-template-columns: 1.3fr 1fr; gap: 24px; align-items: start; }
+.reco .field textarea { font-size: 15px; font-weight: 500; min-height: 150px; resize: vertical; line-height: 1.5; }
+.gsteps { display: grid; gap: 14px; }
+
+/* ---------- perfil ---------- */
+.person { display: grid; grid-template-columns: 240px 1fr; gap: 40px; align-items: center; }
+.avatar { width: 240px; height: 240px; border-radius: 24px; background: var(--navy-2); border: 3px solid var(--green); display: grid; place-items: center; overflow: hidden; font-size: 64px; font-weight: 800; color: var(--green); }
+.avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.person .role { color: var(--green); font-weight: 600; font-size: 15px; margin-top: 4px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.chip-static { font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 100px; border: 1px solid rgba(255,255,255,0.25); }
+.cred { margin-top: 18px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,0.12); font-size: 15px; color: rgba(255,255,255,0.85); line-height: 1.65; max-width: 640px; }
+
+/* ---------- caso ---------- */
+.memo { background: var(--white); border-radius: 12px; padding: 26px 30px; border-left: 4px solid var(--green); box-shadow: 0 10px 40px rgba(0,0,0,0.18); color: var(--navy); }
+.memo-head { font-size: 12px; color: var(--gray); border-bottom: 1px solid var(--light); padding-bottom: 12px; margin-bottom: 16px; line-height: 1.7; }
+.memo-head b { color: var(--navy); font-weight: 600; }
+.memo p + p { margin-top: 12px; }
+.memo p { font-size: 15px; }
+
+/* ---------- agenda ---------- */
+.agenda { display: grid; grid-template-columns: 1fr 1fr 0.8fr; gap: 20px; }
+.agenda .card { display: flex; flex-direction: column; gap: 12px; }
+.agenda .head { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.agenda ol { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+.agenda li { display: flex; gap: 10px; align-items: baseline; font-size: 14px; }
+.agenda li b { font-size: 11px; color: var(--green-dark); min-width: 14px; }
+.agenda .card.week { background: var(--navy); color: var(--white); border-color: var(--navy); }
+.agenda .card.week li b { color: var(--green); }
+
+/* ---------- calculadora ---------- */
+.calc { display: grid; grid-template-columns: 1fr 1.1fr; gap: 24px; align-items: stretch; }
+.field { display: grid; gap: 6px; margin-bottom: 14px; }
+.field label { font-size: 12px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--gray); }
+.field input, .field textarea { font-family: inherit; font-size: 18px; font-weight: 600; color: var(--navy); padding: 10px 14px; border: 1px solid var(--light); border-radius: 8px; background: var(--off); width: 100%; }
+.field input:focus, .field textarea:focus { outline: none; border-color: var(--green-2); background: var(--white); }
+.field .hint { font-size: 12px; color: var(--gray); }
+.results { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.result { background: var(--navy-2); border-radius: 12px; padding: 20px; }
+.result .num { font-size: 34px; }
+.result .lbl { font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 6px; }
+.result.big { grid-column: 1 / -1; background: var(--navy-3); }
+.result.big .num { font-size: 54px; }
+.gauge { height: 8px; border-radius: 4px; background: rgba(255,255,255,0.15); margin-top: 14px; overflow: hidden; }
+.gauge span { display: block; height: 100%; background: var(--green); border-radius: 4px; transition: width .4s; }
+
+/* ---------- tablas ---------- */
+.tbl-wrap { overflow-x: auto; border-radius: 12px; border: 1px solid var(--light); background: var(--white); }
+table { border-collapse: collapse; width: 100%; font-size: 12.5px; }
+th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--light); white-space: nowrap; }
+th { background: var(--navy); color: var(--white); font-weight: 600; font-size: 12px; }
+td { font-variant-numeric: tabular-nums; }
+tr:last-child td { border-bottom: 0; color: var(--gray); }
+.tbl-title { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+.tbl-title b { font-size: 15px; }
+.tbl-title span { font-size: 12px; color: var(--gray); }
+.dl-row { display: flex; flex-wrap: wrap; gap: 12px; }
+.dl { display: flex; align-items: center; gap: 12px; padding: 12px 18px 12px 12px; border-radius: 12px; background: var(--white); border: 1px solid var(--light); text-decoration: none; color: var(--navy); transition: border-color .15s, transform .15s; }
+.dl:hover { border-color: var(--green-2); transform: translateY(-2px); }
+.dl .ext { width: 44px; height: 44px; border-radius: 10px; display: grid; place-items: center; font-size: 11px; font-weight: 800; background: var(--navy); color: var(--green); }
+.dl b { display: block; font-size: 14px; }
+.dl .sub { display: block; font-size: 12px; color: var(--gray); }
+
+/* ---------- preguntas de completar ---------- */
+.qcard { border-radius: 14px; overflow: hidden; min-width: 0; }
+.dark .qcard { background: var(--navy-2); border: 1px solid rgba(255,255,255,0.1); }
+.light .qcard { background: var(--white); border: 1px solid var(--light); box-shadow: 0 2px 12px rgba(0,52,77,0.06); }
+.qhead { display: flex; gap: 14px; align-items: center; padding: 16px 22px; }
+.dark .qhead { border-bottom: 1px solid rgba(255,255,255,0.08); }
+.light .qhead { border-bottom: 1px solid var(--light); }
+.qnum { font-size: 12px; font-weight: 700; padding: 6px 10px; border-radius: 6px; flex-shrink: 0; }
+.dark .qnum { background: rgba(0,255,144,0.12); color: var(--green); border: 1px solid rgba(0,255,144,0.35); }
+.light .qnum { background: var(--navy); color: var(--green); }
+.qhead h3 { font-size: 16px; font-weight: 700; }
+.qbody { padding: 14px 22px 18px; }
+.qhint { font-size: 13px; font-style: italic; margin-bottom: 8px; }
+.dark .qhint { color: rgba(255,255,255,0.55); }
+.light .qhint { color: var(--gray); }
+.qline { font-size: 15px; line-height: 2.6; }
+.opt { display: inline-block; font-size: 12.5px; font-weight: 600; padding: 3px 12px; margin: 0 2px; line-height: 1.6; border-radius: 100px; vertical-align: middle; transition: background .15s, border-color .15s, color .15s; }
+.dark .opt { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.22); color: rgba(255,255,255,0.75); }
+.light .opt { background: var(--off); border: 1px solid var(--light); color: var(--navy); }
+.dark .opt:hover { border-color: var(--green); color: var(--white); }
+.light .opt:hover { border-color: var(--green-2); }
+.opt[aria-pressed="true"] { background: var(--green) !important; border-color: var(--green) !important; color: var(--navy) !important; }
+.opt.bad { border-color: var(--red) !important; box-shadow: 0 0 0 2px rgba(255,107,107,0.5); }
+.blank { width: 72px; font-family: inherit; font-size: 15px; font-weight: 600; text-align: center; padding: 3px 6px; margin: 0 2px; border: 0; border-bottom: 2px solid var(--green-2); border-radius: 4px 4px 0 0; vertical-align: middle; font-variant-numeric: tabular-nums; }
+.dark .blank { background: rgba(255,255,255,0.08); color: var(--white); }
+.light .blank { background: var(--off); color: var(--navy); }
+.blank::placeholder { color: rgba(127,140,150,0.8); }
+.blank:focus { outline: none; border-bottom-color: var(--green); }
+.blank.ok { border-bottom-color: var(--green); }
+.blank.bad { border-bottom-color: var(--red); background: rgba(255,107,107,0.12); }
+.qfoot { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-top: 10px; }
+.feedback { font-size: 13px; font-weight: 600; flex: 1; min-width: 200px; }
+.feedback.ok { color: var(--green); }
+.light .feedback.ok { color: var(--green-dark); }
+.feedback.bad { color: var(--red); }
+.light .feedback.bad { color: #C53030; }
+.qlist { display: grid; gap: 16px; }
+.qgrid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 16px; }
+
+/* ---------- controles de limpieza ---------- */
+.controls { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 16px; align-items: start; }
+.ctrl { background: var(--navy-2); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 18px 20px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.ctrl.done { border-color: var(--green); }
+.ctrl-head { display: flex; align-items: center; gap: 12px; }
+.ctrl-head h3 { font-size: 17px; flex: 1; }
+.ctrl > p { font-size: 14px; color: rgba(255,255,255,0.82); }
+.sample { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px; background: var(--ink); color: #D7F5E7; padding: 2px 7px; border-radius: 4px; white-space: nowrap; }
+.ctrl details { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px; }
+.ctrl summary { font-size: 13px; font-weight: 600; color: var(--green); cursor: pointer; list-style: none; }
+.ctrl summary::-webkit-details-marker { display: none; }
+.ctrl summary::before { content: "+ "; }
+.ctrl details[open] summary::before { content: "– "; }
+.ctrl ol { margin: 10px 0 0; padding-left: 20px; display: grid; gap: 8px; font-size: 13.5px; color: rgba(255,255,255,0.85); line-height: 1.55; }
+.ctrl ol b { color: var(--white); }
+.done-row { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; cursor: pointer; color: rgba(255,255,255,0.75); white-space: nowrap; }
+.done-row input { accent-color: var(--green); width: 16px; height: 16px; margin: 0; }
+
+/* ---------- pasos ---------- */
+.steps { display: grid; gap: 14px; }
+.step { display: flex; gap: 14px; align-items: flex-start; }
+.step .step-n { margin-top: 1px; }
+.step b.t { display: block; font-size: 15px; margin-bottom: 2px; }
+.step p { font-size: 14px; }
+.dark .step p { color: rgba(255,255,255,0.8); }
+.light .step p { color: var(--gray); }
+.light .step p b { color: var(--navy); }
+.callout { border-radius: 12px; padding: 16px 20px; font-size: 14px; line-height: 1.6; }
+.dark .callout { background: var(--ink); border: 1px solid rgba(0,255,144,0.3); color: rgba(255,255,255,0.85); }
+.light .callout { background: var(--green-soft); border: 1px solid var(--green); color: var(--navy); }
+.callout b.hl { color: var(--green); }
+.light .callout b.hl { color: var(--green-dark); }
+.datebox { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.datebox span { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-weight: 700; font-size: 17px; padding: 6px 12px; border-radius: 8px; background: var(--navy-2); color: var(--green); }
+
+/* ---------- código ---------- */
+.code { position: relative; background: var(--ink); color: #D7F5E7; border-radius: 12px; padding: 18px 20px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13px; line-height: 1.6; white-space: pre; overflow-x: auto; }
+.code.wrap { white-space: pre-wrap; font-size: 12px; }
+.code .kw { color: var(--green); }
+.copy-btn { position: absolute; top: 10px; right: 10px; font-size: 11px; font-weight: 600; padding: 6px 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.25); background: rgba(255,255,255,0.06); color: var(--white); font-family: 'Poppins', system-ui, sans-serif; }
+.copy-btn.ok { background: var(--green); color: var(--navy); border-color: var(--green); }
+.measures { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 16px; }
+.measure { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.measure h3 { font-size: 15px; }
+.measure p { font-size: 13px; color: var(--gray); }
+.measure .code { padding-top: 40px; flex: 1; }
+
+/* ---------- modelo ---------- */
+.model { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; }
+.tblbox { background: var(--white); border: 1px solid var(--light); border-radius: 10px; overflow: hidden; min-width: 160px; font-size: 12.5px; color: var(--navy); box-shadow: 0 2px 12px rgba(0,52,77,0.06); }
+.tblbox b { display: block; background: var(--navy); color: var(--white); padding: 8px 12px; font-size: 12.5px; }
+.tblbox span { display: block; padding: 4px 12px; color: var(--gray); }
+.tblbox span.k { color: var(--navy); font-weight: 700; }
+.tblbox span.k::after { content: " ●"; color: var(--green-2); font-size: 10px; }
+.rel { font-size: 12px; font-weight: 700; color: var(--green-dark); padding: 0 10px; text-align: center; min-width: 96px; }
+.rel::before { content: ""; display: block; height: 2px; background: var(--green-2); margin: 0 0 4px; }
+.rel small { display: block; font-weight: 500; color: var(--gray); font-size: 11px; }
+
+/* ---------- storytelling ---------- */
+.story { display: grid; grid-template-columns: 1.15fr 1fr; gap: 32px; align-items: center; }
+.chart-card { background: var(--white); color: var(--navy); border-radius: 12px; padding: 20px 24px; border: 1px solid var(--light); }
+.chart-card .ct { font-size: 18px; font-weight: 700; line-height: 1.25; min-height: 46px; }
+.chart-card .cs { font-size: 12px; color: var(--gray); margin: 4px 0 10px; }
+.chart-card svg { width: 100%; height: auto; max-height: 220px; display: block; }
+.switch { display: inline-flex; background: var(--navy-2); border-radius: 10px; padding: 4px; gap: 4px; margin-bottom: 14px; }
+.switch button { border: 0; background: transparent; color: rgba(255,255,255,0.75); font-size: 13px; font-weight: 600; padding: 8px 16px; border-radius: 7px; }
+.switch button[aria-pressed="true"] { background: var(--green); color: var(--navy); }
+.rules { display: grid; gap: 18px; }
+.rule { display: flex; gap: 14px; align-items: flex-start; }
+.rule p { font-size: 16px; color: rgba(255,255,255,0.82); }
+.rule b { color: var(--white); display: block; }
+
+/* ---------- gamma ---------- */
+.gamma { display: grid; grid-template-columns: 1fr 1.25fr; gap: 24px; align-items: start; }
+.gamma .field textarea { font-size: 14px; font-weight: 500; min-height: 110px; resize: vertical; line-height: 1.5; }
+.gamma .code { white-space: pre-wrap; font-size: 12px; max-height: 56vh; overflow-y: auto; padding-top: 44px; border: 1px solid rgba(255,255,255,0.1); }
+.status-list { display: grid; gap: 6px; }
+.status-list div { display: flex; gap: 8px; align-items: center; font-size: 13px; color: var(--gray); }
+.status-list i { width: 10px; height: 10px; border-radius: 50%; background: var(--light); border: 1px solid #C9D3DC; flex-shrink: 0; }
+.status-list .on { color: var(--navy); }
+.status-list .on i { background: var(--green-2); border-color: var(--green-2); }
+
+/* ---------- links ---------- */
+.links { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 16px; }
+.link-card { display: flex; flex-direction: column; gap: 6px; text-decoration: none; padding: 22px; border-radius: 12px; background: var(--navy-2); border: 1px solid rgba(255,255,255,0.08); color: var(--white); transition: border-color .15s, transform .15s; }
+.link-card:hover { border-color: var(--green); transform: translateY(-2px); }
+.link-card .tag { font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--green); }
+.link-card b { font-size: 17px; }
+.link-card span { font-size: 13px; color: rgba(255,255,255,0.72); line-height: 1.5; }
+.link-card .go { margin-top: auto; padding-top: 10px; font-size: 12px; font-weight: 600; color: var(--green); }
+
+/* ---------- navegación inferior + footer ---------- */
+.bottom { position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: rgba(0, 52, 77, 0.97); backdrop-filter: blur(8px); border-top: 1px solid rgba(255,255,255,0.08); }
+.bottombar { height: var(--nav-h); display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 0 24px; }
+.nav-btn { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 18px; border-radius: 8px; font-size: 13px; font-weight: 600; border: 1px solid rgba(255,255,255,0.2); background: transparent; color: var(--white); }
+.nav-btn.next { background: var(--green); color: var(--navy); border-color: var(--green); }
+.nav-btn:disabled { opacity: .3; cursor: default; }
+.dots { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; justify-content: center; }
+.dot { width: 8px; height: 8px; border-radius: 50%; border: 0; padding: 0; background: rgba(255,255,255,0.25); transition: width .3s, background .3s; }
+.dot.gap { margin-left: 8px; }
+.dot.on { width: 22px; border-radius: 4px; background: var(--green); }
+.counter { color: rgba(255,255,255,0.7); font-size: 12px; font-weight: 600; min-width: 48px; text-align: center; font-variant-numeric: tabular-nums; }
+.footer { height: var(--foot-h); display: flex; align-items: center; gap: 6px; padding: 0 200px 0 24px; border-top: 1px solid rgba(255,255,255,0.06); font-size: 12px; color: rgba(255,255,255,0.6); white-space: nowrap; overflow: hidden; }
+.footer a { color: var(--green); text-decoration: none; font-weight: 600; }
+.footer a:hover { text-decoration: underline; }
+
+/* ---------- índice ---------- */
+.overlay { position: fixed; inset: 0; z-index: 40; background: rgba(0, 31, 46, 0.97); color: var(--white); display: none; overflow-y: auto; padding: 32px 24px; }
+.overlay.open { display: block; }
+.overlay-inner { max-width: 1080px; margin: 0 auto; }
+.overlay-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; gap: 12px; }
+.toc-group { margin-top: 24px; }
+.toc-group > p { font-size: 11px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; color: var(--green); margin-bottom: 12px; }
+.toc { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 12px; }
+.toc button { text-align: left; padding: 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.12); background: var(--navy-2); color: var(--white); min-height: 80px; display: flex; flex-direction: column; gap: 6px; }
+.toc button:hover, .toc button.on { border-color: var(--green); }
+.toc .n { font-size: 11px; font-weight: 700; color: var(--green); letter-spacing: 2px; }
+.toc .t { font-size: 14px; font-weight: 600; line-height: 1.35; }
+
+.toast { position: fixed; left: 50%; bottom: calc(var(--nav-h) + var(--foot-h) + 16px); transform: translateX(-50%) translateY(20px); background: var(--green); color: var(--navy); font-weight: 600; font-size: 13px; padding: 10px 18px; border-radius: 8px; opacity: 0; pointer-events: none; transition: opacity .25s, transform .25s; z-index: 50; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ---------- responsive ---------- */
+@media (max-width: 960px) {
+  .g4, .toc { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .g3, .links { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .cover-grid, .calc, .story, .g2, .gamma, .agenda, .controls, .measures, .measures.m3, .qgrid, .routes, .base-grid, .connect, .reco { grid-template-columns: minmax(0, 1fr); }
+  .cover-art { display: none; }
+  .person { grid-template-columns: 180px 1fr; gap: 28px; }
+  .avatar { width: 180px; height: 180px; }
+}
+@media (max-width: 640px) {
+  :root { --top-h: 56px; --nav-h: 56px; --foot-h: 48px; }
+  .slide { padding: 28px 16px 36px; }
+  .topbar, .bottombar { padding: 0 12px; gap: 8px; }
+  .footer { padding: 0 120px 0 12px; white-space: normal; line-height: 1.35; font-size: 11px; flex-wrap: wrap; align-content: center; gap: 0 6px; }
+  .footer .opt-txt { display: none; }
+  .slide-title-mini, .brand .sep, .brand .prog, .dots, .nav-btn .txt, .icon-btn .txt { display: none; }
+  .g3, .g4, .links, .toc, .results { grid-template-columns: 1fr; }
+  .person { grid-template-columns: 1fr; gap: 20px; }
+  .avatar { width: 140px; height: 140px; }
+  .memo { padding: 22px 20px; }
+  .dl { width: 100%; }
+  .qbody, .qhead { padding-left: 16px; padding-right: 16px; }
+  .rel { min-width: 70px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .slide, .dot, .progress, .btn { transition: none; }
+}
+</style>
+<style>
+/* =====================================================================
+   Componentes propios del ejercicio de formación
+   ===================================================================== */
+.start-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 28px; }
+.time-pill { font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--green); border: 1px solid rgba(0,255,144,0.4); border-radius: 100px; padding: 6px 14px; }
+
+/* método */
+.method { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 14px; }
+.method span { font-size: 13px; font-weight: 600; padding: 6px 12px; border-radius: 100px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); }
+.method i { font-style: normal; color: var(--green); font-weight: 700; }
+.agenda li .min { margin-left: auto; font-size: 12px; color: var(--gray); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+/* niveles */
+.levels { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 14px; align-items: end; }
+.level { border-radius: 12px; padding: 18px 20px; background: var(--navy-2); border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; gap: 6px; }
+.level .n { font-size: 11px; font-weight: 700; letter-spacing: 2px; color: var(--green); text-transform: uppercase; }
+.level h3 { font-size: 18px; }
+.level .q { font-size: 15px; font-weight: 600; color: var(--white); }
+.level p { font-size: 13px; color: rgba(255,255,255,0.75); }
+.level.l1 { min-height: 170px; border-color: var(--green); }
+.level.l2 { min-height: 195px; }
+.level.l3 { min-height: 220px; }
+.level.l4 { min-height: 245px; background: var(--navy-3); }
+.level .here { margin-top: auto; font-size: 11px; font-weight: 700; color: var(--navy); background: var(--green); border-radius: 100px; padding: 3px 10px; align-self: flex-start; }
+
+/* opciones de pregunta */
+.choices { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 14px; }
+.choice {
+  text-align: left; border-radius: 12px; padding: 16px 18px; background: var(--navy-2); color: var(--white);
+  border: 2px solid rgba(255,255,255,0.12); display: flex; flex-direction: column; gap: 8px; transition: border-color .15s;
+}
+.choice:hover { border-color: rgba(0,255,144,0.6); }
+.choice .opt-q { font-size: 15px; font-weight: 600; line-height: 1.45; }
+.choice .why { display: none; font-size: 13px; line-height: 1.5; }
+.choice.picked .why { display: block; }
+.choice.picked.good { border-color: var(--green); background: var(--navy-3); }
+.choice.picked.good .why { color: var(--green); }
+.choice.picked.bad { border-color: var(--red); }
+.choice.picked.bad .why { color: #FFB4B4; }
+.choice .tag { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.5); }
+.criteria { display: grid; gap: 8px; }
+.criteria label { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; cursor: pointer; color: rgba(255,255,255,0.85); }
+.criteria input { accent-color: var(--green); width: 16px; height: 16px; margin-top: 3px; flex-shrink: 0; }
+.dark .field label { color: rgba(255,255,255,0.65); }
+.dark .field textarea, .dark .field input { background: var(--navy-2); border-color: rgba(255,255,255,0.15); color: var(--white); }
+.dark .field textarea:focus, .dark .field input:focus { background: var(--navy-3); border-color: var(--green); }
+.dark .field .hint { color: rgba(255,255,255,0.55); }
+.field textarea { font-size: 15px; font-weight: 500; min-height: 96px; resize: vertical; line-height: 1.5; }
+
+/* hipótesis */
+.stmts { display: grid; gap: 10px; }
+.stmt { background: var(--white); border: 1px solid var(--light); border-radius: 12px; padding: 14px 18px; display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 8px 16px; align-items: center; }
+.stmt > p { font-size: 14.5px; font-weight: 500; }
+.stmt .opts { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.stmt .fb { grid-column: 1 / -1; font-size: 13px; font-weight: 600; display: none; }
+.stmt.done .fb { display: block; }
+.stmt.done.ok { border-color: var(--green-2); }
+.stmt.done.ok .fb { color: var(--green-dark); }
+.stmt.done.ko { border-color: #E53E3E; }
+.stmt.done.ko .fb { color: #C53030; }
+.light .opt.bad { border-color: #E53E3E !important; }
+.builder-h { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 15px; font-weight: 600; line-height: 2.2; }
+.builder-h select {
+  font-family: inherit; font-size: 14px; font-weight: 600; color: var(--navy); background: var(--off);
+  border: 2px dashed #C9D3DC; border-radius: 8px; padding: 7px 10px; max-width: 100%;
+}
+.builder-h select.filled { border-style: solid; border-color: var(--green-2); background: var(--green-soft); }
+.hyp-list { display: grid; gap: 8px; margin-top: 12px; }
+.hyp { display: flex; gap: 10px; align-items: flex-start; background: var(--green-soft); border: 1px solid var(--green); border-radius: 10px; padding: 10px 14px; font-size: 14px; }
+.hyp b { color: var(--green-dark); }
+.hyp button { margin-left: auto; border: 0; background: transparent; color: var(--gray); font-size: 16px; line-height: 1; padding: 2px 4px; }
+.hyp button:hover { color: #C53030; }
+
+/* paquete de datos */
+.catalog { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 10px; }
+.dcard {
+  text-align: left; border-radius: 12px; padding: 12px 14px; background: var(--navy-2); color: var(--white);
+  border: 2px solid rgba(255,255,255,0.12); display: flex; flex-direction: column; gap: 4px; min-height: 104px; transition: border-color .15s, background .15s;
+}
+.dcard:hover { border-color: rgba(0,255,144,0.6); }
+.dcard[aria-pressed="true"] { border-color: var(--green); background: var(--navy-3); }
+.dcard .own { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.5); }
+.dcard b { font-size: 14px; }
+.dcard span.d { font-size: 12px; color: rgba(255,255,255,0.7); line-height: 1.4; }
+.dcard .chk { margin-top: auto; font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.45); }
+.dcard[aria-pressed="true"] .chk { color: var(--green); }
+.dcard.flag-bad { border-color: var(--red) !important; }
+.dcard.flag-miss { border-color: #F6C453 !important; border-style: dashed; }
+.pack-fb { display: grid; gap: 6px; font-size: 13.5px; line-height: 1.5; margin-top: 12px; }
+.pack-fb div { display: flex; gap: 8px; }
+.pack-fb .k { font-weight: 700; flex-shrink: 0; }
+.pack-fb .g { color: var(--green); }
+.pack-fb .w { color: #F6C453; }
+.pack-fb .r { color: #FFB4B4; }
+
+/* resultados */
+.budget { position: sticky; top: -44px; z-index: 5; background: var(--navy); color: var(--white); border-radius: 14px; padding: 14px 20px; display: grid; grid-template-columns: auto minmax(0,1fr) auto; gap: 18px; align-items: center; box-shadow: 0 8px 24px rgba(0,52,77,0.18); }
+.budget .lbl { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.6); }
+.budget .val { font-size: 26px; font-weight: 800; color: var(--green); font-variant-numeric: tabular-nums; line-height: 1.1; }
+.budget .track { position: relative; height: 12px; border-radius: 6px; background: rgba(255,255,255,0.12); }
+.budget .fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 6px; background: var(--green); transition: width .35s; }
+.budget .target { position: absolute; top: -6px; bottom: -6px; width: 2px; background: var(--white); }
+.budget .target::after { content: attr(data-l); position: absolute; top: 22px; left: 50%; transform: translateX(-50%); font-size: 10px; font-weight: 600; white-space: nowrap; color: rgba(255,255,255,0.75); }
+.budget .msg { font-size: 12.5px; font-weight: 600; max-width: 230px; line-height: 1.4; }
+.programs { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 14px; margin-top: 18px; }
+.pcard { background: var(--white); border: 1px solid var(--light); border-radius: 14px; padding: 18px 20px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.pcard.decided-good { border-color: var(--green-2); }
+.pcard.decided-ok { border-color: #F6C453; }
+.pcard.decided-bad { border-color: #E53E3E; }
+.prog-head { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+.prog-head h3 { font-size: 16px; font-weight: 700; }
+.prog-head .who { font-size: 12px; color: var(--gray); margin-top: 2px; }
+.prog-head .cost { text-align: right; flex-shrink: 0; }
+.prog-head .cost b { display: block; font-size: 18px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.prog-head .cost span { font-size: 11px; color: var(--gray); }
+.sat { font-size: 12px; font-weight: 600; color: var(--gray); }
+.sat b { color: var(--navy); }
+.metric-name { font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--gray); }
+.bars { display: grid; gap: 6px; }
+.bar-row { display: grid; grid-template-columns: 92px minmax(0,1fr) 54px; gap: 10px; align-items: center; font-size: 12.5px; }
+.bar-row .who { color: var(--gray); font-weight: 600; }
+.bar-row .track { height: 14px; background: var(--off); border-radius: 0 4px 4px 0; }
+.bar-row .b { height: 100%; border-radius: 0 4px 4px 0; }
+.bar-row .b.con { background: var(--navy); }
+.bar-row .b.sin { background: #B7C3CE; }
+.bar-row .v { font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
+.no-data { font-size: 13px; color: var(--gray); background: var(--off); border: 1px dashed #C9D3DC; border-radius: 8px; padding: 12px; text-align: center; }
+.extra { font-size: 13px; color: var(--navy); background: var(--green-soft); border-radius: 8px; padding: 8px 12px; }
+.decide { display: flex; flex-wrap: wrap; gap: 6px; }
+.decide .opt { margin: 0; }
+.pcard .pfb { font-size: 13px; font-weight: 600; line-height: 1.5; min-height: 0; }
+.pcard.decided-good .pfb { color: var(--green-dark); }
+.pcard.decided-ok .pfb { color: #9A6B00; }
+.pcard.decided-bad .pfb { color: #C53030; }
+.assump { font-size: 12px; color: var(--gray); margin-top: 12px; }
+
+/* recomendaciones */
+.decisions { display: grid; gap: 6px; }
+.decisions div { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 8px; font-size: 13.5px; padding: 8px 0; border-bottom: 1px solid var(--light); }
+.decisions div:last-child { border-bottom: 0; }
+.decisions b { font-weight: 700; }
+.decisions .pend { color: var(--gray); font-style: italic; }
+
+/* IA */
+.ia-list { display: grid; gap: 10px; margin-top: 12px; }
+.ia { display: flex; gap: 12px; align-items: center; }
+.ia .ic { width: 36px; height: 36px; border-radius: 10px; background: var(--green); color: var(--navy); display: grid; place-items: center; font-weight: 800; font-size: 13px; flex-shrink: 0; }
+.ia b { display: block; font-size: 14px; }
+.ia span { font-size: 12.5px; color: rgba(255,255,255,0.75); }
+.ia-badge { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--navy); background: var(--green); border-radius: 100px; padding: 4px 12px; margin-bottom: 10px; }
+.iter { display: grid; gap: 8px; }
+.iter button { text-align: left; font-size: 13px; line-height: 1.45; padding: 10px 14px; border-radius: 10px; background: var(--navy-2); color: rgba(255,255,255,0.9); border: 1px solid rgba(255,255,255,0.15); }
+.iter button:hover { border-color: var(--green); }
+.iter button::after { content: "  Copiar"; color: var(--green); font-weight: 700; font-size: 11px; }
+
+@media (max-width: 960px) {
+  .levels, .catalog { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .choices, .programs { grid-template-columns: minmax(0,1fr); }
+  .budget { grid-template-columns: minmax(0,1fr); gap: 10px; position: static; }
+  .budget .msg { max-width: none; }
+}
+@media (max-width: 640px) {
+  .levels, .catalog { grid-template-columns: minmax(0,1fr); }
+  .level { min-height: 0 !important; }
+  .stmt { grid-template-columns: minmax(0,1fr); }
+  .stmt .opts { justify-content: flex-start; }
+  .bar-row { grid-template-columns: 70px minmax(0,1fr) 48px; }
+}
+</style>
+</head>
+
+<body>
+<!-- =====================================================================
+     CONFIGURACIÓN EDITABLE: perfil, links y entrega.
+     El contenido del caso (programas, datos, hipótesis) está en el <script> final.
+     ===================================================================== -->
+<script>
+window.CONFIG = {
+  acompanan: [
+    {
+      nombre: "Pablo Senra",
+      rol: "Fundador de HACHE Consultora",
+      bio: "Ayudo a equipos de Recursos Humanos a decidir con datos. En HACHE damos formaciones 100% prácticas en Power BI e IA, con foco en que los datos se entiendan y cuenten una historia.",
+      credenciales: "Licenciado en Relaciones del Trabajo, con diferentes posgrados vinculados a Data. Cuento con 20 años de experiencia en el área, trabajando en LATAM y como consultor especializado en People Analytics y stack tecnológico para RRHH.",
+      foto: "assets/pablo-senra.jpg",
+      chips: ["People Analytics", "Power BI", "IA para RRHH", "Storytelling con datos"],
+      linkedin: "https://www.linkedin.com/in/pablosenra"
+    }
+  ],
+  entrega: "Compartí el link de tu presentación de Gamma en el canal del curso.",
+  links: [
+    { tag: "Consultora", titulo: "HACHE Consultora", texto: "Quiénes somos, qué hacemos y cómo trabajamos con equipos de RRHH.", url: "https://www.hacheconsultora.com" },
+    { tag: "Ejercicio", titulo: "Ejercicio de ausentismo", texto: "El mismo método, ahora con datos reales en Power BI.", url: "https://ejercicio-ausentismo.netlify.app" },
+    { tag: "Video", titulo: "Canal de YouTube", texto: "Tutoriales de Power BI, People Analytics e IA aplicada a RRHH.", url: "https://www.youtube.com/@ConsultoraHACHE" }
+  ]
+};
+</script>
+
+<header class="topbar">
+  <a class="brand" href="#inicio" aria-label="HACHE Consultora, ir a la portada">
+    <img src="assets/logo-hache-blanco.png" alt="HACHE" width="102" height="20" />
+    <span class="sep" aria-hidden="true"></span>
+    <span class="prog">Power People<small>Ejercicio · Formación</small></span>
+  </a>
+  <span class="spacer"></span>
+  <span class="slide-title-mini" id="miniTitle"></span>
+  <button class="icon-btn" id="openToc" aria-haspopup="dialog" title="Índice (tecla I)">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="1" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="9" y="1" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="1" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.6"/><rect x="9" y="9" width="6" height="6" rx="1.5" stroke="currentColor" stroke-width="1.6"/></svg>
+    <span class="txt">Índice</span>
+  </button>
+  <div class="progress" id="progress"></div>
+</header>
+
+<main class="deck" id="deck">
+
+  <!-- ============================ INTRO ============================ -->
+
+  <section class="slide dark" data-id="inicio" data-title="Portada" data-group="Intro">
+    <div class="slide-inner">
+      <div class="cover-grid">
+        <div>
+          <p class="label">Power People · Ejercicio</p>
+          <h1>¿Sirve lo que <em>enseñamos</em>?</h1>
+          <p class="lead">El Directorio quiere recortar el presupuesto de formación. Vos decidís qué preguntar, qué datos pedir y qué recomendar. Sin Power BI: con criterio.</p>
+          <div class="start-row">
+            <button class="btn btn-cta" type="button" data-go="next">Empezar →</button>
+            <span class="time-pill">90 minutos · 3 IA</span>
+          </div>
+          <p class="kbd-hint">Navegá con <kbd>←</kbd> <kbd>→</kbd> o deslizando · <kbd>I</kbd> abre el índice</p>
+        </div>
+        <div class="cover-art" aria-hidden="true">
+          <svg viewBox="0 0 400 400">
+            <rect width="400" height="400" rx="24" fill="#0A4560"/>
+            <g font-family="Poppins, sans-serif">
+              <rect x="34" y="262" width="76" height="80" rx="8" fill="#00FF90"/>
+              <rect x="122" y="202" width="76" height="140" rx="8" fill="rgba(255,255,255,0.12)"/>
+              <rect x="210" y="142" width="76" height="200" rx="8" fill="rgba(255,255,255,0.12)"/>
+              <rect x="298" y="82" width="76" height="260" rx="8" fill="rgba(255,255,255,0.12)"/>
+              <text x="72" y="306" font-size="22" font-weight="800" fill="#00344D" text-anchor="middle">1</text>
+              <text x="160" y="276" font-size="22" font-weight="800" fill="rgba(255,255,255,0.5)" text-anchor="middle">2</text>
+              <text x="248" y="246" font-size="22" font-weight="800" fill="rgba(255,255,255,0.5)" text-anchor="middle">3</text>
+              <text x="336" y="216" font-size="22" font-weight="800" fill="rgba(255,255,255,0.5)" text-anchor="middle">4</text>
+              <g font-size="10" font-weight="600" fill="rgba(255,255,255,0.6)" text-anchor="middle" letter-spacing="1">
+                <text x="72" y="360">REACCIÓN</text><text x="160" y="360">APRENDIZAJE</text><text x="248" y="360">CONDUCTA</text><text x="336" y="360">RESULTADOS</text>
+              </g>
+              <text x="34" y="52" font-size="13" font-weight="600" fill="#00FF90">La mayoría mide solo el primer escalón.</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide dark" data-id="perfil" data-title="Quién te acompaña" data-group="Intro">
+    <div class="slide-inner">
+      <p class="label">Quién te acompaña</p>
+      <div id="people"></div>
+    </div>
+  </section>
+
+  <section class="slide dark" data-id="caso" data-title="El caso" data-group="Intro">
+    <div class="slide-inner">
+      <div class="grid g2" style="align-items:center; gap:40px">
+        <div>
+          <p class="label">El caso</p>
+          <h2>Te llegó este mail un jueves a las 9:47.</h2>
+          <p class="lead">Mercado Austral es una cadena de supermercados ficticia, pero la discusión es muy real: se invierte en formación, todos dicen que los cursos están buenos y nadie puede mostrar qué cambió.</p>
+          <div class="grid g3 mt-32" style="gap:12px">
+            <div><div class="num">2.300</div><p class="small muted mt-8">colaboradores</p></div>
+            <div><div class="num">48</div><p class="small muted mt-8">sucursales</p></div>
+            <div><div class="num">$180 M</div><p class="small muted mt-8">en formación por año</p></div>
+          </div>
+        </div>
+        <article class="memo">
+          <div class="memo-head">
+            <b>De:</b> Sofía Méndez · Gerenta de Personas<br />
+            <b>Para:</b> Vos · Analista de People Analytics<br />
+            <b>Asunto:</b> Formación — el Directorio quiere recortar
+          </div>
+          <p>Hola, ¿cómo va?</p>
+          <p>El Directorio quiere <b>recortar un 30% del presupuesto de formación</b> el año que viene. Dicen que "capacitamos mucho y no cambia nada".</p>
+          <p>Lo único que tenemos para mostrar son horas dictadas y encuestas de satisfacción que dan 4,6 sobre 5. No alcanza. Necesito que pensemos bien <b>qué pregunta responder, qué datos pedir y qué recomendar</b>.</p>
+          <p>Presentamos el jueves que viene.<br />Sofía</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide light" data-id="mision" data-title="Tu misión" data-group="Intro">
+    <div class="slide-inner">
+      <p class="label">Tu misión</p>
+      <h2>El tiempo corre. <em>Comencemos.</em></h2>
+      <div class="agenda mt-32" style="grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr)">
+        <div class="card">
+          <div class="head"><h3>De la pregunta a la recomendación</h3><span class="badge badge-green">90 minutos</span></div>
+          <ol>
+            <li><b>1</b>Definir la pregunta<span class="min">10 min</span></li>
+            <li><b>2</b>Formular hipótesis<span class="min">10 min</span></li>
+            <li><b>3</b>Debatirlas con una IA<span class="min">5 min</span></li>
+            <li><b>4</b>Armar el paquete de datos<span class="min">10 min</span></li>
+            <li><b>5</b>Leer los resultados y decidir<span class="min">15 min</span></li>
+            <li><b>6</b>Escribir las recomendaciones<span class="min">10 min</span></li>
+            <li><b>7</b>Construir la herramienta de medición<span class="min">15 min</span></li>
+            <li><b>8</b>Generar la presentación<span class="min">10 min</span></li>
+          </ol>
+        </div>
+        <div class="card week">
+          <div class="head"><h3>El método</h3></div>
+          <div class="method"><span>Pregunta</span><i>→</i><span>Hipótesis</span><i>→</i><span>Datos</span><i>→</i><span>Análisis</span><i>→</i><span>Recomendación</span></div>
+          <p class="label" style="margin:18px 0 0">Las 3 IA del ejercicio</p>
+          <div class="ia-list">
+            <div class="ia"><span class="ic">LLM</span><div><b>Claude o ChatGPT</b><span>Para debatir tus hipótesis</span></div></div>
+            <div class="ia"><span class="ic">Lv</span><div><b>Lovable</b><span>Para construir una herramienta sin programar</span></div></div>
+            <div class="ia"><span class="ic">Gm</span><div><b>Gamma</b><span>Para armar la presentación</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide dark" data-id="niveles" data-title="Cómo se mide la formación" data-group="Intro">
+    <div class="slide-inner">
+      <p class="label">Conceptos clave</p>
+      <h2>Cuatro niveles para medir <em>si una formación sirve</em>.</h2>
+      <p class="lead">Es el modelo de Kirkpatrick. Cada nivel responde una pregunta distinta, y el Directorio solo se convence con el cuarto.</p>
+      <div class="levels mt-32">
+        <div class="level l1"><span class="n">Nivel 1</span><h3>Reacción</h3><span class="q">¿Les gustó?</span><p>Encuesta de satisfacción al terminar.</p><span class="here">Mercado Austral mide acá</span></div>
+        <div class="level l2"><span class="n">Nivel 2</span><h3>Aprendizaje</h3><span class="q">¿Aprendieron?</span><p>Evaluación antes y después del curso.</p></div>
+        <div class="level l3"><span class="n">Nivel 3</span><h3>Conducta</h3><span class="q">¿Lo aplican?</span><p>Uso de lo aprendido a los 3 meses, observación del líder.</p></div>
+        <div class="level l4"><span class="n">Nivel 4</span><h3>Resultados</h3><span class="q">¿Movió el negocio?</span><p>Rotación, ausentismo, ventas, satisfacción de clientes.</p></div>
+      </div>
+      <div class="callout mt-24"><b class="hl">Por eso el 4,6 sobre 5 no convence.</b> Que un curso guste no dice si cambió algo. Tu trabajo es llevar la conversación al nivel 4.</div>
+    </div>
+  </section>
+
+  <!-- ============================ EJERCICIO ============================ -->
+
+  <section class="slide dark" data-id="pregunta" data-title="La pregunta" data-group="Ejercicio">
+    <div class="slide-inner top">
+      <p class="label">Paso 1 · 10 minutos</p>
+      <h2>Todo empieza con <em>una buena pregunta</em>.</h2>
+      <p class="lead">¿Qué pregunta tiene que responder el análisis? Elegí la que te parezca mejor y mirá por qué.</p>
+      <div class="choices mt-24" id="choices"></div>
+      <div class="grid g2 mt-24" style="align-items:start">
+        <div class="field" style="margin:0">
+          <label for="myQ">Ahora escribila con tus palabras</label>
+          <textarea id="myQ" placeholder="Ej.: ¿Qué programas de formación de 2025 movieron la rotación, el ausentismo o las ventas, y cuáles no?"></textarea>
+          <span class="hint">Es la que va a abrir tu presentación.</span>
+        </div>
+        <div class="card-dark">
+          <p class="label">Revisá tu pregunta</p>
+          <div class="criteria" id="criteria"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide light" data-id="hipotesis" data-title="Las hipótesis" data-group="Ejercicio">
+    <div class="slide-inner top">
+      <p class="label">Paso 2 · 10 minutos</p>
+      <h2>Una hipótesis es <em>una respuesta que todavía hay que probar</em>.</h2>
+      <p class="lead muted">Primero, entrená el ojo: ¿cuáles de estas están bien formuladas?</p>
+      <div class="stmts mt-24" id="stmts"></div>
+      <p class="small muted mt-8" id="stmtScore"></p>
+      <div class="card mt-24">
+        <p class="label">Ahora armá las tuyas · hasta 3</p>
+        <div class="builder-h" id="hBuilder"></div>
+        <div class="actions" style="margin-top:12px"><button class="btn btn-primary btn-sm" type="button" id="addHyp">Agregar hipótesis</button><span class="small muted" id="hypMsg"></span></div>
+        <div class="hyp-list" id="hypList"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide dark" data-id="sparring" data-title="Debatí con IA" data-group="Ejercicio">
+    <div class="slide-inner top">
+      <span class="ia-badge">IA 1 · Claude o ChatGPT</span>
+      <p class="label">Paso 3 · 5 minutos</p>
+      <h2>Poné a prueba tus hipótesis <em>con un sparring</em>.</h2>
+      <p class="lead">Un LLM es un buen compañero para discutir ideas. Pedile que haga de Director Financiero escéptico y que te desarme las hipótesis antes que el Directorio.</p>
+      <div class="gamma mt-24">
+        <div class="gsteps">
+          <div class="step"><span class="step-n">1</span><div><b class="t">Copiá el prompt</b><p>Ya trae tus hipótesis del paso anterior.</p><div class="actions" style="margin-top:10px"><button class="btn btn-cta btn-sm" id="sCopy" type="button">Copiar prompt</button></div></div></div>
+          <div class="step"><span class="step-n">2</span><div><b class="t">Abrí un chat nuevo</b><p>En la IA que uses: <a href="https://claude.ai/new" target="_blank" rel="noopener" style="color:var(--green); font-weight:600">Claude</a>, <a href="https://chatgpt.com" target="_blank" rel="noopener" style="color:var(--green); font-weight:600">ChatGPT</a> o <a href="https://gemini.google.com" target="_blank" rel="noopener" style="color:var(--green); font-weight:600">Gemini</a>. Pegá el prompt.</p></div></div>
+          <div class="step"><span class="step-n">3</span><div><b class="t">Respondele</b><p>No aceptes todo: defendé lo que tenga sentido y corregí lo que no. Seguí la charla 2 o 3 vueltas.</p></div></div>
+          <div class="step"><span class="step-n">4</span><div><b class="t">Mejorá tus hipótesis</b><p>Si salió una mejor, volvé al paso 2 y agregala. Anotá acá lo más útil que te dijo:</p>
+            <div class="field" style="margin-top:8px"><textarea id="sAprendi" style="min-height:70px" placeholder="Ej.: Me hizo ver que las sucursales sin onboarding pueden ser distintas por otros motivos (zona, tamaño)."></textarea></div></div></div>
+        </div>
+        <div class="code" id="sPrompt"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide dark" data-id="datos" data-title="El paquete de datos" data-group="Ejercicio">
+    <div class="slide-inner top">
+      <p class="label">Paso 4 · 10 minutos</p>
+      <h2>¿Qué datos necesitás para <em>probar tus hipótesis</em>?</h2>
+      <p class="lead">Armá el pedido a las distintas áreas. Ni de más ni de menos: cada dato que pedís alguien lo tiene que buscar, y algunos no corresponde pedirlos.</p>
+      <div class="catalog mt-24" id="catalog"></div>
+      <div class="actions" style="margin-top:16px"><button class="btn btn-cta btn-sm" type="button" id="checkPack">Revisar mi paquete →</button><span class="small muted" id="packCount"></span></div>
+      <div class="pack-fb" id="packFb" aria-live="polite"></div>
+      <div class="qlist mt-24" id="qCruce"></div>
+    </div>
+  </section>
+
+  <section class="slide light" data-id="resultados" data-title="Resultados y decisiones" data-group="Ejercicio">
+    <div class="slide-inner top">
+      <p class="label">Paso 5 · 15 minutos</p>
+      <h2>Llegaron los datos. <em>¿Qué hacés con cada programa?</em></h2>
+      <p class="lead muted">Comparamos a quienes hicieron cada programa con quienes todavía no lo hicieron. Decidí qué hacer con cada uno: el presupuesto se actualiza solo.</p>
+      <div class="budget mt-24" id="budget">
+        <div><div class="lbl">Tu presupuesto 2026</div><div class="val" id="bVal">$180,0 M</div></div>
+        <div class="track"><div class="fill" id="bFill"></div><div class="target" id="bTarget" data-l="Pedido del Directorio: $126 M"></div></div>
+        <div class="msg" id="bMsg"></div>
+      </div>
+      <div class="programs" id="programs"></div>
+      <p class="assump">Supuestos para el presupuesto: invertir más suma 30% al costo del programa, rediseñar lo baja 40%, recortar lo elimina.</p>
+    </div>
+  </section>
+
+  <section class="slide light" data-id="recomendaciones" data-title="Recomendaciones" data-group="Ejercicio">
+    <div class="slide-inner top">
+      <p class="label">Paso 6 · 10 minutos</p>
+      <h2>Vamos a preparar la presentación para el Directorio. <em>¿Qué le recomendás?</em></h2>
+      <div class="reco mt-32">
+        <div>
+          <div class="field">
+            <label for="gReco">Tus recomendaciones</label>
+            <textarea id="gReco" style="min-height:130px" placeholder="Ej.: 1) Extender el Onboarding presencial a las 18 sucursales que no lo tienen (RRHH, meta: bajas a 90 días por debajo de 20%). 2) Eliminar las charlas inspiracionales y reinvertir en lo que muestra impacto."></textarea>
+            <span class="hint">2 o 3 acciones concretas, con responsable e indicador.</span>
+          </div>
+          <div class="field">
+            <label for="gMedir">¿Cómo lo van a medir el año que viene?</label>
+            <textarea id="gMedir" style="min-height:80px" placeholder="Ej.: Cada programa nuevo arranca con un indicador de negocio definido y un grupo de comparación."></textarea>
+          </div>
+          <div class="field">
+            <label for="gNombre">Tu nombre</label>
+            <input id="gNombre" type="text" placeholder="Para la portada de la presentación" style="font-size:15px" />
+          </div>
+        </div>
+        <div style="display:grid; gap:16px">
+          <div class="card">
+            <p class="label">Tus decisiones</p>
+            <div class="decisions" id="decisions"></div>
+          </div>
+          <div class="card">
+            <p class="label">Una buena recomendación</p>
+            <div class="steps mt-8">
+              <div class="step"><span class="step-n">1</span><p><b>Responde a un hallazgo.</b> Cada acción sale de un dato, no de una intuición.</p></div>
+              <div class="step"><span class="step-n">2</span><p><b>Tiene responsable.</b> Quién la lleva adelante: Formación, RRHH, los líderes.</p></div>
+              <div class="step"><span class="step-n">3</span><p><b>Se puede medir.</b> Qué indicador vas a seguir y qué meta proponés.</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide dark" data-id="lovable" data-title="Herramienta en Lovable" data-group="Ejercicio">
+    <div class="slide-inner top">
+      <span class="ia-badge">IA 2 · Lovable</span>
+      <p class="label">Paso 7 · 15 minutos</p>
+      <h2>Construí la herramienta para <em>medir la formación</em>.</h2>
+      <p class="lead">El problema de fondo es que Mercado Austral no mide nada más que la satisfacción. Con Lovable podés crear, sin programar, la app que los líderes completan a los 3 meses de cada curso.</p>
+      <div class="gamma mt-24">
+        <div class="gsteps">
+          <div class="step"><span class="step-n">1</span><div><b class="t">Copiá el prompt</b><p>Ya incluye tus decisiones y los programas del caso.</p><div class="actions" style="margin-top:10px"><button class="btn btn-cta btn-sm" id="lCopy" type="button">Copiar prompt</button></div></div></div>
+          <div class="step"><span class="step-n">2</span><div><b class="t">Entrá a Lovable</b><p>Abrí <a href="https://lovable.dev" target="_blank" rel="noopener" style="color:var(--green); font-weight:600">lovable.dev</a>, creá tu cuenta gratis, pegá el prompt en el cuadro principal y enviá.</p></div></div>
+          <div class="step"><span class="step-n">3</span><div><b class="t">Iterá</b><p>Probá la app y pedile mejoras en el chat de la izquierda. Tocá una idea para copiarla:</p>
+            <div class="iter mt-8" id="iterList"></div></div></div>
+          <div class="step"><span class="step-n">4</span><div><b class="t">Publicala</b><p>Tocá <b>Publish</b> (arriba a la derecha) y pegá acá el link: va a ir en tu presentación.</p>
+            <div class="field" style="margin-top:8px"><input id="lLink" type="url" placeholder="https://tu-app.lovable.app" style="font-size:14px" /></div></div></div>
+        </div>
+        <div class="code" id="lPrompt"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide dark" data-id="gamma" data-title="Presentación en Gamma" data-group="Ejercicio">
+    <div class="slide-inner top">
+      <span class="ia-badge">IA 3 · Gamma</span>
+      <p class="label">Paso 8 · 10 minutos</p>
+      <h2>Tu prompt está listo. <em>Llevalo a Gamma.</em></h2>
+      <p class="lead">Gamma es una IA que genera presentaciones a partir de un texto. El prompt ya tiene tu pregunta, tus hipótesis, los datos, tus decisiones y tus recomendaciones.</p>
+      <div class="gamma mt-24">
+        <div class="gsteps">
+          <div class="step"><span class="step-n">1</span><div><b class="t">Copiá el prompt</b><p>Con este botón o el de la caja de código.</p><div class="actions" style="margin-top:10px"><button class="btn btn-cta btn-sm" id="gCopy" type="button">Copiar prompt</button></div></div></div>
+          <div class="step"><span class="step-n">2</span><div><b class="t">Entrá a Gamma</b><p>Abrí <a href="https://gamma.app" target="_blank" rel="noopener" style="color:var(--green); font-weight:600">gamma.app</a> y creá tu cuenta gratis (con Google es un clic).</p></div></div>
+          <div class="step"><span class="step-n">3</span><div><b class="t">Generá con IA</b><p>Tocá <b>Crear nuevo</b> y elegí <b>Generar</b>. Pegá el prompt y presioná <b>Generar esquema</b>. Si la ves en inglés: <i>Create new › Generate</i>.</p></div></div>
+          <div class="step"><span class="step-n">4</span><div><b class="t">Revisá y elegí un tema</b><p>Corregí el esquema si hace falta, elegí un tema de colores y tocá <b>Generar</b>.</p></div></div>
+          <div class="step"><span class="step-n">5</span><div><b class="t">Ajustá y compartí</b><p id="gEntrega"></p></div></div>
+        </div>
+        <div class="code" id="gPrompt"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide dark" data-id="explorar" data-title="Seguí explorando" data-group="Cierre">
+    <div class="slide-inner">
+      <p class="label">Seguí explorando</p>
+      <h2>Ahora te toca a vos. <em>Que los datos hablen.</em></h2>
+      <div class="links mt-32" id="links"></div>
+      <div class="actions"><a class="btn btn-outline" href="#inicio">Volver al inicio</a></div>
+    </div>
+  </section>
+</main>
+
+<div class="bottom">
+  <nav class="bottombar" aria-label="Navegación de slides">
+    <button class="nav-btn" id="prev" aria-label="Slide anterior">← <span class="txt">Anterior</span></button>
+    <div class="dots" id="dots"></div>
+    <span class="counter" id="counter"></span>
+    <button class="nav-btn next" id="next" aria-label="Slide siguiente"><span class="txt">Siguiente</span> →</button>
+  </nav>
+  <footer class="footer">
+    <span>© <span id="year">2026</span> Consultora HACHE<span class="opt-txt"> · Ejercicio de Power People · Todos los derechos reservados</span> ·</span>
+    <a href="https://www.hacheconsultora.com" target="_blank" rel="noopener">www.hacheconsultora.com</a>
+  </footer>
+</div>
+
+<div class="overlay" id="toc" role="dialog" aria-modal="true" aria-label="Índice de slides">
+  <div class="overlay-inner">
+    <div class="overlay-head">
+      <div><p class="label">Índice</p><h2>Saltá a cualquier parte</h2></div>
+      <button class="icon-btn" id="closeToc">Cerrar ✕</button>
+    </div>
+    <div id="tocGroups"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(function () {
+  const C = window.CONFIG;
+  const $ = (s, el = document) => el.querySelector(s);
+  const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+  const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const store = {
+    get(k, d) { try { const v = localStorage.getItem("pp-form-" + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+    set(k, v) { try { localStorage.setItem("pp-form-" + k, JSON.stringify(v)); } catch (e) {} }
+  };
+  const fmt = (n, d = 1) => Number(n).toLocaleString("es-AR", { minimumFractionDigits: d, maximumFractionDigits: d });
+  $("#year").textContent = new Date().getFullYear();
+
+  let toastT;
+  function toast(msg) {
+    const t = $("#toast"); t.textContent = msg; t.classList.add("show");
+    clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("show"), 1900);
+  }
+  async function copy(text, btn, label = "Copiar") {
+    let ok = true;
+    try { await navigator.clipboard.writeText(text); }
+    catch (e) {
+      const ta = document.createElement("textarea"); ta.value = text; document.body.appendChild(ta);
+      ta.select(); try { ok = document.execCommand("copy"); } catch (_) { ok = false; } ta.remove();
+    }
+    if (btn) { btn.classList.add("ok"); btn.textContent = "Copiado ✓"; setTimeout(() => { btn.classList.remove("ok"); btn.textContent = label; }, 1600); }
+    toast(ok ? "Copiado al portapapeles" : "No se pudo copiar: seleccioná el texto a mano");
+  }
+
+  /* ---------- perfil, links, entrega ---------- */
+  $("#people").innerHTML = C.acompanan.map(p => {
+    const ini = p.nombre.split(" ").map(w => w[0]).slice(0, 2).join("");
+    return `<div class="person">
+      <div class="avatar">${p.foto ? `<img src="${esc(p.foto)}" alt="${esc(p.nombre)}" width="240" height="240">` : esc(ini)}</div>
+      <div>
+        <h2>${esc(p.nombre)}</h2>
+        <p class="role">${esc(p.rol)}</p>
+        <p class="lead">${esc(p.bio)}</p>
+        <p class="cred">${esc(p.credenciales)}</p>
+        <div class="chips">${p.chips.map(c => `<span class="chip-static">${esc(c)}</span>`).join("")}</div>
+        ${p.linkedin ? `<div class="actions" style="margin-top:20px"><a class="btn btn-cta btn-sm" href="${esc(p.linkedin)}" target="_blank" rel="noopener">Conectar en LinkedIn</a></div>` : ""}
+      </div></div>`;
+  }).join("");
+  $("#links").innerHTML = C.links.map(l => `
+    <a class="link-card" href="${esc(l.url)}" target="_blank" rel="noopener">
+      <span class="tag">${esc(l.tag)}</span><b>${esc(l.titulo)}</b><span>${esc(l.texto)}</span><span class="go">Abrir →</span>
+    </a>`).join("");
+  $("#gEntrega").textContent = C.entrega;
+
+  const state = store.get("state", {});
+  const save = () => { store.set("state", state); buildAll(); };
+
+  /* =====================================================================
+     PASO 1 · LA PREGUNTA
+     ===================================================================== */
+  const PREGUNTAS = [
+    { t: "Describe", q: "¿Cuántas horas de capacitación dimos en 2025?", ok: false,
+      why: "Es descriptiva: dice cuánto hicimos, no si sirvió. No ayuda a decidir qué recortar." },
+    { t: "Decide", q: "¿Qué programas mejoran indicadores del negocio y cuáles no, para decidir dónde recortar y dónde invertir?", ok: true,
+      why: "Esta es. Está atada a la decisión del Directorio, se puede medir y no da por hecha la respuesta." },
+    { t: "Satisfacción", q: "¿Los participantes están satisfechos con los cursos?", ok: false,
+      why: "Ya lo sabemos: 4,6 sobre 5. Es el nivel 1, justo lo que no convence al Directorio." },
+    { t: "Defiende", q: "¿Cómo convencemos al Directorio de que no recorte?", ok: false,
+      why: "Arranca con la respuesta puesta. Si un programa no sirve, el análisis también lo tiene que decir." }
+  ];
+  const CRITERIOS = [
+    "Está conectada con la decisión que hay que tomar",
+    "Se puede responder con datos",
+    "Define qué se compara (programas, personas, sucursales)",
+    "No da por hecha la respuesta"
+  ];
+  $("#choices").innerHTML = PREGUNTAS.map((p, i) => `
+    <button type="button" class="choice" data-i="${i}"><span class="tag">Opción ${String.fromCharCode(65 + i)}</span><span class="opt-q">${esc(p.q)}</span><span class="why">${esc(p.why)}</span></button>`).join("");
+  function paintChoices() {
+    $$(".choice").forEach(b => {
+      const p = PREGUNTAS[+b.dataset.i], picked = (state.picked || []).includes(+b.dataset.i);
+      b.classList.toggle("picked", picked); b.classList.toggle("good", picked && p.ok); b.classList.toggle("bad", picked && !p.ok);
+    });
+  }
+  $$(".choice").forEach(b => b.addEventListener("click", () => {
+    const i = +b.dataset.i;
+    state.picked = [...new Set([...(state.picked || []), i])];
+    if (PREGUNTAS[i].ok) toast("¡Esa es!");
+    paintChoices(); save();
+  }));
+  $("#criteria").innerHTML = CRITERIOS.map((c, i) => `<label><input type="checkbox" data-c="${i}"> <span>${esc(c)}</span></label>`).join("");
+  $$("[data-c]").forEach(cb => cb.addEventListener("change", () => {
+    state.crit = state.crit || {}; state.crit[cb.dataset.c] = cb.checked; save();
+  }));
+
+  /* =====================================================================
+     PASO 2 · HIPÓTESIS
+     ===================================================================== */
+  const ENUNCIADOS = [
+    { s: "La capacitación no sirve.", ok: false, why: "Es una opinión: no dice qué programa, qué indicador ni cómo comprobarlo." },
+    { s: "Las sucursales con Onboarding presencial tienen menos bajas en los primeros 90 días que las que no lo tienen.", ok: true, why: "Concreta: programa, indicador y contra qué comparar." },
+    { s: "A la gente le gustan los cursos.", ok: false, why: "Es nivel 1 y no se conecta con ningún resultado del negocio." },
+    { s: "Los equipos de líderes que hicieron Liderazgo en acción tienen menos ausentismo que el resto.", ok: true, why: "Se puede probar: compara equipos con y sin líderes formados." },
+    { s: "Como el curso de Excel tuvo 4,8 de satisfacción, mejoró la productividad.", ok: false, why: "Confunde que les guste con que lo apliquen. Satisfacción no es impacto." }
+  ];
+  $("#stmts").innerHTML = ENUNCIADOS.map((e, i) => `
+    <div class="stmt" data-i="${i}">
+      <p>${esc(e.s)}</p>
+      <div class="opts">
+        <button type="button" class="opt" data-a="1" aria-pressed="false">Bien formulada</button>
+        <button type="button" class="opt" data-a="0" aria-pressed="false">Hay que mejorarla</button>
+      </div>
+      <p class="fb"></p>
+    </div>`).join("");
+  function paintStmts() {
+    const ans = state.stmts || {};
+    let n = 0, ok = 0;
+    $$(".stmt").forEach(el => {
+      const i = el.dataset.i, e = ENUNCIADOS[i], a = ans[i];
+      $$(".opt", el).forEach(b => b.setAttribute("aria-pressed", a !== undefined && String(+a) === b.dataset.a));
+      if (a === undefined) { el.className = "stmt"; return; }
+      n++;
+      const good = (a === 1) === e.ok; if (good) ok++;
+      el.className = "stmt done " + (good ? "ok" : "ko");
+      $(".fb", el).textContent = (good ? "Correcto. " : "Revisala. ") + e.why;
+    });
+    $("#stmtScore").textContent = n ? `${ok} de ${ENUNCIADOS.length} bien clasificadas${n < ENUNCIADOS.length ? ` · te faltan ${ENUNCIADOS.length - n}` : ""}.` : "";
+  }
+  $$(".stmt").forEach(el => $$(".opt", el).forEach(b => b.addEventListener("click", () => {
+    state.stmts = state.stmts || {}; state.stmts[el.dataset.i] = +b.dataset.a; paintStmts(); save();
+  })));
+
+  const PROGRAMAS_N = ["Onboarding presencial", "Liderazgo en acción", "Excel avanzado", "Atención al cliente (e-learning)", "Charlas inspiracionales"];
+  const H_PARTS = [
+    { k: "prog", opts: PROGRAMAS_N, ph: "Elegí un programa" },
+    { k: "efecto", opts: ["reduce", "mejora"], ph: "efecto" },
+    { k: "ind", opts: ["las bajas en los primeros 90 días", "el ausentismo", "el NPS de clientes", "las ventas por empleado", "el clima del equipo", "los días de cierre contable"], ph: "Elegí un indicador" },
+    { k: "comp", opts: ["comparando a quienes lo hicieron con quienes no", "comparando antes y después del programa"], ph: "Elegí cómo comparar" }
+  ];
+  $("#hBuilder").innerHTML = `<span>Creemos que</span>${hSel(0)}<span>${hSel(1)}</span>${hSel(2)}<span>. Lo vamos a comprobar</span>${hSel(3)}<span>.</span>`;
+  function hSel(i) { const p = H_PARTS[i]; return `<select data-h="${p.k}" aria-label="${p.ph}"><option value="">${p.ph}</option>${p.opts.map(o => `<option>${esc(o)}</option>`).join("")}</select>`; }
+  $$("[data-h]").forEach(s => s.addEventListener("change", () => s.classList.toggle("filled", !!s.value)));
+  const hypText = h => `Creemos que «${h.prog}» ${h.efecto} ${h.ind}. Lo vamos a comprobar ${h.comp}.`;
+  function paintHyps() {
+    const list = state.hyps || [];
+    $("#hypList").innerHTML = list.map((h, i) => `<div class="hyp"><b>H${i + 1}</b><span>${esc(hypText(h))}</span><button type="button" data-del="${i}" aria-label="Quitar hipótesis ${i + 1}">✕</button></div>`).join("");
+    $$("[data-del]").forEach(b => b.addEventListener("click", () => { state.hyps.splice(+b.dataset.del, 1); paintHyps(); save(); }));
+    $("#addHyp").disabled = list.length >= 3;
+  }
+  $("#addHyp").addEventListener("click", () => {
+    const h = Object.fromEntries($$("[data-h]").map(s => [s.dataset.h, s.value]));
+    if (Object.values(h).some(v => !v)) { $("#hypMsg").textContent = "Completá las cuatro partes."; return; }
+    state.hyps = state.hyps || [];
+    if (state.hyps.length >= 3) return;
+    state.hyps.push(h); $("#hypMsg").textContent = "";
+    $$("[data-h]").forEach(s => { s.value = ""; s.classList.remove("filled"); });
+    paintHyps(); save(); toast("Hipótesis agregada");
+  });
+
+  /* =====================================================================
+     PASO 3 · PAQUETE DE DATOS
+     tipo: clave (imprescindible) · resultado (nivel 4) · proceso (niveles 1 a 3) · no (no corresponde)
+     ===================================================================== */
+  const DATOS = [
+    { id: "nomina", own: "RRHH", n: "Nómina", d: "Legajo, puesto, sucursal, líder y antigüedad.", tipo: "clave" },
+    { id: "lms", own: "Formación", n: "Registro de cursos", d: "Quién hizo cada curso y cuándo.", tipo: "clave" },
+    { id: "costos", own: "Finanzas", n: "Costos por programa", d: "Cuánto costó cada curso en 2025.", tipo: "clave" },
+    { id: "satis", own: "Formación", n: "Encuestas de satisfacción", d: "Nivel 1: si les gustó.", tipo: "proceso" },
+    { id: "evals", own: "Formación", n: "Evaluaciones antes y después", d: "Nivel 2: si aprendieron.", tipo: "proceso" },
+    { id: "uso", own: "Líderes", n: "Uso a los 3 meses", d: "Nivel 3: si lo aplican en el puesto.", tipo: "proceso" },
+    { id: "bajas", own: "RRHH", n: "Bajas con fecha y motivo", d: "Para medir rotación temprana.", tipo: "resultado" },
+    { id: "ausen", own: "RRHH", n: "Ausentismo por persona", d: "Días de ausencia por mes.", tipo: "resultado" },
+    { id: "ventas", own: "Comercial", n: "Ventas por sucursal", d: "Ventas mensuales por empleado.", tipo: "resultado" },
+    { id: "nps", own: "Comercial", n: "NPS de clientes", d: "Satisfacción de clientes por sucursal.", tipo: "resultado" },
+    { id: "clima", own: "RRHH", n: "Encuesta de clima", d: "Resultados por equipo.", tipo: "resultado" },
+    { id: "salud", own: "Medicina laboral", n: "Diagnósticos médicos", d: "Historias clínicas de cada persona.", tipo: "no", why: "Son datos de salud: sensibles y no responden la pregunta." },
+    { id: "chats", own: "Sistemas", n: "Mails y chats internos", d: "Mensajes de los colaboradores.", tipo: "no", why: "Es invasivo y no hace falta para medir impacto." },
+    { id: "redes", own: "Internet", n: "Redes sociales personales", d: "Perfiles fuera del trabajo.", tipo: "no", why: "No corresponde: es la vida privada de las personas." }
+  ];
+  $("#catalog").innerHTML = DATOS.map(d => `
+    <button type="button" class="dcard" data-d="${d.id}" aria-pressed="false">
+      <span class="own">${esc(d.own)}</span><b>${esc(d.n)}</b><span class="d">${esc(d.d)}</span><span class="chk"></span>
+    </button>`).join("");
+  function paintPack(showFlags) {
+    const sel = state.pack || [];
+    $$(".dcard").forEach(b => {
+      const on = sel.includes(b.dataset.d);
+      b.setAttribute("aria-pressed", on);
+      $(".chk", b).textContent = on ? "✓ En el pedido" : "+ Pedir";
+      if (!showFlags) b.classList.remove("flag-bad", "flag-miss");
+    });
+    $("#packCount").textContent = `${sel.length} dato${sel.length === 1 ? "" : "s"} en tu pedido`;
+  }
+  $$(".dcard").forEach(b => b.addEventListener("click", () => {
+    const id = b.dataset.d; state.pack = state.pack || [];
+    state.pack = state.pack.includes(id) ? state.pack.filter(x => x !== id) : [...state.pack, id];
+    b.classList.remove("flag-bad", "flag-miss");
+    paintPack(true); save();
+  }));
+  function checkPack(silent) {
+    const sel = state.pack || [];
+    const byId = id => DATOS.find(d => d.id === id);
+    const faltan = DATOS.filter(d => d.tipo === "clave" && !sel.includes(d.id));
+    const malos = sel.map(byId).filter(d => d.tipo === "no");
+    const res = sel.map(byId).filter(d => d.tipo === "resultado");
+    const proc = sel.map(byId).filter(d => d.tipo === "proceso" && d.id !== "satis");
+    const lines = [];
+    $$(".dcard").forEach(b => b.classList.remove("flag-bad", "flag-miss"));
+    faltan.forEach(d => { lines.push(["w", "Falta", `${d.n}: ${d.id === "nomina" ? "sin la nómina no podés cruzar nada con nada." : d.id === "lms" ? "sin saber quién hizo cada curso no hay comparación posible." : "sin costos no podés decidir dónde recortar."}`]); $(`[data-d="${d.id}"]`).classList.add("flag-miss"); });
+    if (res.length < 2) lines.push(["w", "Falta", `Indicadores de resultado (nivel 4). Pediste ${res.length}: sumá al menos 2 entre bajas, ausentismo, ventas, NPS o clima.`]);
+    malos.forEach(d => { lines.push(["r", "Sacá", `${d.n}. ${d.why}`]); $(`[data-d="${d.id}"]`).classList.add("flag-bad"); });
+    const ok = !faltan.length && res.length >= 2 && !malos.length;
+    if (ok) {
+      lines.unshift(["g", "¡Bien!", `Tu paquete permite cruzar personas, cursos, costos y ${res.length} indicadores de resultado.`]);
+      if (proc.length) lines.push(["g", "Plus", "Sumaste datos de aprendizaje o aplicación: así vas a poder explicar por qué un curso no funcionó."]);
+      else lines.push(["w", "Tip", "Pensá en sumar evaluaciones o uso a los 3 meses: ayudan a entender por qué un curso no funciona."]);
+    }
+    state.packOk = ok;
+    $("#packFb").innerHTML = lines.map(([c, k, t]) => `<div class="${c}"><span class="k">${k}</span><span>${esc(t)}</span></div>`).join("");
+    if (!silent) { store.set("state", state); buildAll(); if (ok) toast("¡Paquete listo!"); }
+  }
+  $("#checkPack").addEventListener("click", () => checkPack());
+
+  /* ---------- pregunta de cruce (mismo formato que el ejercicio de ausentismo) ---------- */
+  const CRUCE = {
+    id: "cruce", titulo: "¿Cómo cruzás los datos?",
+    hint: "Pensá qué columna está en las dos fuentes que querés unir.",
+    lineas: [
+      "Para cruzar quién hizo cada curso con las bajas, usás {c:a:Nombre y apellido|Legajo|Sucursal|Mes}.",
+      "Para cruzar los cursos con las ventas y el NPS, usás {c:b:Legajo|Sucursal|Puesto}, porque esos datos no son por persona."
+    ],
+    esperado: { a: "Legajo", b: "Sucursal" },
+    ok: "Exacto. Legajo une todo lo que es por persona; Sucursal, lo que se mide por local. La nómina tiene las dos.",
+    mal: "Revisá lo marcado. El nombre se repite y se escribe distinto; el legajo es único."
+  };
+  const cr = state.cruce || {};
+  $("#qCruce").innerHTML = `<div class="qcard" data-q="cruce">
+      <div class="qhead"><span class="qnum">✓</span><h3>${esc(CRUCE.titulo)}</h3></div>
+      <div class="qbody"><p class="qhint">${esc(CRUCE.hint)}</p>
+      ${CRUCE.lineas.map(l => `<div class="qline">${esc(l).replace(/\{c:(\w+):([^}]+)\}/g, (_, k, o) => o.split("|").map(v => `<button type="button" class="opt" data-k="${k}" data-v="${v}" aria-pressed="${cr[k] === v}">${v}</button>`).join(" "))}</div>`).join("")}
+      <div class="qfoot"><button type="button" class="btn btn-cta btn-sm" data-confirm>Confirmar →</button><span class="feedback" aria-live="polite"></span></div></div></div>`;
+  const crCard = $("#qCruce .qcard");
+  crCard.addEventListener("click", e => {
+    const b = e.target.closest(".opt");
+    if (b) { state.cruce = state.cruce || {}; state.cruce[b.dataset.k] = b.dataset.v; $$(`.opt[data-k="${b.dataset.k}"]`, crCard).forEach(o => { o.setAttribute("aria-pressed", o === b); o.classList.remove("bad"); }); save(); }
+    if (e.target.closest("[data-confirm]")) checkCruce();
+  });
+  function checkCruce(silent) {
+    const st = state.cruce || {}; let ok = true;
+    Object.entries(CRUCE.esperado).forEach(([k, v]) => {
+      const good = st[k] === v; ok = ok && good;
+      $$(`.opt[data-k="${k}"]`, crCard).forEach(b => b.classList.toggle("bad", !good && (b.getAttribute("aria-pressed") === "true" || !st[k])));
+    });
+    const fb = $(".feedback", crCard); fb.className = "feedback " + (ok ? "ok" : "bad"); fb.textContent = ok ? CRUCE.ok : CRUCE.mal;
+    if (!silent && ok) toast("¡Correcto!");
+  }
+
+  /* =====================================================================
+     PASO 4 · RESULTADOS Y DECISIONES
+     ===================================================================== */
+  const DECIS = ["Invertir más", "Mantener", "Rediseñar", "Recortar"];
+  const FACTOR = { "Invertir más": 1.3, "Mantener": 1, "Rediseñar": 0.6, "Recortar": 0 };
+  const PRESUPUESTO = 180, OBJETIVO = 126;
+  const PROGS = [
+    { id: "onb", n: "Onboarding presencial «Primeros 30 días»", who: "Cajeros y repositores nuevos · 620 personas", cost: 38, sat: "4,2",
+      metric: "Bajas en los primeros 90 días", con: 17, sin: 32, unit: "%", max: 40, menosEsMejor: true,
+      extra: "Hoy se dicta en 30 de las 48 sucursales.",
+      fb: { "Invertir más": ["good", "Bien: es el programa con más impacto y todavía no llega a 18 sucursales. Extenderlo es la mejor inversión."],
+            "Mantener": ["ok", "Funciona, pero hay 18 sucursales sin el programa. Ahí está la oportunidad de bajar la rotación."],
+            "Rediseñar": ["bad", "No hace falta: casi la mitad de bajas que donde no se dicta."],
+            "Recortar": ["bad", "Es el que más impacto tiene: recortarlo aumentaría la rotación y lo que cuesta reemplazar a cada persona."] } },
+    { id: "lid", n: "Liderazgo en acción", who: "Jefes de sucursal · 96 líderes", cost: 52, sat: "4,4",
+      metric: "Ausentismo de sus equipos", con: 4.3, sin: 6.1, unit: "%", max: 8, menosEsMejor: true,
+      extra: "El clima de esos equipos subió 9 puntos.",
+      fb: { "Invertir más": ["ok", "Tiene impacto. Antes de ampliarlo, conviene mantenerlo y seguir midiendo un año más."],
+            "Mantener": ["good", "Bien: muestra impacto en ausentismo y clima. Se sostiene y se sigue midiendo."],
+            "Rediseñar": ["bad", "Los resultados son buenos: no hay nada que justifique cambiarlo."],
+            "Recortar": ["bad", "Sus equipos faltan menos y tienen mejor clima. Recortarlo es perder ese efecto."] } },
+    { id: "xls", n: "Excel avanzado", who: "Oficinas centrales · 140 personas", cost: 24, sat: "4,8",
+      metric: "Días para el cierre contable", con: 6.1, sin: 6.2, unit: " días", max: 8, menosEsMejor: true,
+      extra: "Es el curso mejor puntuado, pero solo el 35% usa lo aprendido a los 3 meses.",
+      fb: { "Invertir más": ["bad", "Gusta mucho, pero no cambió nada: 6,1 contra 6,2 días. Satisfacción no es impacto."],
+            "Mantener": ["bad", "Mantenerlo así es seguir pagando por un curso que casi nadie aplica."],
+            "Rediseñar": ["good", "Bien: el tema sirve, el formato no. Rediseñarlo con casos reales del puesto puede hacer que se use."],
+            "Recortar": ["ok", "Es defendible: no muestra impacto. Pero antes de eliminarlo, se puede probar un formato aplicado."] } },
+    { id: "atc", n: "Atención al cliente (e-learning)", who: "Personal de sucursal · 1.200 inscriptos", cost: 18, sat: "4,0",
+      metric: "NPS de clientes", con: 41, sin: 40, unit: "", max: 60, menosEsMejor: false,
+      extra: "Solo el 21% lo terminó: se hace fuera del horario de trabajo.",
+      fb: { "Invertir más": ["bad", "Con 21% de finalización, más presupuesto no resuelve nada."],
+            "Mantener": ["bad", "Así como está casi nadie lo termina: no se puede saber si funciona."],
+            "Rediseñar": ["good", "Bien: el problema es el formato. En horario laboral y en módulos cortos, se puede medir de verdad."],
+            "Recortar": ["ok", "Entendible por los números, pero el tema es clave para un supermercado. El problema es cómo se dicta."] } },
+    { id: "cha", n: "Charlas inspiracionales", who: "Toda la empresa · 2 eventos al año", cost: 48, sat: "4,7",
+      metric: null, extra: "Es el 27% del presupuesto y nunca se midió nada más que la satisfacción.",
+      fb: { "Invertir más": ["bad", "No hay ninguna evidencia de impacto para justificar más inversión."],
+            "Mantener": ["bad", "Es el programa más caro después de Liderazgo y no se puede demostrar qué cambia."],
+            "Rediseñar": ["ok", "Si se mantiene, que sea más chico y con un objetivo medible."],
+            "Recortar": ["good", "Bien: es la partida más grande sin ninguna evidencia de impacto. Ese dinero rinde más en otro lado."] } }
+  ];
+  const fmtM = n => "$" + fmt(n) + " M";
+  function bars(p) {
+    if (!p.metric) return `<div class="no-data">Sin datos de impacto: solo hay encuestas de satisfacción.</div>`;
+    const row = (lbl, v, cls) => `<div class="bar-row" title="${lbl}: ${fmt(v, Number.isInteger(v) ? 0 : 1)}${p.unit}"><span class="who">${lbl}</span><span class="track"><span class="b ${cls}" style="width:${Math.min(100, v / p.max * 100)}%; display:block"></span></span><span class="v">${fmt(v, Number.isInteger(v) ? 0 : 1)}${p.unit}</span></div>`;
+    return `<div><div class="metric-name">${esc(p.metric)}${p.menosEsMejor ? " · menos es mejor" : " · más es mejor"}</div>
+      <div class="bars mt-8">${row("Con programa", p.con, "con")}${row("Sin programa", p.sin, "sin")}</div></div>`;
+  }
+  $("#programs").innerHTML = PROGS.map(p => `
+    <article class="pcard" data-p="${p.id}">
+      <div class="prog-head"><div><h3>${esc(p.n)}</h3><p class="who">${esc(p.who)}</p></div><div class="cost"><b>${fmtM(p.cost)}</b><span>costo 2025</span></div></div>
+      <p class="sat">Satisfacción: <b>${p.sat}</b> / 5</p>
+      ${bars(p)}
+      <p class="extra">${esc(p.extra)}</p>
+      <div class="decide">${DECIS.map(d => `<button type="button" class="opt" data-dec="${d}" aria-pressed="false">${d}</button>`).join("")}</div>
+      <p class="pfb" aria-live="polite"></p>
+    </article>`).join("");
+  const budgetOf = dec => PROGS.reduce((s, p) => s + p.cost * (dec[p.id] ? FACTOR[dec[p.id]] : 1), 0);
+  function paintProgs() {
+    const dec = state.dec || {};
+    $$(".pcard").forEach(el => {
+      const p = PROGS.find(x => x.id === el.dataset.p), d = dec[p.id];
+      $$("[data-dec]", el).forEach(b => b.setAttribute("aria-pressed", b.dataset.dec === d));
+      el.classList.remove("decided-good", "decided-ok", "decided-bad");
+      if (d) { const [cls, txt] = p.fb[d]; el.classList.add("decided-" + cls); $(".pfb", el).textContent = txt; }
+      else $(".pfb", el).textContent = "";
+    });
+    const total = budgetOf(dec), pct = (total / PRESUPUESTO - 1) * 100;
+    const scaleMax = PRESUPUESTO * 1.3;
+    $("#bVal").textContent = `${fmtM(total)} (${pct > 0 ? "+" : ""}${fmt(pct)}%)`;
+    $("#bFill").style.width = Math.min(100, total / scaleMax * 100) + "%";
+    $("#bTarget").style.left = (OBJETIVO / scaleMax * 100) + "%";
+    const n = Object.keys(dec).length;
+    $("#bMsg").textContent = n < PROGS.length ? `Decidiste ${n} de ${PROGS.length} programas.`
+      : total <= OBJETIVO + 1 ? "Llegás al recorte que pide el Directorio, sin tocar lo que funciona."
+      : `Quedás ${fmtM(total - OBJETIVO)} arriba de lo que pide el Directorio. Si lo defendés con datos, puede estar bien.`;
+  }
+  $$(".pcard").forEach(el => $$("[data-dec]", el).forEach(b => b.addEventListener("click", () => {
+    state.dec = state.dec || {}; state.dec[el.dataset.p] = b.dataset.dec; paintProgs(); save();
+  })));
+
+  /* =====================================================================
+     PASO 5 y 6 · RECOMENDACIONES Y PROMPT
+     ===================================================================== */
+  const FIELDS = { myQ: "#myQ", reco: "#gReco", medir: "#gMedir", nombre: "#gNombre", aprendi: "#sAprendi", link: "#lLink" };
+  const g = store.get("gamma", {});
+  Object.entries(FIELDS).forEach(([k, sel]) => {
+    $(sel).value = g[k] || "";
+    $(sel).addEventListener("input", () => {
+      store.set("gamma", Object.fromEntries(Object.entries(FIELDS).map(([kk, ss]) => [kk, $(ss).value]))); buildAll();
+    });
+  });
+
+  const ITER = [
+    "Agregá un tablero con el porcentaje de aplicación por programa y por sucursal, con un gráfico de barras.",
+    "Sumá una alerta en rojo para los programas donde menos del 50% aplica lo aprendido.",
+    "Aplicá estos colores: fondo azul marino #00344D, acentos verde #00FF90 y tipografía Poppins.",
+    "Agregá datos de ejemplo para 10 líderes y 3 programas, así puedo mostrar cómo se ve."
+  ];
+  $("#iterList").innerHTML = ITER.map((t, i) => `<button type="button" data-it="${i}">${esc(t)}</button>`).join("");
+  $$("[data-it]").forEach(b => b.addEventListener("click", () => copy(ITER[+b.dataset.it])));
+
+  function setCode(sel, text) {
+    $(sel).innerHTML = `<button class="copy-btn" type="button">Copiar</button>` + esc(text);
+    $(sel + " .copy-btn").addEventListener("click", e => copy(text, e.currentTarget));
+    $(sel).dataset.prompt = text;
+  }
+
+  function buildAll() {
+    const dec = state.dec || {};
+    const hypsTxt = (state.hyps || []).map((h, i) => `H${i + 1}: ${hypText(h)}`).join("\n");
+
+    setCode("#sPrompt",
+`Actuá como el Director Financiero de Mercado Austral, una cadena de supermercados de 2.300 personas y 48 sucursales. Sos escéptico con la formación: querés recortar 30% del presupuesto ($180 M por año) porque "se capacita mucho y no cambia nada".
+
+Soy analista de People Analytics y estas son mis hipótesis:
+${hypsTxt || "[todavía no agregué hipótesis: proponeme 3 para que las discutamos]"}
+
+Para cada hipótesis:
+1. Decime qué dato la refutaría.
+2. Señalá un sesgo o una explicación alternativa (por ejemplo, que los grupos que comparo sean distintos por otros motivos).
+3. Proponé cómo mejorarla.
+
+Después sugerí una hipótesis que no se me haya ocurrido. Sé directo, en español rioplatense, y esperá mi respuesta antes de seguir.`);
+
+    const decTxt = PROGS.map(p => `- ${p.n.replace(/ «.*»/, "")}: ${dec[p.id] || "a definir"}`).join("\n");
+    setCode("#lPrompt",
+`Creá una app web llamada "Impacto de Formación" para Mercado Austral, una cadena de supermercados.
+
+Objetivo: medir si lo que se enseña en cada programa de formación se aplica en el trabajo, 3 meses después de cada curso.
+
+La app tiene dos pantallas:
+
+1. Formulario para líderes. El líder elige:
+   - el programa: ${PROGS.filter(p => dec[p.id] !== "Recortar").map(p => p.n.replace(/ «.*»/, "")).join(", ")}
+   - la persona (legajo y nombre) y la sucursal
+   - ¿Aplica lo aprendido? (escala de 1 a 5)
+   - un ejemplo concreto de aplicación (texto)
+   - qué indicador debería mejorar (rotación, ausentismo, NPS, ventas u otro)
+
+2. Tablero de resultados:
+   - porcentaje de personas que aplican lo aprendido (4 o 5 en la escala) por programa
+   - promedio por sucursal
+   - lista de los últimos ejemplos cargados
+
+Decisiones que ya tomamos sobre cada programa:
+${decTxt}
+
+Diseño: limpio, en español, fondo blanco con encabezado azul marino (#00344D), acentos verde (#00FF90), tipografía Poppins. Incluí datos de ejemplo para que se vea funcionando.`);
+    $("#decisions").innerHTML = PROGS.map(p => {
+      const d = dec[p.id];
+      return `<div><span>${esc(p.n.replace(/ «.*»/, ""))}</span>${d ? `<b>${d} · ${fmtM(p.cost * FACTOR[d])}</b>` : `<span class="pend">sin decidir</span>`}</div>`;
+    }).join("") + `<div><span><b>Total 2026</b></span><b>${fmtM(budgetOf(dec))}</b></div>`;
+
+    const pregunta = $("#myQ").value.trim() || ((state.picked || []).includes(1) ? PREGUNTAS[1].q : "[definí tu pregunta en el paso 1]");
+    const hyps = (state.hyps || []).map((h, i) => `- H${i + 1}: ${hypText(h)}`).join("\n") || "- [agregá tus hipótesis en el paso 2]";
+    const pack = (state.pack || []).map(id => DATOS.find(d => d.id === id)).filter(d => d.tipo !== "no").map(d => `${d.n} (${d.own})`).join(", ") || "[armá tu paquete de datos en el paso 3]";
+    const hall = PROGS.map(p => {
+      const dato = p.metric ? `${p.metric}: ${fmt(p.con, Number.isInteger(p.con) ? 0 : 1)}${p.unit} con el programa contra ${fmt(p.sin, Number.isInteger(p.sin) ? 0 : 1)}${p.unit} sin el programa` : "sin datos de impacto";
+      return `- ${p.n.replace(/ «.*»/, "")} (${fmtM(p.cost)}, satisfacción ${p.sat}): ${dato}. ${p.extra} Decisión: ${dec[p.id] || "[sin decidir]"}.`;
+    }).join("\n");
+    const total = budgetOf(dec), pct = (total / PRESUPUESTO - 1) * 100;
+    const reco = $("#gReco").value.trim(), medir = $("#gMedir").value.trim(), nombre = $("#gNombre").value.trim();
+
+    const prompt =
+`Creá una presentación de 8 slides para el Directorio de Mercado Austral (cadena de supermercados, 2.300 personas, 48 sucursales) sobre el presupuesto de formación.
+
+Contexto: el Directorio quiere recortar 30% del presupuesto de formación ($180 M por año) porque "se capacita mucho y no cambia nada". Hasta ahora solo se medía la satisfacción (4,6 sobre 5).
+
+Audiencia: directores con poco tiempo. Tono: claro, directo, en español rioplatense.
+Cada slide con un título que diga la conclusión (máximo 12 palabras), un dato destacado grande y poco texto.
+
+Pregunta del análisis:
+${pregunta}
+
+Hipótesis:
+${hyps}
+
+Datos que usamos: ${pack}.
+
+Resultados por programa (con programa vs. sin programa):
+${hall}
+
+Presupuesto propuesto para 2026: ${fmtM(total)} (${pct > 0 ? "+" : ""}${fmt(pct)}% contra 2025; el Directorio pedía ${fmtM(OBJETIVO)}).
+
+Recomendaciones:
+${reco || "[escribí tus recomendaciones en el paso 5]"}
+
+Cómo lo vamos a medir:
+${medir || "[contá cómo lo van a medir el año que viene]"}${$("#lLink").value.trim() ? `\nPrototipo de la herramienta de medición (hecho con Lovable): ${$("#lLink").value.trim()}` : ""}${$("#sAprendi").value.trim() ? `\n\nLo que aprendimos al debatir las hipótesis: ${$("#sAprendi").value.trim()}` : ""}
+
+Estructura:
+1. Portada: "¿Sirve lo que enseñamos?"${nombre ? ` · Presenta: ${nombre}` : ""}
+2. El pedido del Directorio y por qué la satisfacción no alcanza
+3. La pregunta y las hipótesis
+4. Qué datos cruzamos
+5. Lo que funciona (con datos)
+6. Lo que no funciona y por qué
+7. Propuesta de presupuesto y recomendaciones
+8. Cómo vamos a medir la formación de ahora en adelante (con el link al prototipo, si lo hay)
+
+Estilo visual: fondo azul marino (#00344D), acentos en verde (#00FF90), tipografía Poppins, gráficos simples con un solo color destacado.`;
+    $("#gPrompt").innerHTML = `<button class="copy-btn" type="button" id="gCopyInner">Copiar</button>` + esc(prompt);
+    $("#gCopyInner").addEventListener("click", e => copy(prompt, e.currentTarget));
+    $("#gPrompt").dataset.prompt = prompt;
+  }
+  $("#gCopy").addEventListener("click", e => copy($("#gPrompt").dataset.prompt, e.currentTarget, "Copiar prompt"));
+  $("#sCopy").addEventListener("click", e => copy($("#sPrompt").dataset.prompt, e.currentTarget, "Copiar prompt"));
+  $("#lCopy").addEventListener("click", e => copy($("#lPrompt").dataset.prompt, e.currentTarget, "Copiar prompt"));
+
+  // Restaurar estado guardado
+  paintChoices(); paintStmts(); paintHyps(); paintPack(false); paintProgs();
+  Object.entries(state.crit || {}).forEach(([i, v]) => { const cb = $(`[data-c="${i}"]`); if (cb) cb.checked = v; });
+  if (state.packOk !== undefined) checkPack(true);
+  if (state.cruce && Object.keys(state.cruce).length === 2) checkCruce(true);
+  buildAll();
+
+  /* =====================================================================
+     NAVEGACIÓN
+     ===================================================================== */
+  const slides = $$(".slide");
+  let cur = 0;
+  $("#dots").innerHTML = slides.map((s, i) => {
+    const gap = i > 0 && s.dataset.group !== slides[i - 1].dataset.group ? " gap" : "";
+    return `<button class="dot${gap}" aria-label="Ir a ${esc(s.dataset.title)}" data-i="${i}"></button>`;
+  }).join("");
+  const groups = [];
+  slides.forEach((s, i) => {
+    let gr = groups.find(x => x.name === s.dataset.group);
+    if (!gr) groups.push(gr = { name: s.dataset.group, items: [] });
+    gr.items.push(i);
+  });
+  $("#tocGroups").innerHTML = groups.map(gr => `<div class="toc-group"><p>${esc(gr.name)}</p><div class="toc">${gr.items.map(i =>
+    `<button data-i="${i}"><span class="n">${String(i + 1).padStart(2, "0")}</span><span class="t">${esc(slides[i].dataset.title)}</span></button>`).join("")}</div></div>`).join("");
+
+  function go(i, push = true) {
+    i = Math.max(0, Math.min(slides.length - 1, i));
+    slides.forEach((s, j) => {
+      s.classList.toggle("active", j === i);
+      s.classList.toggle("before", j < i);
+      s.setAttribute("aria-hidden", j !== i);
+      s.inert = j !== i;
+    });
+    cur = i;
+    slides[i].scrollTop = 0;
+    $$(".dot").forEach((d, j) => d.classList.toggle("on", j === i));
+    $$("#tocGroups button").forEach(d => d.classList.toggle("on", +d.dataset.i === i));
+    $("#counter").textContent = `${i + 1} / ${slides.length}`;
+    $("#progress").style.width = ((i + 1) / slides.length * 100) + "%";
+    $("#miniTitle").textContent = slides[i].dataset.title;
+    $("#prev").disabled = i === 0;
+    $("#next").disabled = i === slides.length - 1;
+    const id = slides[i].dataset.id;
+    if (push && location.hash !== "#" + id) history.replaceState(null, "", "#" + id);
+  }
+  const fromHash = () => Math.max(0, slides.findIndex(s => s.dataset.id === location.hash.slice(1)));
+  const next = () => go(cur + 1);
+
+  $("#prev").addEventListener("click", () => go(cur - 1));
+  $("#next").addEventListener("click", next);
+  $$("[data-go=next]").forEach(b => b.addEventListener("click", next));
+  $$(".dot").forEach(d => d.addEventListener("click", () => go(+d.dataset.i)));
+  window.addEventListener("hashchange", () => go(fromHash(), false));
+
+  const toc = $("#toc");
+  const openToc = () => { toc.classList.add("open"); const on = $("#tocGroups button.on"); if (on) on.focus(); };
+  const closeToc = () => { toc.classList.remove("open"); $("#openToc").focus(); };
+  $("#openToc").addEventListener("click", openToc);
+  $("#closeToc").addEventListener("click", closeToc);
+  $$("#tocGroups button").forEach(b => b.addEventListener("click", () => { go(+b.dataset.i); closeToc(); }));
+
+  document.addEventListener("keydown", e => {
+    if (e.target.closest("input, textarea, select")) return;
+    if (toc.classList.contains("open")) { if (e.key === "Escape" || e.key.toLowerCase() === "i") closeToc(); return; }
+    if (["ArrowRight", "PageDown"].includes(e.key) || (e.key === " " && !e.target.closest("button, a, summary"))) { e.preventDefault(); next(); }
+    else if (["ArrowLeft", "PageUp"].includes(e.key)) { e.preventDefault(); go(cur - 1); }
+    else if (e.key === "Home") go(0);
+    else if (e.key === "End") go(slides.length - 1);
+    else if (e.key.toLowerCase() === "i" && !e.metaKey && !e.ctrlKey) openToc();
+  });
+
+  let sx = 0, sy = 0, st = 0;
+  $("#deck").addEventListener("touchstart", e => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; st = Date.now(); }, { passive: true });
+  $("#deck").addEventListener("touchend", e => {
+    if (e.target.closest(".code, input, textarea, select")) return;
+    const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5 && Date.now() - st < 600) { if (dx < 0) next(); else go(cur - 1); }
+  }, { passive: true });
+
+  go(fromHash(), false);
+})();
+</script>
+</body>
+</html>
